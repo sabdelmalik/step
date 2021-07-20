@@ -1682,6 +1682,10 @@ step.util = {
 			"nl",  // Dutch
 			"en",  // English
 			"enm", // English Middle
+			"eo",  // Esperanto
+			"et",  // Estonian
+			"fo",  // Faroese
+			"fi",  // Finnish
 			"fr",  // French
 			"fre", // French *
 			"de",  // German
@@ -1982,6 +1986,7 @@ step.util = {
 			"zh"   // Chinese
 		];
 		var western_asia_lang = [
+			"ar",  // Arabic
 			"hy",  // Armenian
 			"az",  // Azerbaijani
 			"azb", // Azerbaijani, South
@@ -1990,7 +1995,7 @@ step.util = {
 			"heb", // Hebrew *
 			"syr", // Syriac
 			"tr",  // Turkish
-			"en"  // English
+			"en"   // English
 		];
         var arrayToProcess = [];
         if (testMode) {
