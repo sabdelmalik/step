@@ -1610,7 +1610,6 @@ step.util = {
     },
 	addTagLine: function(){
         var bibleVersions = $("#bibleVersions");
-		debugger;
 		var displayedLanguages = $('.langUL').filter(":visible");
 		var length = 0;
 		for (var i = 0; i < displayedLanguages.length; i ++) {
