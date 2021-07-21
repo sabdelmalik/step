@@ -1608,7 +1608,26 @@ step.util = {
 			element.parentNode.removeChild(element);
 		}
     },
-	showByGeo: function(testMode) { // This need to be updated when new language are added.
+	addTagLine: function(){
+        var bibleVersions = $("#bibleVersions");
+		debugger;
+		var displayedLanguages = $('.langUL').filter(":visible");
+		var length = 0;
+		for (var i = 0; i < displayedLanguages.length; i ++) {
+			var langCode = "";
+			var classes = $(displayedLanguages[i]).attr('class').split(' ');
+			for (var j = 0; j < classes.length; j ++) {
+				if (classes[j].substr(0, 3) === "ul_") {
+					langCode = classes[j].substr(3);
+					if (langCode !== "Most_widely_used") length += $('.ul_' + langCode).find('.list-group-item').length;
+				}
+			}
+		}
+        var total = step.itemisedVersions.length;
+        var message = '<span class="tagLine">' + sprintf(__s.filtering_total_bibles_and_commentaries, length, total) + "</span>";
+        bibleVersions.find(".modal-footer").find(".tagLine").remove().end().prepend(message);
+    },
+	showByGeo: function(testMode) { // The following arrays need to be updated when new language are added.
 		var africa_lang = [
 			"af",  // Afrikaans
 			"am",  // Amharic
@@ -1944,7 +1963,7 @@ step.util = {
 			"ben", // Bengali
 			"hne", // Chhattisgarhi
 			"guj", // Gujarati
-			"hi", // Hindi
+			"hi",  // Hindi
 			"kan", // Kannada
 			"ckb", // Kurdish, Central
 			"kpb", // Kurumba, Mullu
@@ -1952,13 +1971,13 @@ step.util = {
 			"nep", // Nepali
 			"ori", // Oriya
 			"pan", // Panjabi
-			"fa", // Persian
+			"fa",  // Persian
 			"pes", // Persian, Iranian
 			"tam", // Tamil
 			"tel", // Telugu
-			"ur", // Urdu
+			"ur",  // Urdu
 			"urd", // Urdu *
-			"en" // English
+			"en"   // English
 		];
 		var southeast_asia_lang = [
 			"my",  // Burmese
@@ -1991,6 +2010,8 @@ step.util = {
 			"az",  // Azerbaijani
 			"azb", // Azerbaijani, South
 			"cop", // Coptic
+			"fa",  // Persian
+			"pes", // Persian, Iranian
 			"he",  // Hebrew
 			"heb", // Hebrew *
 			"syr", // Syriac
@@ -2032,9 +2053,7 @@ step.util = {
                     $('.btn_' + arrayToProcess[i]).show();
 					$('.span_' + arrayToProcess[i]).show();
                     $('.plusminus_' + arrayToProcess[i]).text('+');
-
                 }
-
             }
         }
 	},
