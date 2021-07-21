@@ -1612,15 +1612,18 @@ step.util = {
         var bibleVersions = $("#bibleVersions");
 		var displayedLanguages = $('.langUL').filter(":visible");
 		var numOfBibleDisplayed = 0;
+		var numOfBibleInMostWidelyUsed = 0;
 		for (var i = 0; i < displayedLanguages.length; i ++) {
 			var langCode = "";
 			var classes = $(displayedLanguages[i]).attr('class').split(' ');
 			for (var j = 0; j < classes.length; j ++) {
-				if ((classes[j].substr(0, 3) === "ul_") && (classes[j] !== "ul_Most_widely_used")) {
-					numOfBibleDisplayed += $("." + classes[j]).find('.list-group-item').length;
+				if (classes[j].substr(0, 3) === "ul_") {
+					if (classes[j] === "ul_Most_widely_used") numOfBibleInMostWidelyUsed += $("." + classes[j]).find('.list-group-item').length;
+					else numOfBibleDisplayed += $("." + classes[j]).find('.list-group-item').length;
 				}
 			}
 		}
+		if (numOfBibleDisplayed < numOfBibleInMostWidelyUsed) numOfBibleDisplayed = numOfBibleInMostWidelyUsed; // All the language groups are not selected except the Most Widely Used group
         var total = step.itemisedVersions.length;
         var message = '<span class="tagLine">' + sprintf(__s.filtering_total_bibles_and_commentaries, numOfBibleDisplayed, total) + "</span>";
         bibleVersions.find(".modal-footer").find(".tagLine").remove().end().prepend(message);
