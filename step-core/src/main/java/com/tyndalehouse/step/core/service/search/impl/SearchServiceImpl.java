@@ -235,6 +235,7 @@ public class SearchServiceImpl implements SearchService {
             else if (userLanguage.equalsIgnoreCase("zh_tw")) defaultVersion = "CUn";
 			else if (userLanguage.toLowerCase().startsWith("es")) defaultVersion = "SpaRV1909";
 			else if (userLanguage.toLowerCase().startsWith("bg")) defaultVersion = "BulProtRev";
+			else if (userLanguage.toLowerCase().startsWith("hi")) defaultVersion = "HinULB";
             versions.add(defaultVersion);
             searchTokens.add(new SearchToken("version", defaultVersion));
         }
