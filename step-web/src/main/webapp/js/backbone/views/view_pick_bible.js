@@ -288,8 +288,8 @@ var PickBibleView = Backbone.View.extend({
 				console.log("No Bible module for " + key);
 				delete bibleList[key];
 			}
-			else {
-				if (uniqueBibleList.indexOf(bibleList[key][0].languageCode) > -1) console.log("dup " + bibleList[key][0].languageCode);
+			else if (selectedLanguage == "_all") {
+				if (uniqueBibleList.indexOf(bibleList[key][0].languageCode) > -1) console.log("Same language code shows up in two groups of language: " + bibleList[key][0].languageCode);
 				else uniqueBibleList.push(bibleList[key][0].languageCode);
 			}
 		}
