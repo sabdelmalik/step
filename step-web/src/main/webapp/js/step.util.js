@@ -2022,7 +2022,7 @@ step.util = {
             $('.langSpan').show();
             $('.langBtn').show();
             $('.langUL').show();
-			var tmp = confirm("All buttons for the different languages and Bibles should be shown");
+			var tmp = confirm("Make sure you run this in the All languages tab.");
             arrayToProcess = africa_lang.concat(americas_lang).concat(east_asia_lang).concat(europe_lang).concat(oceania_lang)
                 .concat(south_asia_lang).concat(southeast_asia_lang).concat(western_asia_lang);
             for (var i = 0; i < arrayToProcess.length; i++) {
