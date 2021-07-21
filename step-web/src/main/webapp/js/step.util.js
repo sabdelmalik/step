@@ -2055,6 +2055,7 @@ step.util = {
                 }
             }
         }
+		step.util.addTagLine();
 	},
   	getDetailsOfStrong: function(strongNum, version) {
         var gloss = strongNum;
