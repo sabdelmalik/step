@@ -2035,7 +2035,6 @@ step.util = {
                 $('.langSpan').show();
                 $('.langBtn').show();
                 $('.langUL').hide();
-
             }
             else {
                 if (geo === "africa") arrayToProcess = africa_lang;
@@ -2054,6 +2053,7 @@ step.util = {
                     $('.plusminus_' + arrayToProcess[i]).text('+');
                 }
             }
+			$('.langBtn').removeClass('stepPressedButton');
         }
 		step.util.addTagLine();
 	},
