@@ -1611,22 +1611,21 @@ step.util = {
 	addTagLine: function(){
         var bibleVersions = $("#bibleVersions");
 		var displayedLanguages = $('.langUL').filter(":visible");
-		var length = 0;
+		var numOfBibleDisplayed = 0;
 		for (var i = 0; i < displayedLanguages.length; i ++) {
 			var langCode = "";
 			var classes = $(displayedLanguages[i]).attr('class').split(' ');
 			for (var j = 0; j < classes.length; j ++) {
-				if (classes[j].substr(0, 3) === "ul_") {
-					langCode = classes[j].substr(3);
-					if (langCode !== "Most_widely_used") length += $('.ul_' + langCode).find('.list-group-item').length;
+				if ((classes[j].substr(0, 3) === "ul_") && (classes[j] !== "ul_Most_widely_used")) {
+					numOfBibleDisplayed += $("." + classes[j]).find('.list-group-item').length;
 				}
 			}
 		}
         var total = step.itemisedVersions.length;
-        var message = '<span class="tagLine">' + sprintf(__s.filtering_total_bibles_and_commentaries, length, total) + "</span>";
+        var message = '<span class="tagLine">' + sprintf(__s.filtering_total_bibles_and_commentaries, numOfBibleDisplayed, total) + "</span>";
         bibleVersions.find(".modal-footer").find(".tagLine").remove().end().prepend(message);
     },
-	showByGeo: function(testMode) { // The following arrays need to be updated when new language are added.
+	showByGeo: function(testMode) { // The following arrays need to be updated when new Bible with additional language codes are added.
 		var africa_lang = [
 			"af",  // Afrikaans
 			"am",  // Amharic
@@ -2018,16 +2017,19 @@ step.util = {
 			"en"   // English
 		];
         var arrayToProcess = [];
-        if (testMode) {
+        if (testMode) { // This has to be called inside the debugger when the modal is showing "All" the languages and they type in, "step.util.showByGeo(true)" in the debugger's console.
+						// If the above language codes covers all the Bibles on the web server, it should hide everything.
             $('.langSpan').show();
             $('.langBtn').show();
             $('.langUL').show();
+			var tmp = confirm("All buttons for the different languages and Bibles should be shown");
             arrayToProcess = africa_lang.concat(americas_lang).concat(east_asia_lang).concat(europe_lang).concat(oceania_lang)
                 .concat(south_asia_lang).concat(southeast_asia_lang).concat(western_asia_lang);
             for (var i = 0; i < arrayToProcess.length; i++) {
                 $('.btn_' + arrayToProcess[i]).hide();
                 $('.ul_' + arrayToProcess[i]).hide();
             }
+			tmp = confirm("All buttons for the different languages and Bibles should be hidden");
         }
         else {
        		var geo = $( ".selectGeo option:selected" ).val();
