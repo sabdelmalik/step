@@ -1608,383 +1608,414 @@ step.util = {
 			element.parentNode.removeChild(element);
 		}
     },
-	showByGeo: function(testMode) { // This need to be updated when new language are added.
+	addTagLine: function(){
+        var bibleVersions = $("#bibleVersions");
+		var displayedLanguages = $('.langUL').filter(":visible");
+		var length = 0;
+		for (var i = 0; i < displayedLanguages.length; i ++) {
+			var langCode = "";
+			var classes = $(displayedLanguages[i]).attr('class').split(' ');
+			for (var j = 0; j < classes.length; j ++) {
+				if (classes[j].substr(0, 3) === "ul_") {
+					langCode = classes[j].substr(3);
+					if (langCode !== "Most_widely_used") length += $('.ul_' + langCode).find('.list-group-item').length;
+				}
+			}
+		}
+        var total = step.itemisedVersions.length;
+        var message = '<span class="tagLine">' + sprintf(__s.filtering_total_bibles_and_commentaries, length, total) + "</span>";
+        bibleVersions.find(".modal-footer").find(".tagLine").remove().end().prepend(message);
+    },
+	showByGeo: function(testMode) { // The following arrays need to be updated when new language are added.
 		var africa_lang = [
-			"Afrikaans",
-			"Amharic",
-			"Chichewa",
-			"Ewe",
-			"Ganda",
-			"Gbagyi",
-			"Geez",
-			"Hausa",
-			"Igbo",
-			"Ikposo",
-			"Kikuyu",
-			"Lama__Togo_",
-			"Lopit",
-			"Malagasy",
-			"Malagasy__Plateau",
-			"Mina__Cameroon_",
-			"Naro",
-			"Ndebele__North",
-			"North_Ndebele",
-			"Shona",
-			"Somali",
-			"Swahili",
-			"Swahili__individual_language_",
-			"Tswana",
-			"Twi",
-			"Yombe",
-			"Yoruba",
-			"English",
-			"Spanish",
-			"French",
-			"Arabic",
-			"Arabic__Standard",
-			"Portuguese"
+			"af",  // Afrikaans
+			"am",  // Amharic
+			"ar",  // Arabic
+			"ee",  // Ewe
+			"ewe", // Ewe *
+			"lg",  // Ganda
+			"gbr", // Gbagyi
+			"gez", // Geez
+			"ha",  // Hausa
+			"hau", // Hausa
+			"ig",  // Igbo
+			"kpo", // Ikposo
+			"ki",  // Kikuyu
+			"las", // Lama (Togo)
+			"ln",  // Lingala
+			"lpx", // Lopit
+			"mg",  // Malagasy
+			"plt", // Malagasy, Plateau
+			"hna", // Mina (Cameroon)
+			"nhr", // Naro
+			"nd",  // North Ndebele
+			"ny",  // Nyanja
+			"pt",  // Portuguese
+			"sn",  // Shona
+			"so",  // Somali
+			"sw",  // Swahili
+			"swa", // Swahili *
+			"swh", // Swahili (individual language) *
+			"tn",  // Tswana
+			"tw",  // Twi
+			"twi", // Twi *
+			"yom", // Yombe
+			"yor", // Yoruba
+			"en",  // English
+			"fr",  // French
+			"fre", // French *
+			"es"   // Spanish
 		];
 		var americas_lang = [
-			"Caló",
-			"Cherokee",
-			"Haitian",
-			"Kekchí",
-			"Potawatomi",
-			"Serrano",
-			"English",
-			"French",
-			"Spanish",
-			"Portuguese"
+			"acr", // Achi
+			"rmq", // Caló
+			"chr", // Cherokee
+			"en",  // English
+			"ht",  // Haitian
+			"kek", // Kekchí
+			"pt",  // Portuguese
+			"pot", // Potawatomi
+			"ser", // Serrano
+			"es",  // Spanish
+			"fr",  // French
+			"fre"  // French *
 		];
 		var east_asia_lang = [
-			"Chinese",
-			"Korean",
-			"Mongolian",
-			"English"
+			"zh", // Chinese
+			"ko", // Korean
+			"mn", // Mongolian
+			"en"  // English
 		];
 		var europe_lang = [
-			"Albanian",
-			"Basque",
-			"Breton",
-			"Bulgarian",
-			"Church_Slavic",
-			"Croatian",
-			"Czech",
-			"Danish",
-			"Dutch",
-			"English",
-			"English__Middle__1100-1500_",
-			"Esperanto",
-			"Estonian",
-			"Faroese",
-			"Finnish",
-			"French",
-			"German",
-			"Gothic",
-			"Greek",
-			"Greek__Ancient__to_1453_",
-			"Hungarian",
-			"Icelandic",
-			"Irish",
-			"Italian",
-			"Latin",
-			"Latvian",
-			"Lithuanian",
-			"Manx",
-			"Norwegian_Bokmål",
-			"Norwegian_Nynorsk",
-			"Polish",
-			"Portuguese",
-			"Romanian",
-			"Russian",
-			"Scottish_Gaelic",
-			"Serbian",
-			"Slovenian",
-			"Spanish",
-			"Swedish",
-			"Ukrainian",
-			"Welsh"
+			"sq",  // Albanian
+			"eu",  // Basque
+			"br",  // Breton
+			"bg",  // Bulgarian
+			"bul", // Bulgarian
+			"cu",  // Church Slavic
+			"hr",  // Croatian
+			"hrv", // Croatian *
+			"cs",  // Czech
+			"da",  // Danish
+			"nl",  // Dutch
+			"en",  // English
+			"enm", // English Middle
+			"eo",  // Esperanto
+			"et",  // Estonian
+			"fo",  // Faroese
+			"fi",  // Finnish
+			"fr",  // French
+			"fre", // French *
+			"de",  // German
+			"got", // Gothic
+			"el",  // Greek
+			"grc", // Greek, Ancient (to 1453)
+			"hu",  // Hungarian
+			"hun", // Hungarian *
+			"is",  // Icelandic
+			"ga",  // Irish
+			"it",  // Italian
+			"la",  // Latin
+			"lv",  // Latvian
+			"lt",  // Lithuanian
+			"gv",  // Manx
+			"nb",  // Norwegian Bokmål
+			"nn",  // Norwegian Nynorsk
+			"pl",  // Polish
+			"pt",  // Portuguese
+			"ro",  // Romanian
+			"ru",  // Russian
+			"gd",  // Scottish Gaelic
+			"sr",  // Serbian
+			"sl",  // Slovenian
+			"es",  // Spanish
+			"sv",  // Swedish
+			"uk",  // Ukrainian
+			"cy"   // Welsh
 		];
 		var oceania_lang = [
-			"_Auhelawa",
-			"Abau",
-			"Adzera",
-			"Agarabi",
-			"Alamblak",
-			"Alekano",
-			"Ama__Papua_New_Guinea_",
-			"Amanab",
-			"Ambrym__Southeast",
-			"Ambulas",
-			"Amele",
-			"Aneme_Wake",
-			"Angaataha",
-			"Angal_Heneng",
-			"Angor",
-			"Anjam",
-			"Ankave",
-			"Anuki",
-			"Arapesh__Bumbita",
-			"Are",
-			"Arifama-Miniafia",
-			"Aruamu",
-			"Au",
-			"Awa__Papua_New_Guinea_",
-			"Awara",
-			"Awiyaana",
-			"Bambam",
-			"Barai",
-			"Bargam",
-			"Bariai",
-			"Baruya",
-			"Benabena",
-			"Biangai",
-			"Bimin",
-			"Bine",
-			"Binumarien",
-			"Bola",
-			"Borong",
-			"Bo-Ung",
-			"Buang__Mangga",
-			"Buang__Mapos",
-			"Bugawac",
-			"Bukiyip",
-			"Bunama",
-			"Bwanabwana",
-			"Chamorro",
-			"Chortí",
-			"Chuave",
-			"Dadibi",
-			"Daga",
-			"Dano",
-			"Dawawa",
-			"Dedua",
-			"Dobu",
-			"Doromu-Koki",
-			"Edolo",
-			"Enga",
-			"Ese",
-			"Ewage-Notu",
-			"Faiwol",
-			"Fasu",
-			"Folopa",
-			"Fore",
-			"Gapapaiwa",
-			"Ghayavi",
-			"Girawa",
-			"Golin",
-			"Guhu-Samane",
-			"Gwahatike",
-			"Halia",
-			"Hanga_Hundi",
-			"Hiri_Motu",
-			"Hote",
-			"Huli",
-			"Iamalele",
-			"Iatmul",
-			"Iduna",
-			"Imbongu",
-			"Inoke-Yate",
-			"Ipili",
-			"Iwal",
-			"Iwam__Sepik",
-			"Iyo",
-			"Kakabai",
-			"Kalam",
-			"Kaluli",
-			"Kamasau",
-			"Kamula",
-			"Kanasi",
-			"Kandas",
-			"Kandawo",
-			"Kanite",
-			"Kapingamarangi",
-			"Kara__Papua_New_Guinea_",
-			"Karkar-Yuri",
-			"Kâte",
-			"Keapara",
-			"Kein",
-			"Kewa__East",
-			"Kewa__West",
-			"Keyagana",
-			"Kobon",
-			"Koiali__Mountain",
-			"Komba",
-			"Kombio",
-			"Korafe-Yegha",
-			"Kosena",
-			"Kuanua",
-			"Kube",
-			"Kuman",
-			"Kunimaipa",
-			"Kuot",
-			"Kwamera",
-			"Kwanga",
-			"Kwoma",
-			"Kyaka",
-			"Label",
-			"Lote",
-			"Madak",
-			"Maiadomu",
-			"Maiwa__Papua_New_Guinea_",
-			"Manam",
-			"Mangseng",
-			"Maori",
-			"Mape",
-			"Marik",
-			"Maskelynes",
-			"Mauwake",
-			"Mbula",
-			"Mekeo",
-			"Melpa",
-			"Mende__Papua_New_Guinea_",
-			"Mengen",
-			"Mian",
-			"Migabac",
-			"Misima-Panaeati",
-			"Molima",
-			"Motu",
-			"Mufian",
-			"Mussau-Emira",
-			"Mutu",
-			"Muyuw",
-			"Naasioi",
-			"Nabak",
-			"Nakanai",
-			"Nali",
-			"Namiae",
-			"Nehan",
-			"Nek",
-			"Nggem",
-			"Nii",
-			"Nobonob",
-			"Numanggang",
-			"Nyindrou",
-			"Odoodee",
-			"Oksapmin",
-			"Olo",
-			"Ömie",
-			"Orokaiva",
-			"Paama",
-			"Patep",
-			"Patpatar",
-			"Pele-Ata",
-			"Pohnpeian",
-			"Qaqet",
-			"Ramoaaina",
-			"Rawa",
-			"Rotokas",
-			"Safeyoka",
-			"Saliba",
-			"Salt-Yui",
-			"Samberigi",
-			"Saniyo-Hiyewe",
-			"Saposa",
-			"Seimat",
-			"Selepet",
-			"Siane",
-			"Sinaugoro",
-			"Sio",
-			"Siroi",
-			"Somba-Siawari",
-			"Suau",
-			"Suena",
-			"Sulka",
-			"Sursurunga",
-			"Tabo",
-			"Tairora__North",
-			"Tairora__South",
-			"Takia",
-			"Tangoa",
-			"Tanna__North",
-			"Tanna__Southwest",
-			"Taupota",
-			"Tawala",
-			"Telefol",
-			"tgg",
-			"Timbe",
-			"Tinputz",
-			"Tok_Pisin",
-			"Tuma-Irumu",
-			"Tungag",
-			"Ubir",
-			"Umanakaina",
-			"Umbu-Ungu",
-			"Usan",
-			"Usarufa",
-			"Waffa",
-			"Waima",
-			"Wantoat",
-			"Waris",
-			"Waskia",
-			"Wedau",
-			"Weri",
-			"Wipi",
-			"Wiru",
-			"Wuvulu-Aua",
-			"Yabem",
-			"Yareba",
-			"Yau__Morobe_Province_",
-			"Yaweyuha",
-			"Yele",
-			"Yessan-Mayo",
-			"Yongkom",
-			"Yopno",
-			"Zia",
-			"English",
-			"French"
+			"aau", // Abau
+			"adz", // Adzera
+			"agd", // Agarabi
+			"amp", // Alamblak
+			"gah", // Alekano
+			"amm", // Ama (Papua New Guinea)
+			"amn", // Amanab
+			"tvk", // Ambrym, Southeast
+			"abt", // Ambulas
+			"aey", // Amele
+			"aby", // Aneme Wake
+			"agm", // Angaataha
+			"akh", // Angal Heneng
+			"agg", // Angor
+			"boj", // Anjam
+			"aak", // Ankave
+			"aui", // Anuki
+			"aon", // Arapesh, Bumbita
+			"mwc", // Are
+			"aai", // Arifama-Miniafia
+			"msy", // Aruamu
+			"avt", // Au
+			"kud", // 'Auhelawa
+			"awb", // Awa (Papua New Guinea)
+			"awx", // Awara
+			"auy", // Awiyaana
+			"ptu", // Bambam
+			"bbb", // Barai
+			"mlp", // Bargam
+			"bch", // Bariai
+			"byr", // Baruya
+			"bef", // Benabena
+			"big", // Biangai
+			"bhl", // Bimin
+			"bon", // Bine
+			"bjr", // Binumarien
+			"bnp", // Bola
+			"ksr", // Borong
+			"mux", // Bo-Ung
+			"mmo", // Buang, Mangga
+			"bzh", // Buang, Mapos
+			"buk", // Bugawac
+			"ape", // Bukiyip
+			"bdd", // Bunama
+			"tte", // Bwanabwana
+			"ch",  // Chamorro
+			"caa", // Chortí
+			"cjv", // Chuave
+			"mps", // Dadibi
+			"dgz", // Daga
+			"aso", // Dano
+			"dww", // Dawawa
+			"ded", // Dedua
+			"dob", // Dobu
+			"kqc", // Doromu-Koki
+			"etr", // Edolo
+			"enq", // Enga
+			"pwg", // Gapapaiwa
+			"bmk", // Ghayavi
+			"bbr", // Girawa
+			"gvf", // Golin
+			"ghs", // Guhu-Samane
+			"dah", // Gwahatike
+			"hla", // Halia
+			"wos", // Hanga Hundi
+			"hmo", // Hiri Motu
+			"hot", // Hote
+			"hui", // Huli
+			"yml", // Iamalele
+			"ian", // Iatmul
+			"viv", // Iduna
+			"imo", // Imbongu
+			"ino", // Inoke-Yate
+			"ipi", // Ipili
+			"kbm", // Iwal
+			"iws", // Iwam, Sepik
+			"nca", // Iyo
+			"kqf", // Kakabai
+			"kmh", // Kalam
+			"bco", // Kaluli
+			"kms", // Kamasau
+			"xla", // Kamula
+			"soq", // Kanasi
+			"kqw", // Kandas
+			"gam", // Kandawo
+			"kmu", // Kanite
+			"kpg", // Kapingamarangi
+			"leu", // Kara (Papua New Guinea)
+			"yuj", // Karkar-Yuri
+			"kmg", // Kâte
+			"khz", // Keapara
+			"bmh", // Kein
+			"kjs", // Kewa, East
+			"kew", // Kewa, West
+			"kyg", // Keyagana
+			"kpw", // Kobon
+			"kpx", // Koiali, Mountain
+			"kpf", // Komba
+			"xbi", // Kombio
+			"kpr", // Korafe-Yegha
+			"kze", // Kosena
+			"ksd", // Kuanua
+			"kgf", // Kube
+			"kue", // Kuman
+			"kup", // Kunimaipa
+			"kto", // Kuot
+			"tnk", // Kwamera
+			"kwj", // Kwanga
+			"kmo", // Kwoma
+			"kyc", // Kyaka
+			"lbb", // Label
+			"uvl", // Lote
+			"mmx", // Madak
+			"mzz", // Maiadomu
+			"mti", // Maiwa (Papua New Guinea)
+			"mva", // Manam
+			"mbh", // Mangseng
+			"mi",  // Maori
+			"mlh", // Mape
+			"dad", // Marik
+			"klv", // Maskelynes
+			"mhl", // Mauwake
+			"mna", // Mbula
+			"mek", // Mekeo
+			"med", // Melpa
+			"sim", // Mende (Papua New Guinea)
+			"mee", // Mengen
+			"mpt", // Mian
+			"mpp", // Migabac
+			"mpx", // Misima-Panaeati
+			"mox", // Molima
+			"meu", // Motu
+			"aoj", // Mufian
+			"emi", // Mussau-Emira
+			"tuc", // Mutu
+			"myw", // Muyuw
+			"nas", // Naasioi
+			"naf", // Nabak
+			"nak", // Nakanai
+			"nss", // Nali
+			"nvm", // Namiae
+			"nsn", // Nehan
+			"nif", // Nek
+			"nbq", // Nggem
+			"nii", // Nii
+			"gaw", // Nobonob
+			"nop", // Numanggang
+			"lid", // Nyindrou
+			"kkc", // Odoodee
+			"opm", // Oksapmin
+			"ong", // Olo
+			"aom", // Ömie
+			"okv", // Orokaiva
+			"pma", // Paama
+			"ptp", // Patep
+			"gfk", // Patpatar
+			"ata", // Pele-Ata
+			"pon", // Pohnpeian
+			"byx", // Qaqet
+			"rai", // Ramoaaina
+			"rwo", // Rawa
+			"roo", // Rotokas
+			"apz", // Safeyoka
+			"sbe", // Saliba
+			"sll", // Salt-Yui
+			"ssx", // Samberigi
+			"sny", // Saniyo-Hiyewe
+			"sps", // Saposa
+			"ssg", // Seimat
+			"spl", // Selepet
+			"snp", // Siane
+			"snc", // Sinaugoro
+			"xsi", // Sio
+			"ssd", // Siroi
+			"bmu", // Somba-Siawari
+			"swp", // Suau
+			"sue", // Suena
+			"sua", // Sulka
+			"sgz", // Sursurunga
+			"knv", // Tabo
+			"tbg", // Tairora, North
+			"omw", // Tairora, South
+			"tbc", // Takia
+			"tgg", // Tangga
+			"tgp", // Tangoa
+			"tnn", // Tanna, North
+			"nwi", // Tanna, Southwest
+			"tpa", // Taupota
+			"tbo", // Tawala
+			"tlf", // Telefol
+			"tim", // Timbe
+			"tpz", // Tinputz
+			"tpi", // Tok Pisin
+			"iou", // Tuma-Irumu
+			"lcm", // Tungag
+			"ubr", // Ubir
+			"gdn", // Umanakaina
+			"ubu", // Umbu-Ungu
+			"wnu", // Usan
+			"usa", // Usarufa
+			"waj", // Waffa
+			"rro", // Waima
+			"wnc", // Wantoat
+			"wrs", // Waris
+			"wsk", // Waskia
+			"wed", // Wedau
+			"wer", // Weri
+			"gdr", // Wipi
+			"wiu", // Wiru
+			"wuv", // Wuvulu-Aua
+			"jae", // Yabem
+			"yrb", // Yareba
+			"yuw", // Yau (Morobe Province)
+			"yby", // Yaweyuha
+			"yle", // Yele
+			"yss", // Yessan-Mayo
+			"yon", // Yongkom
+			"yut", // Yopno
+			"zia", // Zia
+			"en",  // English
+			"fr",  // French
+			"fre"  // French *
 		];
 		var south_asia_lang = [
-			"Assamese",
-			"Bengali",
-			"Chhattisgarhi",
-			"Gujarati",
-			"Hindi",
-			"Kannada",
-			"Kurdish__Central",
-			"Kurumba__Mullu",
-			"Marathi",
-			"Nepali",
-			"Oriya",
-			"Panjabi",
-			"Persian",
-			"Persian__Iranian",
-			"Tamil",
-			"Telugu",
-			"Urdu",
-			"English"
+			"asm", // Assamese
+			"ben", // Bengali
+			"hne", // Chhattisgarhi
+			"guj", // Gujarati
+			"hi",  // Hindi
+			"kan", // Kannada
+			"ckb", // Kurdish, Central
+			"kpb", // Kurumba, Mullu
+			"mar", // Marathi
+			"nep", // Nepali
+			"ori", // Oriya
+			"pan", // Panjabi
+			"fa",  // Persian
+			"pes", // Persian, Iranian
+			"tam", // Tamil
+			"tel", // Telugu
+			"ur",  // Urdu
+			"urd", // Urdu *
+			"en"   // English
 		];
 		var southeast_asia_lang = [
-			"Burmese",
-			"Cebuano",
-			"Central_Khmer",
-			"Hiligaynon",
-			"Iloko",
-			"Indonesian",
-			"Malayalam",
-			"Orya",
-			"Sama__Central",
-			"Tagalog",
-			"Thai",
-			"Uma",
-			"Vietnamese",
-			"Zou",
-			"English",
-			"Chinese",
-			"Spanish",
-			"French"
+			"my",  // Burmese
+			"ceb", // Cebuano
+			"khm", // Central Khmer
+			"hil", // Hiligaynon
+			"ilo", // Iloko
+			"id",  // Indonesian
+			"ind", // Indonesian *
+			"ml",  // Malayalam
+			"mal", // Malayalam *
+			"ury", // Orya
+			"sml", // Sama, Central
+			"tl",  // Tagalog
+			"tgl", // Tagalog *
+			"th",  // Thai
+			"ppk", // Uma
+			"vi",  // Vietnamese
+			"vie", // Vietnamese *
+			"zom", // Zou
+			"en",  // English
+			"fr",  // French
+			"fre", // French *
+			"es",  // Spanish
+			"zh"   // Chinese
 		];
 		var western_asia_lang = [
-			"Arabic",
-			"Arabic__Standard",
-			"Armenian",
-			"Azerbaijani",
-			"Azerbaijani__South",
-			"Coptic",
-			"Hebrew",
-			"Syriac",
-			"Turkish",
-			"English"
+			"ar",  // Arabic
+			"hy",  // Armenian
+			"az",  // Azerbaijani
+			"azb", // Azerbaijani, South
+			"cop", // Coptic
+			"fa",  // Persian
+			"pes", // Persian, Iranian
+			"he",  // Hebrew
+			"heb", // Hebrew *
+			"syr", // Syriac
+			"tr",  // Turkish
+			"en"   // English
 		];
         var arrayToProcess = [];
         if (testMode) {
@@ -2004,7 +2035,6 @@ step.util = {
                 $('.langSpan').show();
                 $('.langBtn').show();
                 $('.langUL').hide();
-
             }
             else {
                 if (geo === "africa") arrayToProcess = africa_lang;
@@ -2021,11 +2051,11 @@ step.util = {
                     $('.btn_' + arrayToProcess[i]).show();
 					$('.span_' + arrayToProcess[i]).show();
                     $('.plusminus_' + arrayToProcess[i]).text('+');
-
                 }
-
             }
+			$('.langBtn').removeClass('stepPressedButton');
         }
+		step.util.addTagLine();
 	},
   	getDetailsOfStrong: function(strongNum, version) {
         var gloss = strongNum;

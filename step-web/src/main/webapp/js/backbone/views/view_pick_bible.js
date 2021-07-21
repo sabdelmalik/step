@@ -14,6 +14,21 @@ var PickBibleView = Backbone.View.extend({
         '</li>' +
         '</ul>' +
         '<% }) %>'),
+    versionTemplateAll: _.template('' +
+        '<% _.each(versions, function(languageBibles, key) { %>' +
+        '<span class="langSpan span_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %>">' +
+        '<button class="langBtn btn_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %> stepButton">' +
+        '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
+        '<ul class="list-group langUL ul_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %>" style="display:none">' +
+        '<% _.each(languageBibles, function(languageBible) { %>' +
+        '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
+        '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
+        '<a class="resource" href="javascript:void(0)">' +
+        '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a></li>' +
+        '<% }) %>' +
+        '</li>' +
+        '</ul>' +
+        '<% }) %>'),
     filtersTemplate: _.template('<form role="form" class="form-inline">' +
         '<span class="form-group btn-group" data-toggle="buttons">' +
         '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
@@ -267,7 +282,19 @@ var PickBibleView = Backbone.View.extend({
             }
         }
         this.$el.find(".tab-pane").empty();
-        this.$el.find(selectedTab).append(this.versionTemplate({
+		var uniqueBibleList = [];
+		for (var key in bibleList) { 
+			if (bibleList[key].length == 0) {
+				console.log("No Bible module for " + key);
+				delete bibleList[key];
+			}
+			else {
+				if (uniqueBibleList.indexOf(bibleList[key][0].languageCode) > -1) console.log("dup " + bibleList[key][0].languageCode);
+				else uniqueBibleList.push(bibleList[key][0].languageCode);
+			}
+		}
+		var templateName = (selectedLanguage === "_all") ? this.versionTemplateAll : this.versionTemplate;
+		this.$el.find(selectedTab).append(templateName({
             versions: bibleList
         }));
 
@@ -305,7 +332,6 @@ var PickBibleView = Backbone.View.extend({
                 el.addClass("active");
             }
         });
-        this._addTagLine();
         if (showGeoSelection) $('.selectGeo').show();
         else {
             $('.selectGeo').hide();
@@ -315,16 +341,9 @@ var PickBibleView = Backbone.View.extend({
             $('.langPlusMinus').text('-');
             $('.langUL').show();
         }
+        step.util.addTagLine();
         this.$el.find(".langBtn").click(this._handleUsrClick);
         this.$el.find(".langPlusMinus").click(this._handleUsrClick);
-    },
-    _addTagLine: function(){
-        var bibleVersions = $("#bibleVersions");
-        var length = bibleVersions.find(".list-group-item").length;
-        var total = step.itemisedVersions.length;
-        var message = '<span class="tagLine">' + sprintf(__s.filtering_total_bibles_and_commentaries, length, total) + "</span>";
-        this.bibleVersions.find(".modal-footer").find(".tagLine").remove().end().prepend(message);
-        
     },
     _isLanguageValid: function (actualLanguage, wantedLanguage) {
         if (wantedLanguage == "_all") {
@@ -366,5 +385,6 @@ var PickBibleView = Backbone.View.extend({
                 $(plusminusClassName).text('-');
             }
         }
+		step.util.addTagLine();
     }
 });
