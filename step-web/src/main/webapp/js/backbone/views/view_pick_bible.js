@@ -177,7 +177,6 @@ var PickBibleView = Backbone.View.extend({
 				$('.langBtn').hide();
 				$('.list-group').show();
 				$('.list-group-item').hide();
-				console.log("Searching for " + userInput);
 				var regex1 = new RegExp("(^\\w*" + userInput + "|[\\s\\.]" + userInput + ")", "i");
 				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
 				step.util.addTagLine();
@@ -247,12 +246,7 @@ var PickBibleView = Backbone.View.extend({
     _filter: function (keyboard) {
         var self = this;
         var selectedTab = this._getSelectedTab();
-        var selectedLanguage = this._getLanguage();
-		if ((keyboard) && (selectedLanguage !== "_all")) {
-			selectedLanguage = "_all";
-			// $('.form-inline').find('.btn.btn-default.btn-sm.stepButton').removeClass("active");
-			// $($('.form-inline').find('.btn.btn-default.btn-sm.stepButton')[0]).addClass('active');
-		}
+        var selectedLanguage = (keyboard) ? "_all" : this._getLanguage();
         var origLanguage = selectedLanguage;
 		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
 
