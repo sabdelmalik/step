@@ -1609,24 +1609,23 @@ step.util = {
 		}
     },
 	addTagLine: function(){
-        var bibleVersions = $("#bibleVersions");
-		var displayedLanguages = $('.langUL').filter(":visible");
-		var numOfBibleDisplayed = 0;
-		var numOfBibleInMostWidelyUsed = 0;
-		for (var i = 0; i < displayedLanguages.length; i ++) {
-			var langCode = "";
-			var classes = $(displayedLanguages[i]).attr('class').split(' ');
-			for (var j = 0; j < classes.length; j ++) {
-				if (classes[j].substr(0, 3) === "ul_") {
-					if (classes[j] === "ul_Most_widely_used") numOfBibleInMostWidelyUsed += $("." + classes[j]).find('.list-group-item').length;
-					else numOfBibleDisplayed += $("." + classes[j]).find('.list-group-item').length;
-				}
-			}
-		}
-		if (numOfBibleDisplayed < numOfBibleInMostWidelyUsed) numOfBibleDisplayed = numOfBibleInMostWidelyUsed; // All the language groups are not selected except the Most Widely Used group
+		// var displayedLanguages = $('.langUL').filter(":visible");
+		var numOfBibleDisplayed = $('.list-group-item:visible').length;
+		var numOfBibleInMostWidelyUsed = $('.ul_Most_widely_used').find('.list-group-item:visible').length;
+		// for (var i = 0; i < displayedLanguages.length; i ++) {
+			// var langCode = "";
+			// var classes = $(displayedLanguages[i]).attr('class').split(' ');
+			// for (var j = 0; j < classes.length; j ++) {
+				// if (classes[j].substr(0, 3) === "ul_") {
+					// if (classes[j] === "ul_Most_widely_used") numOfBibleInMostWidelyUsed += $("." + classes[j]).find('.list-group-item').length;
+					// else numOfBibleDisplayed += $("." + classes[j]).find('.list-group-item').length;
+				// }
+			// }
+		// }
+		if (numOfBibleDisplayed > numOfBibleInMostWidelyUsed)
+			numOfBibleDisplayed -= numOfBibleInMostWidelyUsed; // The most widely used can be included in other language groups 
         var total = step.itemisedVersions.length;
 		$(".tagLine").text(sprintf(__s.filtering_total_bibles_and_commentaries, numOfBibleDisplayed, total));
-//        bibleVersions.find("#enterYourTranslation").find(".tagLine").remove().end().append(message);
     },
 	showByGeo: function(testMode) { // The following arrays need to be updated when new Bible with additional language codes are added.
 		var africa_lang = [

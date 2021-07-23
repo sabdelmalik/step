@@ -161,12 +161,7 @@ var PickBibleView = Backbone.View.extend({
             $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
         });
         this._filter();
-	    $("textarea#enterYourTranslation")
-		// .keypress(function(e) {
-			// var code = (e.keyCode ? e.keyCode : e.which);
-			// self._handleEnteredTranslation(code, self._filter);
-		// })
-		.keyup(function(e) {
+	    $("textarea#enterYourTranslation").keyup(function(e) {
 			var code = (e.keyCode ? e.keyCode : e.which);
 			self._handleEnteredTranslation(code, self._filter);
 		});
@@ -187,11 +182,13 @@ var PickBibleView = Backbone.View.extend({
 				// $('.list-group-item.active').show();
 				var regex1 = new RegExp("(^" + userInput + "|[\\s\\.]" + userInput + ")", "i");
 				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
-				var num = $('.list-group-item:visible').length;
-				$(".tagLine").text(num + " of " + step.itemisedVersions.length);
-	//			step.util.addTagLine();
+				// var num = $('.list-group-item:visible').length;
+				// $(".tagLine").text(num + " of " + step.itemisedVersions.length);
+				step.util.addTagLine();
 			}
-			else filterFunc(); // reset back to the modal without input
+			else {
+				filterFunc(); // reset back to the modal without input
+			}
 		}
 		else {
 			$('textarea#enterYourTranslation').val(userInput);
@@ -256,18 +253,19 @@ var PickBibleView = Backbone.View.extend({
     _filter: function (keyboard) {
         var self = this;
         var selectedTab = this._getSelectedTab();
-        var selectedLanguage = (keyboard) ? "_all" : this._getLanguage();
+        var selectedLanguage = this._getLanguage();
+		if ((keyboard) && (selectedLanguage !== "_all")) {
+			selectedLanguage = "_all";
+			// $('.form-inline').find('.btn.btn-default.btn-sm.stepButton').removeClass("active");
+			// $($('.form-inline').find('.btn.btn-default.btn-sm.stepButton')[0]).addClass('active');
+		}
         var origLanguage = selectedLanguage;
 		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
 
-        var filter = "BIBLE"
-        var showGeoSelection = false;
-        if (selectedTab == '#commentaryList') {
-            filter = "COMMENTARY";
-        }
-        else if (selectedLanguage == "_all") showGeoSelection = true;
+        var filter = (selectedTab == '#commentaryList') ? "COMMENTARY" : "BIBLE";
+		$('.form-inline').find('.btn.btn-default.btn-sm.stepButton').removeClass("active");
         this.$el.find(".btn.stepPressedButton").removeClass("stepPressedButton");
-        this.$el.find(".btn").has("input[data-lang='" + origLanguage + "']").addClass("stepPressedButton");
+        this.$el.find(".btn").has("input[data-lang='" + origLanguage + "']").addClass("stepPressedButton").addClass("active");
 
         var bibleList = {};
         if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
@@ -372,7 +370,7 @@ var PickBibleView = Backbone.View.extend({
                 el.addClass("active");
             }
         });
-        if (showGeoSelection) {
+        if ((selectedTab !== '#commentaryList') && (selectedLanguage == "_all")) {
 			if (keyboard) $('.selectGeo').hide();
 			else $('.selectGeo').show();
 		}
@@ -384,7 +382,10 @@ var PickBibleView = Backbone.View.extend({
             $('.langPlusMinus').text('-');
             $('.langUL').show();
         }
-        step.util.addTagLine();
+		if (!keyboard) {
+			step.util.addTagLine();
+			$('textarea#enterYourTranslation').val("");
+		}
         this.$el.find(".langBtn").click(this._handleUsrClick);
         this.$el.find(".langPlusMinus").click(this._handleUsrClick);
     },
