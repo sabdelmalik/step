@@ -161,38 +161,42 @@ var PickBibleView = Backbone.View.extend({
             $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
         });
         this._filter();
-	    $("textarea#enterYourTranslation").keypress(function(e) {
+	    $("textarea#enterYourTranslation")
+		// .keypress(function(e) {
+			// var code = (e.keyCode ? e.keyCode : e.which);
+			// self._handleEnteredTranslation(code, self._filter);
+		// })
+		.keyup(function(e) {
 			var code = (e.keyCode ? e.keyCode : e.which);
-			var userInput = $('textarea#enterYourTranslation').val();
-			if (code !== 13) {
-				userInput += String.fromCharCode(code);
-				userInput = userInput.replace(/[\n\r\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
-				userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
-				if (userInput.length > 0) {
-					self._filter(true);
-					$('.langSpan').hide();
-					$('.langBtn').hide();
-					$('.list-group').show();
-					$('.list-group-item').hide();
-					// $('.list-group-item.active').show();
-					var regex1 = new RegExp("(^" + userInput + "|[\\s\\.]" + userInput + ")", "i");
-					$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
-					step.util.addTagLine();
-				}
-			}
-			else $('textarea#enterYourTranslation').val(userInput);
-//			else self._filter();
-		}).keyup(function(e) {
-			var code = (e.keyCode ? e.keyCode : e.which);
-			if (code == 8) { // 8 is backspace
-				var userInput = $('textarea#enterYourTranslation').val();
-				userInput = userInput.replace(/[\n\r\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
-				userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
-				if (userInput.length == 0) self._filter(); // reset back to the modal without input
-			}
+			self._handleEnteredTranslation(code, self._filter);
 		});
         $('textarea#enterYourTranslation').focus();
     },
+	_handleEnteredTranslation: function (keyCode, filterFunc) {
+		var userInput = $('textarea#enterYourTranslation').val();
+		// if ((keyCode !== 13) && (keyCode !== 8)) userInput += String.fromCharCode(keyCode); // enter or backspace
+		userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '')
+		if (keyCode !== 13) { // 13 is enter key
+			if (userInput.length > 0) {
+				filterFunc(true);
+				$('.langSpan').hide();
+				$('.langBtn').hide();
+				$('.list-group').show();
+				$('.list-group-item').hide();
+				console.log("Searching for " + userInput);
+				// $('.list-group-item.active').show();
+				var regex1 = new RegExp("(^" + userInput + "|[\\s\\.]" + userInput + ")", "i");
+				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
+				$(".tagLine").text("");
+	//			step.util.addTagLine();
+			}
+			else filterFunc(); // reset back to the modal without input
+		}
+		else {
+			$('textarea#enterYourTranslation').val(userInput);
+			$('.list-group-item:visible')[0].click();
+		}
+	},
     closeModal: function (ev) {
         if (ev) ev.preventDefault();
         this.bibleVersions.modal("hide");
