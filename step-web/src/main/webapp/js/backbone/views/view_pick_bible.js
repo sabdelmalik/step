@@ -69,8 +69,12 @@ var PickBibleView = Backbone.View.extend({
         '<div class="tab-pane" id="commentaryList">' +
         '</div>' +
         '</div>' + //end body
-        '<div class="modal-footer"><button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
-                                  '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
+        '<div class="modal-footer">' +
+			'<img id="keyboard_icon" class="pull-left" src="/images/keyboard.jpg" alt="Keyboard entry">' +
+			'<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:16px; width: 25%;"></textarea>' +
+			'<span class="tagLine"></span>' +
+			'<button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
+            '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
         '</div>' + //end dialog
         '</div>' +
@@ -157,6 +161,33 @@ var PickBibleView = Backbone.View.extend({
             $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
         });
         this._filter();
+	    $("textarea#enterYourTranslation").keypress(function(e) {
+			var code = (e.keyCode ? e.keyCode : e.which);
+		    var userInput = $('textarea#enterYourTranslation').val() + String.fromCharCode(code);
+			userInput = userInput.replace(/[\n\r\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+			userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+			if (userInput.length > 0) {
+				self._filter(true);
+				$('.langSpan').hide();
+				$('.langBtn').hide();
+				$('.list-group').show();
+				$('.list-group-item').hide();
+				$('.list-group-item.active').show();
+				var regex1 = new RegExp("(^" + userInput + "|[\\s\\.]" + userInput + ")", "i");
+				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
+				step.util.addTagLine();
+			}
+//			else self._filter();
+		}).keyup(function(e) {
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if (code == 8) { // 8 is backspace
+				var userInput = $('textarea#enterYourTranslation').val();
+				userInput = userInput.replace(/[\n\r\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+				userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+				if (userInput.length == 0) self._filter(); // reset back to the modal without input
+			}
+		});
+        $('textarea#enterYourTranslation').focus();
     },
     closeModal: function (ev) {
         if (ev) ev.preventDefault();
@@ -213,10 +244,10 @@ var PickBibleView = Backbone.View.extend({
         }
         return selectedLanguage;
     },
-    _filter: function () {
+    _filter: function (keyboard) {
         var self = this;
         var selectedTab = this._getSelectedTab();
-        var selectedLanguage = this._getLanguage();
+        var selectedLanguage = (keyboard) ? "_all" : this._getLanguage();
         var origLanguage = selectedLanguage;
 		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
 
@@ -332,7 +363,10 @@ var PickBibleView = Backbone.View.extend({
                 el.addClass("active");
             }
         });
-        if (showGeoSelection) $('.selectGeo').show();
+        if (showGeoSelection) {
+			if (keyboard) $('.selectGeo').hide();
+			else $('.selectGeo').show();
+		}
         else {
             $('.selectGeo').hide();
             $('.langSpan').show();

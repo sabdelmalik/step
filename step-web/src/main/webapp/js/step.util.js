@@ -1625,8 +1625,8 @@ step.util = {
 		}
 		if (numOfBibleDisplayed < numOfBibleInMostWidelyUsed) numOfBibleDisplayed = numOfBibleInMostWidelyUsed; // All the language groups are not selected except the Most Widely Used group
         var total = step.itemisedVersions.length;
-        var message = '<span class="tagLine">' + sprintf(__s.filtering_total_bibles_and_commentaries, numOfBibleDisplayed, total) + "</span>";
-        bibleVersions.find(".modal-footer").find(".tagLine").remove().end().prepend(message);
+		$(".tagLine").text(sprintf(__s.filtering_total_bibles_and_commentaries, numOfBibleDisplayed, total));
+//        bibleVersions.find("#enterYourTranslation").find(".tagLine").remove().end().append(message);
     },
 	showByGeo: function(testMode) { // The following arrays need to be updated when new Bible with additional language codes are added.
 		var africa_lang = [

@@ -366,7 +366,7 @@ function _handleEnteredPassage(verifyOnly) {
         else {
             var errorText = (userInput != "") ? ' for "' + userInput + '"' : "";
             $('#userEnterPassageError').text("No match" + errorText + ", please update the passage you entered.");
-            $('textareatextarea#enterYourPassage').focus();
+            $('textarea#enterYourPassage').focus();
             if (!verifyOnly) $('textarea#enterYourPassage').val(userInput);
         }
     });
