@@ -187,7 +187,8 @@ var PickBibleView = Backbone.View.extend({
 				// $('.list-group-item.active').show();
 				var regex1 = new RegExp("(^" + userInput + "|[\\s\\.]" + userInput + ")", "i");
 				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
-				$(".tagLine").text("");
+				var num = $('.list-group-item:visible').length;
+				$(".tagLine").text(num + " of " + step.itemisedVersions.length);
 	//			step.util.addTagLine();
 			}
 			else filterFunc(); // reset back to the modal without input
