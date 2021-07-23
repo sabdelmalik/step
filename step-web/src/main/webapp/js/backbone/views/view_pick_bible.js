@@ -163,20 +163,24 @@ var PickBibleView = Backbone.View.extend({
         this._filter();
 	    $("textarea#enterYourTranslation").keypress(function(e) {
 			var code = (e.keyCode ? e.keyCode : e.which);
-		    var userInput = $('textarea#enterYourTranslation').val() + String.fromCharCode(code);
-			userInput = userInput.replace(/[\n\r\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
-			userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
-			if (userInput.length > 0) {
-				self._filter(true);
-				$('.langSpan').hide();
-				$('.langBtn').hide();
-				$('.list-group').show();
-				$('.list-group-item').hide();
-				$('.list-group-item.active').show();
-				var regex1 = new RegExp("(^" + userInput + "|[\\s\\.]" + userInput + ")", "i");
-				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
-				step.util.addTagLine();
+			var userInput = $('textarea#enterYourTranslation').val();
+			if (code !== 13) {
+				userInput += String.fromCharCode(code);
+				userInput = userInput.replace(/[\n\r\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+				userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+				if (userInput.length > 0) {
+					self._filter(true);
+					$('.langSpan').hide();
+					$('.langBtn').hide();
+					$('.list-group').show();
+					$('.list-group-item').hide();
+					// $('.list-group-item.active').show();
+					var regex1 = new RegExp("(^" + userInput + "|[\\s\\.]" + userInput + ")", "i");
+					$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
+					step.util.addTagLine();
+				}
 			}
+			else $('textarea#enterYourTranslation').val(userInput);
 //			else self._filter();
 		}).keyup(function(e) {
 			var code = (e.keyCode ? e.keyCode : e.which);
