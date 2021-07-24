@@ -95,13 +95,26 @@ function initPassageSelect() {
         //else $('#new_panel').hide();
     }
     _displayListOfBooks();
-    $("textarea#enterYourPassage").keypress(function(e) {
+    $("textarea#enterYourPassage")
+	// keypress(function(e) {
+        // var code = (e.keyCode ? e.keyCode : e.which);
+        // if (code == 13) _handleEnteredPassage(false); // 13 is return
+        // else if (code == 44) _handleEnteredPassage(true); // 44 is ,
+    // })
+	.keyup(function(e) {
         var code = (e.keyCode ? e.keyCode : e.which);
-        if (code == 13) _handleEnteredPassage(false); // 13 is return
-        else if (code == 44) _handleEnteredPassage(true); // 44 is ,
-    }).keyup(function(e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
-        if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
+	    var input = $('textarea#enterYourPassage').val();
+		input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+		input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+		$("td").css("background-color", "white");
+		var firstWord = input.split(/\.|,|:| /);
+		if (firstWord[0].length > 0) {
+			var regex1 = RegExp("^" + firstWord[0], "i")
+			$("td").filter(function () { return regex1.test($(this).text());}).css("background-color", "fafad2");
+		}
+        if (code == 13) _handleEnteredPassage(false, input); // 13 is return
+        else if (code == 44) _handleEnteredPassage(true, input); // 44 is ,
+        else if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
     });
     var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
     if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourPassage').focus();
@@ -350,10 +363,13 @@ function getChapters(bookOsisID, version, userLang, numOfChptrsOrVrs) {
     }
 }
 
-function _handleEnteredPassage(verifyOnly) {
-    userInput = $('textarea#enterYourPassage').val();
-    userInput = userInput.replace(/[\n\r\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
-    userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+function _handleEnteredPassage(verifyOnly, input) {
+	if (input !== null) userInput = input;
+	else {
+		userInput = $('textarea#enterYourPassage').val();
+		userInput = userInput.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+		userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+	}
     var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
     $.getJSON(url, function (data) {
         if (data.length > 0) {
@@ -387,13 +403,26 @@ function _userEnterPassage() {
     $('#bookchaptermodalbody').empty();
     $('#bookchaptermodalbody').append(html);
     $(function(){
-        $("#bookchaptermodalbody").keypress(function(e){
+        $("#bookchaptermodalbody")
+		// .keypress(function(e){
+            // var code = (e.keyCode ? e.keyCode : e.which);
+            // if (code == 13) _handleEnteredPassage(false); // 13 is return
+            // else if (code == 44) _handleEnteredPassage(true); // 44 is ,
+        // })
+		.keyup(function(e){
             var code = (e.keyCode ? e.keyCode : e.which);
-            if (code == 13) _handleEnteredPassage(false); // 13 is return
-            else if (code == 44) _handleEnteredPassage(true); // 44 is ,
-        }).keyup(function(e){
-            var code = (e.keyCode ? e.keyCode : e.which);
-            if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
+		    var input = $('textarea#enterYourPassage').val();
+			input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+			input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+			$("td").css("background-color", "white");
+			var firstWord = input.split(/\.|,|:| /);
+			if (firstWord[0].length > 0) {
+				var regex1 = RegExp("^" + firstWord[0], "i")
+				$("td").filter(function () { return regex1.test($(this).text());}).css("background-color", "fafad2");
+			}
+			if (code == 13) _handleEnteredPassage(false, input); // 13 is return
+			else if (code == 44) _handleEnteredPassage(true, input); // 44 is ,
+			else if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
         });
     });
     $('textarea#enterYourPassage').focus();
