@@ -71,7 +71,7 @@ var PickBibleView = Backbone.View.extend({
         '</div>' + //end body
         '<div class="modal-footer">' +
 			'<img id="keyboard_icon" class="pull-left" src="/images/keyboard.jpg" alt="Keyboard entry">' +
-			'<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:16px; width: 15%;"></textarea>' +
+			'<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:16px; width: 18%;"></textarea>' +
 			'<span class="tagLine"></span>' +
 			'<button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
             '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
