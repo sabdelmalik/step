@@ -95,29 +95,32 @@ function initPassageSelect() {
         //else $('#new_panel').hide();
     }
     _displayListOfBooks();
-    $("textarea#enterYourPassage")
-	// keypress(function(e) {
-        // var code = (e.keyCode ? e.keyCode : e.which);
-        // if (code == 13) _handleEnteredPassage(false); // 13 is return
-        // else if (code == 44) _handleEnteredPassage(true); // 44 is ,
-    // })
-	.keyup(function(e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
-	    var input = $('textarea#enterYourPassage').val();
-		input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
-		input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
-		$("td").css("background-color", "white");
-		var firstWord = input.split(/\.|,|:| /);
-		if (firstWord[0].length > 0) {
-			var regex1 = RegExp("^" + firstWord[0], "i")
-			$("td").filter(function () { return regex1.test($(this).text());}).css("background-color", "fafad2");
-		}
-        if (code == 13) _handleEnteredPassage(false, input); // 13 is return
-        else if (code == 44) _handleEnteredPassage(true, input); // 44 is ,
-        else if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
+    $("textarea#enterYourPassage").keyup(function(e) {
+		var code = (e.keyCode ? e.keyCode : e.which);
+		_handleKeyboardEntry(code);
     });
     var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
     if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourPassage').focus();
+}
+
+function _handleKeyboardEntry(code) {
+	var input = $('textarea#enterYourPassage').val();
+	input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+	input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+	$("td").css("background-color", "white");
+	var lastPassageEntered  = input.replace(/\s+$/g, '').split(/,|;/);
+	lastPassageEntered  = lastPassageEntered[lastPassageEntered.length -1].replace(/^\s+/g, '').replace(/\s+$/g, '');
+	var firstWord = lastPassageEntered.split(/\.|:|\s/)[0].toLowerCase();
+	if (firstWord.length > 0) {
+		if (firstWord == "jas") firstWord = "jam";
+		else if (firstWord == "phile") firstWord = "phlm";
+		else if (firstWord == "obd") firstWord = "obad";
+		var regex1 = RegExp("^" + firstWord, "i")
+		$("td").filter(function () { return regex1.test($(this).text());}).css("background-color", "fafad2");
+	}
+	if (code == 13) _handleEnteredPassage(false, input); // 13 is return
+	else if (code == 44) _handleEnteredPassage(true, input); // 44 is ,
+	else if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
 }
 
 function _displayListOfBooks() {
@@ -403,26 +406,9 @@ function _userEnterPassage() {
     $('#bookchaptermodalbody').empty();
     $('#bookchaptermodalbody').append(html);
     $(function(){
-        $("#bookchaptermodalbody")
-		// .keypress(function(e){
-            // var code = (e.keyCode ? e.keyCode : e.which);
-            // if (code == 13) _handleEnteredPassage(false); // 13 is return
-            // else if (code == 44) _handleEnteredPassage(true); // 44 is ,
-        // })
-		.keyup(function(e){
-            var code = (e.keyCode ? e.keyCode : e.which);
-		    var input = $('textarea#enterYourPassage').val();
-			input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
-			input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
-			$("td").css("background-color", "white");
-			var firstWord = input.split(/\.|,|:| /);
-			if (firstWord[0].length > 0) {
-				var regex1 = RegExp("^" + firstWord[0], "i")
-				$("td").filter(function () { return regex1.test($(this).text());}).css("background-color", "fafad2");
-			}
-			if (code == 13) _handleEnteredPassage(false, input); // 13 is return
-			else if (code == 44) _handleEnteredPassage(true, input); // 44 is ,
-			else if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
+        $("#bookchaptermodalbody").keyup(function(e){
+			var code = (e.keyCode ? e.keyCode : e.which);
+			_handleKeyboardEntry(code);
         });
     });
     $('textarea#enterYourPassage').focus();
