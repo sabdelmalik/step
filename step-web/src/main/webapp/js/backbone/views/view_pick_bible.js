@@ -177,11 +177,12 @@ var PickBibleView = Backbone.View.extend({
 				$('.langBtn').hide();
 				$('.list-group').show();
 				$('.list-group-item').hide();
+				$('.list-group-item.active').show();
 				var regex1 = new RegExp("(^\\w*" + userInput + "|[\\s\\.]" + userInput + ")", "i");
 				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
 				step.util.addTagLine();
 			}
-			else filterFunc(); // reset back to the modal without input
+			else filterFunc(); // reset back to the modal without keyboard input
 		}
 		else {
 			$('textarea#enterYourTranslation').val(userInput);
