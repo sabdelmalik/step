@@ -152,7 +152,7 @@ var PickBibleView = Backbone.View.extend({
 
         this.$el.find(this._getSelectedTab()).addClass("active");
         this.bibleVersions = this.$el.find("#bibleVersions").modal({ show: true});
-        this.$el.find("input[type='text']").focus();
+        // this.$el.find("input[type='text']").focus();
         this.$el.find(".btn").click(this.handleLanguageButton);
         this.$el.find(".closeModal").click(this.closeModal);
         this.$el.find("#order_button_bible_modal").click(this.orderButton);
@@ -165,7 +165,8 @@ var PickBibleView = Backbone.View.extend({
 			var code = (e.keyCode ? e.keyCode : e.which);
 			self._handleEnteredTranslation(code, self._filter);
 		});
-        $('textarea#enterYourTranslation').focus();
+		var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
+		if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourTranslation').focus();
     },
 	_handleEnteredTranslation: function (keyCode, filterFunc) {
 		var userInput = $('textarea#enterYourTranslation').val();
