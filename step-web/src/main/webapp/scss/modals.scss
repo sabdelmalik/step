@@ -94,7 +94,6 @@
 
 @media screen and (min-height: 400px) {
 	.scrollPart {
-		min-height: 40%;
 		max-height: 70%;
 		width:100%;
 		overflow-y:scroll;
@@ -102,7 +101,6 @@
 }
 @media screen and (min-height: 600px) {
     .scrollPart {
-		min-height: 45%;
         max-height: 80%;
         width:100%;
         overflow-y:scroll;
@@ -110,7 +108,6 @@
 }
 @media screen and (min-height: 900px) {
     .scrollPart {
-		min-height: 50%;
         max-height: 85%;
         width:100%;
         overflow-y:scroll;
