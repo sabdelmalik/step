@@ -230,6 +230,7 @@
 									<jsSourceFile>js/backbone/views/view_restore.js</jsSourceFile>
 									<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 									<jsSourceFile>js/step_ready.js</jsSourceFile>
+									<jsSourceFile>js/passage_selection.js</jsSourceFile>
 								</jsSourceFiles>
 								<jsFinalFile>step.${project.version}.js</jsFinalFile>
 							</configuration>
@@ -402,20 +403,6 @@
 									<jsSourceFile>js/search_selection.js</jsSourceFile>
 								</jsSourceFiles>
 								<jsFinalFile>search_selection.${project.version}.js</jsFinalFile>
-							</configuration>
-						</execution>
-                        <execution>
-							<id>minify-passage_selection</id>
-							<phase>generate-resources</phase>
-							<goals>
-								<goal>minify</goal>
-							</goals>
-							<configuration>
-								<jsSourceDir>.</jsSourceDir>
-								<jsSourceFiles>
-									<jsSourceFile>js/passage_selection.js</jsSourceFile>
-								</jsSourceFiles>
-								<jsFinalFile>passage_selection.${project.version}.js</jsFinalFile>
 							</configuration>
 						</execution>
                         <execution>
@@ -689,23 +676,6 @@
                                 </includes>
                                 <replacements>
                                     <replacement><token>search_selection\.js</token><value>search_selection.${project.version}.min.js</value></replacement>
-                                    <replacement><token>^[\t\s]+</token><value></value></replacement>
-                                </replacements>
-                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
-                            </configuration>
-						</execution>
-                        <execution>
-                            <id>update-passage_selection-html</id>
-							<phase>prepare-package</phase>
-							<goals>
-								<goal>replace</goal>
-							</goals>
-                            <configuration>
-                                <includes>
-                                    <include>${basedir}/target/step-web/html/passage_selection.min.html</include>
-                                </includes>
-                                <replacements>
-                                    <replacement><token>passage_selection\.js</token><value>passage_selection.${project.version}.min.js</value></replacement>
                                     <replacement><token>^[\t\s]+</token><value></value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>

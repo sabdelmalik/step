@@ -1,7 +1,5 @@
-﻿<!--  For unknown reason, the maven replace will only work if the the following line is not line one. -->
-<script src='js/passage_selection.js'></script>
-<div class="modal-header">
-	<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
+﻿<div class="modal-header">
+	<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.passageSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<span class="pull-right">
     <button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>
 	<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
@@ -37,6 +35,22 @@
 </div>
 <script>
     $(document).ready(function () {
-        initPassageSelect();
+        step.passageSelect.initPassageSelect();
     });
+	
+	// This has to be inside the html doc or included by a html script tag like the following line.
+	// script src='js/passage_selection.js'
+	// The JS code to handle the onoffswitch (checkbox) is downloaded from the Internet and
+	// the function called by the onchange for the onoffswitch is not aware of jquery and
+	// the step.passageSelect.
+	function addSelectVerse() {
+		if (document.getElementById('selectverseonoffswitch').checked) {
+			step.passageSelect.addVerseSelection = true;
+			$('#select_verse_number').addClass('checked');
+		}
+		else {
+			step.passageSelect.addVerseSelection = false;
+			$('#select_verse_number').removeClass('checked');
+		}
+	}
 </script>

@@ -1503,11 +1503,11 @@ step.util = {
                 '<div class="modal-dialog">' +
                 '<div class="modal-content">');
             passageSelectDiv.appendTo("body");
-            if ($.getUrlVars().indexOf("debug") == -1) {
+            // if ($.getUrlVars().indexOf("debug") == -1) {
 				$.ajaxSetup({ cache: true });
-                $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.min.html');
-			}
-            else
+                // $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.min.html');
+			// }
+            // else
                 $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
     },
 
