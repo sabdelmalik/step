@@ -88,6 +88,7 @@ step.searchSelect = {
 
 	initSearchSelection: function() {
 		this.userLang = step.state.language() || "en-US";
+        this.version = "ESV_th";
         this.searchOnSpecificType = "";
         this.searchModalCurrentPage = 1;
         this.searchUserInput = "";

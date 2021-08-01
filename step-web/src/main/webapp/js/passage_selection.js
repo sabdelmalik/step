@@ -76,7 +76,14 @@ step.passageSelect = {
 	],
 
 	initPassageSelect: function() {
+        this.version = "ESV_th";
 		this.userLang = step.state.language() || "en-US";
+        this.userLang = "en";
+        this.addVerseSelection = false;
+        this.modalMode = 'book';
+        this.lastOsisID = '';
+        this.lastNumOfChapters = '';
+        
 		$('#display_passage_at').text(__s.display_passage_at);
 		$('#current_panel').text(__s.current_panel);
 		$('#new_panel').text(__s.new_panel);
