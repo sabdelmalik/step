@@ -103,6 +103,7 @@ step.searchSelect = {
 
 	initSearchSelection: function() {
 		this.userLang = step.state.language() || "en-US";
+        this.searchUserInput = "";
 		$('#display_result_in').text(__s.display_result_in);
 		$('#current_panel').text(__s.current_panel);
 		$('#new_panel').text(__s.new_panel);
