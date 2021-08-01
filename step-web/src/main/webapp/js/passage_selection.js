@@ -1,4 +1,4 @@
-window.step = window.step || {};
+// window.step = window.step || {};
 step.passageSelect = {
 	version: "ESV_th",
 	userLang: "en",
@@ -499,4 +499,4 @@ step.passageSelect = {
 			this._displayListOfBooks();
 		}
 	}
-}
+};

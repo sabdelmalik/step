@@ -215,6 +215,8 @@
 									<jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
 									<jsSourceFile>js/step_constants.js</jsSourceFile>
 									<jsSourceFile>js/step.util.js</jsSourceFile>
+									<jsSourceFile>js/passage_selection.js</jsSourceFile>
+									<jsSourceFile>js/search_selection.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_main_search.js</jsSourceFile>
 									<jsSourceFile>js/backbone/step_router.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display.js</jsSourceFile>
@@ -230,7 +232,6 @@
 									<jsSourceFile>js/backbone/views/view_restore.js</jsSourceFile>
 									<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 									<jsSourceFile>js/step_ready.js</jsSourceFile>
-									<jsSourceFile>js/passage_selection.js</jsSourceFile>
 								</jsSourceFiles>
 								<jsFinalFile>step.${project.version}.js</jsFinalFile>
 							</configuration>
@@ -389,20 +390,6 @@
 									<jsSourceFile>js/color_code_config.js</jsSourceFile>
 								</jsSourceFiles>
 								<jsFinalFile>color_code_config.${project.version}.js</jsFinalFile>
-							</configuration>
-						</execution>
-                        <execution>
-							<id>minify-search_selection</id>
-							<phase>generate-resources</phase>
-							<goals>
-								<goal>minify</goal>
-							</goals>
-							<configuration>
-								<jsSourceDir>.</jsSourceDir>
-								<jsSourceFiles>
-									<jsSourceFile>js/search_selection.js</jsSourceFile>
-								</jsSourceFiles>
-								<jsFinalFile>search_selection.${project.version}.js</jsFinalFile>
 							</configuration>
 						</execution>
                         <execution>
@@ -659,23 +646,6 @@
                                 </includes>
                                 <replacements>
                                     <replacement><token>color_code_config\.js</token><value>color_code_config.${project.version}.min.js</value></replacement>
-                                    <replacement><token>^[\t\s]+</token><value></value></replacement>
-                                </replacements>
-                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
-                            </configuration>
-						</execution>
-						<execution>
-                            <id>update-search_selection-html</id>
-							<phase>prepare-package</phase>
-							<goals>
-								<goal>replace</goal>
-							</goals>
-                            <configuration>
-                                <includes>
-                                    <include>${basedir}/target/step-web/html/search_selection.min.html</include>
-                                </includes>
-                                <replacements>
-                                    <replacement><token>search_selection\.js</token><value>search_selection.${project.version}.min.js</value></replacement>
                                     <replacement><token>^[\t\s]+</token><value></value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>

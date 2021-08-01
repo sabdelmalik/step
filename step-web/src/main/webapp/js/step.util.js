@@ -1518,11 +1518,11 @@ step.util = {
             '<div class="modal-dialog">' +
             '<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">');
         searchSelectDiv.appendTo("body");
-        if ($.getUrlVars().indexOf("debug") == -1) {
+        // if ($.getUrlVars().indexOf("debug") == -1) {
 			$.ajaxSetup({ cache: true });
-            $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.min.html');
-		}
-        else
+            // $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.min.html');
+		// }
+        // else
             $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
     },
 	showVideoModal: function (videoFile, seconds) {

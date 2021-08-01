@@ -424,6 +424,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <script src="/js/step_constants.js" type="text/javascript"></script>
 <script src="/js/step.util.js" type="text/javascript"></script>
 <script src="/js/passage_selection.js" type="text/javascript"></script>
+<script src="/js/search_selection.js" type="text/javascript"></script>
 <script src="/js/backbone/views/view_main_search.js" type="text/javascript"></script>
 <script src="/js/backbone/views/view_restore.js" type="text/javascript"></script>
 
