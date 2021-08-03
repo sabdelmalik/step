@@ -80,29 +80,46 @@ step.searchSelect = {
 		"Jude": 64,
 		"Rev": 65
 	},
-	groupsOT: [
-		{groupName: __s.book_of_moses, show: false, books: [0, 1, 2, 3, 4], bookOrderPos: [-1, -1, -1, -1, -1]},
-		{groupName: __s.history_books, show: false, books: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-			bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]},
-		{groupName: __s.poetic_books, show: false, books: [17, 18, 19, 20, 21], bookOrderPos: [-1, -1, -1, -1, -1]},
-		{groupName: __s.major_prophets, show: false, books: [22, 23, 24, 25, 26], bookOrderPos: [-1, -1, -1, -1, -1]},
-		{groupName: __s.minor_prophets, show: false, books: [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-			bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]}
-	],
-	groupsNT: [
-		{groupName: __s.gospels_and_acts, show: false, books: [39, 40, 41, 42, 43], bookOrderPos: [-1, -1, -1, -1, -1]},
-		{groupName: __s.pauline_epistles, show: false, books: [44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56],
-			bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]},
-		{groupName: __s.other_nt, show: false, books: [57, 58, 59, 60, 61, 62, 63, 64, 65],
-			bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1]}
-	],
+	groupsOT: undefined,
+	groupsNT: undefined,
 	groupsOther: undefined,
 	bookOrder: [],
 	idx2BookOrder: {},
-	// showUpdtPrvsSrchBtn: false,
 
 	initSearchSelection: function() {
 		this.userLang = step.state.language() || "en-US";
+        this.version = "ESV_th";
+        this.searchOnSpecificType = "";
+        this.searchModalCurrentPage = 1;
+        this.searchUserInput = "";
+        this.searchRange = "Gen-Rev";
+        this.previousSearchTokens = [];
+        this.numOfPreviousSearchTokens = 0;
+        this.includePreviousSearches = false;
+        this.rangeWasUpdated = false;
+        this.andOrNotUpdated = false;
+        this.timer = undefined;
+
+        this.groupsOT = [
+            {groupName: __s.book_of_moses, show: false, books: [0, 1, 2, 3, 4], bookOrderPos: [-1, -1, -1, -1, -1]},
+            {groupName: __s.history_books, show: false, books: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]},
+            {groupName: __s.poetic_books, show: false, books: [17, 18, 19, 20, 21], bookOrderPos: [-1, -1, -1, -1, -1]},
+            {groupName: __s.major_prophets, show: false, books: [22, 23, 24, 25, 26], bookOrderPos: [-1, -1, -1, -1, -1]},
+            {groupName: __s.minor_prophets, show: false, books: [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
+                bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]}
+        ];
+        this.groupsNT = [
+            {groupName: __s.gospels_and_acts, show: false, books: [39, 40, 41, 42, 43], bookOrderPos: [-1, -1, -1, -1, -1]},
+            {groupName: __s.pauline_epistles, show: false, books: [44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56],
+                bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]},
+            {groupName: __s.other_nt, show: false, books: [57, 58, 59, 60, 61, 62, 63, 64, 65],
+                bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1]}
+        ];
+        this.groupsOther = undefined,
+        this.bookOrder = [];
+        this.idx2BookOrder = {};
+        
 		$('#display_result_in').text(__s.display_result_in);
 		$('#current_panel').text(__s.current_panel);
 		$('#new_panel').text(__s.new_panel);
@@ -117,8 +134,8 @@ step.searchSelect = {
 			var existingReferences = "";
 			$('#previousSearch').empty();
 			var listOfPreviousSearch = [];
-			this.previousSearchTokens = [];
-			this.numOfPreviousSearchTokens = 0;
+			// this.previousSearchTokens = [];
+			// this.numOfPreviousSearchTokens = 0;
 			for (var i = 0; i < activePassageData.length; i++) {
 				var actPsgeDataElm = activePassageData[i];
 				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
