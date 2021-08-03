@@ -1501,14 +1501,63 @@ step.util = {
 			step.util.activePassageId(activePassageNumber); // make the passage active
             var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
-                '<div class="modal-content">');
-            passageSelectDiv.appendTo("body");
-            // if ($.getUrlVars().indexOf("debug") == -1) {
-				$.ajaxSetup({ cache: true });
-                // $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.min.html');
-			// }
-            // else
-                $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.passageSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+							'<span class="pull-right">' +
+								'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>' +
+								'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+								'<div id="modalonoffswitch" class="pull-right">' +
+									'<span id="select_verse_number">&nbsp;<b>Select verse number</b></span>' +
+									'<div class="onoffswitch2 append pull-right">' +
+										'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>' +
+										'<label class="onoffswitch2-label" for="selectverseonoffswitch">' +
+										'<span class="onoffswitch2-inner"></span>' +
+										'<span class="onoffswitch2-switch"></span>' +
+										'</label>' +
+									'</div>' +
+								'</div>' +
+							'</span>' +
+							'<br>' +
+							'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
+								'<label id="display_passage_at" for="displayLocation">Display passage in:</label>' +
+								'<select type="text" id="displayLocation">' +
+									'<option id="current_panel" value="replace">Current panel</option>' +
+									'<option id="new_panel" class="hidden-xs" value="new">New panel</option>' +
+									'<option id="append_to_panel" value="append">Current panel, after current passage</option>' +
+								'</select>' +
+							'</div>' +
+							'<br>' +
+						'</div>' +
+						'<div id="bookchaptermodalbody" class="modal-body"></div>' +
+						'<div class="footer">' +
+							'<img id="keyboard_icon" src="/images/keyboard.jpg" alt="Keyboard entry">' +
+							'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"></textarea>' +
+							'<br>' +
+							'<span id="userEnterPassageError" style="color: red;"></span>' +
+						'</div>' +
+						'<script>' +
+							'$(document).ready(function () {' +
+								'step.passageSelect.initPassageSelect();' +
+							'});' +
+							'function addSelectVerse() {' +
+								'if (document.getElementById("selectverseonoffswitch").checked) {' +
+									'step.passageSelect.addVerseSelection = true;' +
+									'$("#select_verse_number").addClass("checked");' +
+								'}' +
+								'else {' +
+									'step.passageSelect.addVerseSelection = false;' +
+									'$("#select_verse_number").removeClass("checked");' +
+								'}' +
+							'}' +
+						'</script>' +
+					'</div>' +
+				'</div>' +
+			'</div>').modal("show");
+				
+                // '<div class="modal-content">');
+            // passageSelectDiv.appendTo("body");
+            // $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
     },
 
 	searchSelectionModal: function () {
@@ -1516,14 +1565,78 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
         var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-            '<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">');
-        searchSelectDiv.appendTo("body");
-        // if ($.getUrlVars().indexOf("debug") == -1) {
-			$.ajaxSetup({ cache: true });
-            // $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.min.html');
-		// }
-        // else
-            $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
+				'<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
+					'<div class="modal-header">' +
+						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+						'<span class="pull-right">' +
+							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
+								'<label id="display_result_in" for="displayLocation">Display result in:</label>' +
+								'<select type="text" id="displayLocation">' +
+									'<option id="current_panel" value="replace">Current panel</option>' +
+									'<option id="new_panel" class="hidden-xs" value="new">New panel</option>' +
+								'</select>' +
+							'</span>' +
+						'</span>' +
+					'</div>' +
+					'<div id="searchmodalbody" class="modal-body">' +
+						'<div id="searchHdrTable"></div>' +
+						'<br>' +
+						'<div id="previousSearch"></div>' +
+					'</div>' +
+					'<div class="footer">' +
+						'<br>' +
+						'<span id="searchSelectError"></span>' +
+						'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
+						'onclick=step.searchSelect._updateRange()></button>' +
+						'<button id="updateButton" style="display:none;float:right" type="button" class="stepButton"' +
+						'onclick=step.searchSelect.goSearch()></button><br><br><br>' +
+					'</div>' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.searchSelect.initSearchSelection();' +
+						'});' +
+						'function showPreviousSearch() {' +
+							'var element = document.getElementById("showprevioussearchonoff");' +
+							'if ((element) && (element.checked)) {' +
+								'step.searchSelect.includePreviousSearches = true;' +
+								'$("#listofprevioussearchs").show();' +
+								'var onlyFoundSubjectOrMeaningsSearch = true;' +
+								'for (var i = 0; i < step.searchSelect.previousSearchTokens.length; i++) {' +
+									'if ((step.searchSelect.previousSearchTokens[i] !== "") &&' +
+										'(!step.searchSelect.previousSearchTokens[i].startsWith(MEANINGS)) &&' +
+										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
+										'onlyFoundSubjectOrMeaningsSearch = false;' +
+								'}' +
+								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
+								'else $("#searchAndOrNot").show();' +
+								'if (step.searchSelect.searchUserInput.length == 0) {' +
+									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
+										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
+								'}' +
+								'step.searchSelect.handlePreviousSearchAndOrNot();' +
+							'}' +
+							'else {' +
+								'step.searchSelect.includePreviousSearches = false;' +
+								'$("#listofprevioussearchs").hide();' +
+								'$("#searchAndOrNot").hide();' +
+								'$("#updateButton").hide();' +
+								'$("#searchResultssubject").show();' +
+								'$("#searchResultsmeanings").show();' +
+								'$("#searchResultssubjectWarn").hide();' +
+								'$("#searchResultsmeaningsWarn").hide();' +
+							'}' +
+						'}' +
+					'</script>' +
+				'</div>' +
+			'</div>' +
+		'</div>').modal("show");
+			
+			
+            // '<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">');
+        // searchSelectDiv.appendTo("body");
+        // $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
     },
 	showVideoModal: function (videoFile, seconds) {
         var element = document.getElementById('videoModal');
