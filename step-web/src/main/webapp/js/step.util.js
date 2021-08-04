@@ -1499,71 +1499,67 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
-            var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                '<div class="modal-dialog">' +
-					'<div class="modal-content">' +
-						'<div class="modal-header">' +
-							'<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.passageSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
-							'<span class="pull-right">' +
-								'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>' +
-								'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
-								'<div id="modalonoffswitch" class="pull-right">' +
-									'<span id="select_verse_number">&nbsp;<b>Select verse number</b></span>' +
-									'<div class="onoffswitch2 append pull-right">' +
-										'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>' +
-										'<label class="onoffswitch2-label" for="selectverseonoffswitch">' +
-										'<span class="onoffswitch2-inner"></span>' +
-										'<span class="onoffswitch2-switch"></span>' +
-										'</label>' +
-									'</div>' +
+		$(_.template('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<div class="modal-header">' +
+						'<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.passageSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+						'<span class="pull-right">' +
+							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+							'<div id="modalonoffswitch" class="pull-right">' +
+								'<span id="select_verse_number">&nbsp;<b><%= __s.select_verse_number %></b></span>' +
+								'<div class="onoffswitch2 append pull-right">' +
+									'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>' +
+									'<label class="onoffswitch2-label" for="selectverseonoffswitch">' +
+									'<span class="onoffswitch2-inner"></span>' +
+									'<span class="onoffswitch2-switch"></span>' +
+									'</label>' +
 								'</div>' +
-							'</span>' +
-							'<br>' +
-							'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
-								'<label id="display_passage_at" for="displayLocation">Display passage in:</label>' +
-								'<select type="text" id="displayLocation">' +
-									'<option id="current_panel" value="replace">Current panel</option>' +
-									'<option id="new_panel" class="hidden-xs" value="new">New panel</option>' +
-									'<option id="append_to_panel" value="append">Current panel, after current passage</option>' +
-								'</select>' +
 							'</div>' +
-							'<br>' +
+						'</span>' +
+						'<br>' +
+						'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
+							'<label for="displayLocation"><%= __s.display_passage_at %></label>' +
+							'<select type="text" id="displayLocation">' +
+								'<option value="replace"> <%= __s.current_panel %></option>' +
+								'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
+								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
+							'</select>' +
 						'</div>' +
-						'<div id="bookchaptermodalbody" class="modal-body"></div>' +
-						'<div class="footer">' +
-							'<img id="keyboard_icon" src="/images/keyboard.jpg" alt="Keyboard entry">' +
-							'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"></textarea>' +
-							'<br>' +
-							'<span id="userEnterPassageError" style="color: red;"></span>' +
-						'</div>' +
-						'<script>' +
-							'$(document).ready(function () {' +
-								'step.passageSelect.initPassageSelect();' +
-							'});' +
-							'function addSelectVerse() {' +
-								'if (document.getElementById("selectverseonoffswitch").checked) {' +
-									'step.passageSelect.addVerseSelection = true;' +
-									'$("#select_verse_number").addClass("checked");' +
-								'}' +
-								'else {' +
-									'step.passageSelect.addVerseSelection = false;' +
-									'$("#select_verse_number").removeClass("checked");' +
-								'}' +
-							'}' +
-						'</script>' +
+						'<br>' +
 					'</div>' +
+					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
+					'<div class="footer">' +
+						'<img id="keyboard_icon" src="/images/keyboard.jpg" alt="Keyboard entry" title="<%= __s.type_in_your_passage %>">' +
+						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"  title="<%= __s.type_in_your_passage %>"></textarea>' +
+						'<br>' +
+						'<span id="userEnterPassageError" style="color: red;"></span>' +
+					'</div>' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.passageSelect.initPassageSelect();' +
+						'});' +
+						'function addSelectVerse() {' +
+							'if (document.getElementById("selectverseonoffswitch").checked) {' +
+								'step.passageSelect.addVerseSelection = true;' +
+								'$("#select_verse_number").addClass("checked");' +
+							'}' +
+							'else {' +
+								'step.passageSelect.addVerseSelection = false;' +
+								'$("#select_verse_number").removeClass("checked");' +
+							'}' +
+						'}' +
+					'</script>' +
 				'</div>' +
-			'</div>').modal("show");
-				
-                // '<div class="modal-content">');
-            // passageSelectDiv.appendTo("body");
-            // $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
+			'</div>' +
+		'</div>')()).modal("show");
     },
 
 	searchSelectionModal: function () {
         var element = document.getElementById('searchSelectionModal');
         if (element) element.parentNode.removeChild(element);
-        var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
 				'<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<div class="modal-header">' +
@@ -1572,10 +1568,10 @@ step.util = {
 							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>' +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
 							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
-								'<label id="display_result_in" for="displayLocation">Display result in:</label>' +
+								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
 								'<select type="text" id="displayLocation">' +
-									'<option id="current_panel" value="replace">Current panel</option>' +
-									'<option id="new_panel" class="hidden-xs" value="new">New panel</option>' +
+									'<option value="replace"><%= __s.current_panel %></option>' +
+									'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
 								'</select>' +
 							'</span>' +
 						'</span>' +
@@ -1591,7 +1587,7 @@ step.util = {
 						'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
 						'onclick=step.searchSelect._updateRange()></button>' +
 						'<button id="updateButton" style="display:none;float:right" type="button" class="stepButton"' +
-						'onclick=step.searchSelect.goSearch()></button><br><br><br>' +
+						'onclick=step.searchSelect.goSearch()><%= __s.update_search %></button><br><br><br>' +
 					'</div>' +
 					'<script>' +
 						'$(document).ready(function () {' +
@@ -1631,12 +1627,7 @@ step.util = {
 					'</script>' +
 				'</div>' +
 			'</div>' +
-		'</div>').modal("show");
-			
-			
-            // '<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">');
-        // searchSelectDiv.appendTo("body");
-        // $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
+		'</div>')()).modal("show");
     },
 	showVideoModal: function (videoFile, seconds) {
         var element = document.getElementById('videoModal');

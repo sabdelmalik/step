@@ -82,23 +82,13 @@ step.passageSelect = {
 		this.modalMode = 'book';
 		this.lastOsisID = '';
 		this.lastNumOfChapters = '';
-		$('#display_passage_at').text(__s.display_passage_at);
-		$('#current_panel').text(__s.current_panel);
-		$('#new_panel').text(__s.new_panel);
-		$('#append_to_panel').text(__s.append_to_panel);
-		$('#select_verse_number').text(__s.select_verse_number);
-		$('#type_in_your_passage').text(__s.type_in_your_passage);
 		step.util.closeModal('searchSelectionModal');
 		var hideAppend = false;
 		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
 			$('#append_to_panel').hide();
 			hideAppend = true;
 		}
-		if ($('.passageContainer.active').width() < 500) {
-			//if (hideAppend) 
-			$('#displayLocForm').hide();
-			//else $('#new_panel').hide();
-		}
+		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
 		this._displayListOfBooks();
 		$("textarea#enterYourPassage").keyup(function(e) {
 			var code = (e.keyCode ? e.keyCode : e.which);
@@ -395,29 +385,6 @@ step.passageSelect = {
 			}
 		});
 	},
-
-	// _userEnterPassage: function() {
-		// $('#keyboardEntry').hide();
-		// $('#pssgModalBackButton').show();
-		// var html = '<h4>' + __s.type_in_your_passage + '</h4>';
-		// html += '<p>&nbsp;&nbsp;&nbsp;<b>' + __s.examples + ':</b>	' + __s.passage_example1 + '</p>' +
-			// '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + __s.passage_example2 + '</p>' +
-			// '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + __s.passage_example3 + '</p><br><br>' +
-			// '<p>' + __s.enter_passage + ':</p>' +
-			// '<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"></textarea>' + // size 16px so the mobile devices will not expand
-			// '<br><br>' +
-			// '<button type="button" class="pull-right" onclick=this._handleEnteredPassage(false)>' + __s.go_to_passage + '</button>&nbsp;' +
-			// '<span id="userEnterPassageError" style="color: red;"></span>';
-		// $('#bookchaptermodalbody').empty();
-		// $('#bookchaptermodalbody').append(html);
-		// $(function(){
-			// $("#bookchaptermodalbody").keyup(function(e){
-				// var code = (e.keyCode ? e.keyCode : e.which);
-				// this._handleKeyboardEntry(code);
-			// });
-		// });
-		// $('textarea#enterYourPassage').focus();
-	// },
 
 	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter) {
 		var headerMsg;
