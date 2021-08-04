@@ -1156,12 +1156,12 @@ step.util = {
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "lexiconFocus"
-                    });
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "lexiconFocus"
+					});
                 }
             }).on("touchstart", function (ev) {
                 that.touchstart = new Date().getTime();
@@ -1171,19 +1171,19 @@ step.util = {
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "lexiconFocus"
-                    });
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "lexiconFocus"
+					});
                 } else {
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "primaryLightBg"
-                    });
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "primaryLightBg"
+					});
 
                     var hoverContext = this;
                     require(['quick_lexicon'], function () {
@@ -1192,12 +1192,12 @@ step.util = {
                 }
                 that.lastTapStrong = $(this).attr("strong");
             }).hover(function (ev) {
-                step.passage.higlightStrongs({
-                    passageId: undefined,
-                    strong: $(this).attr('strong'),
-                    morph: $(this).attr('morph'),
-                    classes: "primaryLightBg"
-                });
+				step.passage.higlightStrongs({
+					passageId: undefined,
+					strong: $(this).attr('strong'),
+					morph: $(this).attr('morph'),
+					classes: "primaryLightBg"
+				});
 
                 var hoverContext = this;
                 require(['quick_lexicon'], function () {

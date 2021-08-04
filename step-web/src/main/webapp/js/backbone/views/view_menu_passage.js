@@ -15,6 +15,7 @@ var PassageMenuView = Backbone.View.extend({
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+    similarWord: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.similar_word %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSimilarWord ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.zh_second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
@@ -452,6 +453,22 @@ var PassageMenuView = Backbone.View.extend({
 
             //toggle the tick
             self._setVisible(this, verseVocab);
+        }));
+		var currentSimilarWordSetting = self.model.get("isSimilarWord");
+        if (currentSimilarWordSetting == null) {
+            this.model.save({isSimilarWord: true});
+            currentSimilarWordSetting = true;
+        }
+        dropdown.append($(_.template(this.similarWord)({isSimilarWord: currentSimilarWordSetting})).click(function (e) {
+            //prevent the bubbling up
+            e.stopPropagation();
+
+            //set the setting
+            var similarWord = !self.model.get("isSimilarWord");
+            self.model.save({isSimilarWord: similarWord});
+
+            //toggle the tick
+            self._setVisible(this, similarWord);
         }));
 
         dropdown.append(li);
