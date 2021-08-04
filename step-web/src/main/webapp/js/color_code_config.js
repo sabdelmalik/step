@@ -33,7 +33,7 @@ function openClrConfig() {
 function initOpenClrCodeModal() {
   var s = $('<select id="openClrConfigDropdown"/>');
   s.append($('<option/>').html('Verb, Gender and Number'));
-  s.append($('<option/>').html('Verb, Gender and Number, 2nd version'));
+  s.append($('<option/>').html('Verb, without reference to time'));
   s.append($('<option/>').html('Verb only (tense-mood)'));
   s.append($('<option/>').html('Verb with Middle and Passive Voices'));
   s.append($('<option/>').html('Verb, imperative mood'));

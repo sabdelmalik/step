@@ -1991,7 +1991,7 @@ var cf = {
     else if (selectedConfig === 'verb with middle and passive voices') c4 = cf.c4VerbWithMiddlePassive();
     else if (selectedConfig === 'verb, imperative mood') c4 = cf.c4ImperativesOnly();
     else if (selectedConfig === 'verb, main vs supporting verbs') c4 = cf.c4MainVsSupporingVerbs();
-    else if (selectedConfig === 'verb, gender and number, 2nd version') c4 = cf.c4VerbMoodTense2();
+    else if (selectedConfig === 'verb, without reference to time') c4 = cf.c4VerbMoodTense2();
     else {
       var found = false;
       var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
@@ -2051,7 +2051,7 @@ var cf = {
     r[C_Greek][C_orderOfMood] = ['i', 'm', 's', 'o', 'n', 'p'];
     r[C_Greek][C_moodToCombineWithPrevious] = [false, false, false, false, false, false];
     r[C_Greek][C_verbTableYHeader] = null;
-    r[C_enableGenderNumberClr] = true;
+    r[C_enableGenderNumberClr] = false;
     r[C_OT][C_verbTableXHeader] = null;
     r[C_OT][C_verbTableYHeader] = null;
     return r;
