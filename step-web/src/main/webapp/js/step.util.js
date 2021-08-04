@@ -1535,12 +1535,12 @@ step.util = {
 					'</div>' +
 				'</div>' +
 			'</div>' +
-		'</div>' +
-		'<script>' +
-			'$( document ).ready(function() {' +
-				'initializeClrCodeHtmlModalPage();' +
-			'});' +
-		'</script>').modal("show");
+			'<script>' +
+				'$( document ).ready(function() {' +
+					'initializeClrCodeHtmlModalPage();' +
+				'});' +
+			'</script>' +
+		'</div>').modal("show");
     },
     passageSelectionModal: function (activePassageNumber) {
         var element = document.getElementById('passageSelectionModal');
