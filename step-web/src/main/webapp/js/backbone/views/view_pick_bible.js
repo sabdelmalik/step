@@ -197,18 +197,42 @@ var PickBibleView = Backbone.View.extend({
     },
     orderButton: function (ev) {
         this.closeModal(ev);
-        var orderVersionDiv = $('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">');
-        if (document.getElementById('orderVersionModal')) {
-            var element = document.getElementById('orderVersionModal');
-            element.parentNode.removeChild(element);
-        }
-        orderVersionDiv.appendTo("body");
-        if ($.getUrlVars().indexOf("debug") == -1)
-            $('#orderVersionModal').modal('show').find('.modal-content').load('/html/order_version.min.html');
-        else
-            $('#orderVersionModal').modal('show').find('.modal-content').load('/html/order_version.html');
+        element = document.getElementById('orderVersionModal');
+        if (element) element.parentNode.removeChild(element);
+
+		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+		$('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<style>' +
+						'#nestedVersion div, .nested-1 {' +
+							'margin-top: 5px;' +
+						'}' +
+						'.nested-1 {' +
+							'background-color: #e6e6e6;' +
+						'}' +
+					'</style>' +  
+					'<div class="modal-header">' +
+						'<button type="button" class="close" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button>' +
+					'</div>' +
+					'<div class="modal-body">' +
+						'<div id="sortVersionModal"></div>' +
+							'<div class="footer">' +
+								'<button id="updateVersionOrderButton" class="btn btn-default btn-xs closeModal stepButton pull-right" onclick=saveVersionOrder()><label>Update order</label></button>' +
+								'<br>' +
+							'</div>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+				'<script src="/js/order_version.' + jsVersion + 'js"></script>' +
+				'<script src="/libs/Sortable.min.js"></script>' +
+				'<script>' +
+					'$( document ).ready(function() {' +
+						'init_order_version();' +
+					'});' +
+				'</script>' +
+			'</div>' +
+		'</div>').modal("show");;
     },
     okButton: function (ev) {
         this.closeModal(ev);

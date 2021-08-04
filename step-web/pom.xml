@@ -634,40 +634,6 @@
 								<skip>${skipLocalHostACL}</skip>
                             </configuration>
 						</execution>
-						<execution>
-                            <id>update-color_code-html</id>
-							<phase>prepare-package</phase>
-							<goals>
-								<goal>replace</goal>
-							</goals>
-                            <configuration>
-                                <includes>
-                                    <include>${basedir}/target/step-web/html/color_code_grammar.min.html</include>
-                                </includes>
-                                <replacements>
-                                    <replacement><token>color_code_config\.js</token><value>color_code_config.${project.version}.min.js</value></replacement>
-                                    <replacement><token>^[\t\s]+</token><value></value></replacement>
-                                </replacements>
-                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
-                            </configuration>
-						</execution>
-                        <execution>
-                            <id>update-order_version-html</id>
-							<phase>prepare-package</phase>
-							<goals>
-								<goal>replace</goal>
-							</goals>
-                            <configuration>
-                                <includes>
-                                    <include>${basedir}/target/step-web/html/order_version.min.html</include>
-                                </includes>
-                                <replacements>
-                                    <replacement><token>order_version\.js</token><value>order_version.${project.version}.min.js</value></replacement>
-                                    <replacement><token>^[\t\s]+</token><value></value></replacement>
-                                </replacements>
-                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
-                            </configuration>
-						</execution>
 					</executions>
 				</plugin>
 				<plugin>

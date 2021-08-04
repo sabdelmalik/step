@@ -349,7 +349,7 @@ var PassageMenuView = Backbone.View.extend({
             '<button class="btn btn-default btn-xs grammarColor" type="button" title="<%= __s.config_color_grammar_explain %>">' +
             '<span class="glyphicon glyphicon-cog"></span></button></span></li>',
             dropdown.append(_.template(colorCodeGrammarButton)())
-                .find(".grammarColor").click(this.showConfigGrammarColor);
+                .find(".grammarColor").click(step.util.showConfigGrammarColor);
 
         dropdownContainer.append(displayOptionsHeading);
         dropdownContainer.append(dropdown);
@@ -736,22 +736,6 @@ var PassageMenuView = Backbone.View.extend({
 //            ensure last element
 //            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
 //        }
-    },
-
-    showConfigGrammarColor: function (e) {
-        var grammarColorConfigPage = $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">');
-        var temp = document.getElementById("grammarClrModal");
-        e.preventDefault();
-        if (!temp) grammarColorConfigPage.appendTo("body");
-        if ($.getUrlVars().indexOf("debug") == -1) {
-            $.ajaxSetup({ cache: true });
-            $('#grammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.min.html');
-        }
-        else
-            $('#grammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.html');
-
     }
 
 });

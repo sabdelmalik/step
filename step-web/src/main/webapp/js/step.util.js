@@ -1494,8 +1494,56 @@ step.util = {
             doHighlight(nonJqElement, cssClasses, regex);
         }
     },
+	showConfigGrammarColor: function (e) {
+        if (e) e.preventDefault();
+        // var temp = document.getElementById("grammarClrModal");
+        // if (!temp) grammarColorConfigPage.appendTo("body");
+        var element = document.getElementById('grammarClrModal');
+        if (element) element.parentNode.removeChild(element);
+		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+        $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<link href="css/color_code_grammar.' + jsVersion + 'css" rel="stylesheet"/>' +
+					'<link rel="stylesheet" href="css/spectrum.css"/>' +
+					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
+					'<script src="libs/spectrum.js"></script>' +
+					'<div class="modal-header">' +
+						'<button type="button" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+					'</div>' +
+					'<div class="modal-body">' +
+						'<div id="colortabs">' +
+							'<ul class="nav nav-tabs">' +
+								'<li class="active"><a href="#nounClrs" data-toggle="tab">Number & Gender</a></li>' +
+								'<li><a href="#verbClrs" data-toggle="tab">Greek Verbs</a></li>' +
+								'<li><a href="#hVerbClrs" data-toggle="tab">OT Verbs</a></li>' +
+							'</ul>' +
+							'<div class="tab-content">' +
+								'<div class="tab-pane fade in active" id="nounClrs"></div>' +
+								'<div class="tab-pane fade" id="verbClrs"></div>' +
+								'<div class="tab-pane fade" id="hVerbClrs"></div>' +
+							'</div>' +
+						'</div>' +
+					'</div>' +
+					'<div class="footer">' +
+						'<br>' +
+						'<button id="openButton" class="stepButton" onclick=openClrConfig()><label>Open</label></button>' +
+						'<button id="saveButton" class="stepButton" onclick=saveClrConfig()><label>Save</label></button>' +
+						'<button id="cancelButton" class="stepButton" onclick=cancelClrChanges()><label>Cancel</label></button>' +
+						'<button id="resetButton" class="stepButton" onclick=resetClrConfig()><label>Reset</label></button>' +
+						'<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>' +
+					'</div>' +
+				'</div>' +
+			'</div>' +
+		'</div>' +
+		'<script>' +
+			'$( document ).ready(function() {' +
+				'initializeClrCodeHtmlModalPage();' +
+			'});' +
+		'</script>').modal("show");
+    },
     passageSelectionModal: function (activePassageNumber) {
-        element = document.getElementById('passageSelectionModal');
+        var element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active

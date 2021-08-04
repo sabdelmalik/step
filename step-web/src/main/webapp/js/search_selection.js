@@ -115,7 +115,7 @@ step.searchSelect = {
         this.rangeWasUpdated = false;
         this.andOrNotUpdated = false;
         this.timer = undefined;
-
+		// The following fields need to be reset.
    		this.groupsOT[0].show = false;
 		this.groupsOT[0].bookOrderPos = [-1, -1, -1, -1, -1];
 		this.groupsOT[1].show = false;
@@ -289,7 +289,7 @@ step.searchSelect = {
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
 			$('#previousSearch').show();
-			if (this.searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
+			if (this.searchModalCurrentPage == 1) $('#srchModalBackButton').hide();
 			$(function(){
 				$('textarea#userTextInput').keyup(function(e){
 					this.timer && clearTimeout(this.timer);
@@ -299,7 +299,7 @@ step.searchSelect = {
 			$('textarea#userTextInput').focus();
 			this._handleEnteredSearchWord(null, this.searchUserInput);
 		}
-		else if (this.searchModalCurrentPage === 2) {
+		else if (this.searchModalCurrentPage == 2) {
 			this.searchOnSpecificType = "";
 			this.searchModalCurrentPage = 1;
 			$('#srchModalBackButton').hide();

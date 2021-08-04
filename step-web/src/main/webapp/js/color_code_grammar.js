@@ -1698,7 +1698,10 @@ var cf = {
     descOfXAxisItems = r.descOfXAxisItems;
     descOfYAxisItems = r.descOfYAxisItems;
     var htmlTable = '';
-    if (!createUserInputs) htmlTable = '<link href="/css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
+    if (!createUserInputs) {
+		var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+		htmlTable = '<link href="/css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>';
+	}
     var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs);
     htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
       yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs) + '">';

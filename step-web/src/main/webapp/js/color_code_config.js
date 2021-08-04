@@ -636,7 +636,10 @@ function addOTVerbTable(createUserInputs, htmlElement) {
     descOfYAxisItems = r.nameOfAllYAxisItems;
   }
   var htmlTable = '';
-  if (!createUserInputs) htmlTable = '<link href="/css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
+  if (!createUserInputs) {
+      var cssVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+	  htmlTable = '<link href="/css/color_code_grammar.' + cssVersion + 'css" rel="stylesheet" media="screen"/>';
+  }
   var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs, 'OT');
   htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
   yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs, 'OT') + '">';
@@ -1600,7 +1603,7 @@ function resetClrConfig() {
 function closeClrConfig() {
   $('.sp-container').remove(); // The color selection tool is not totally removed so manually remove it. 08/19/2019
   step.util.closeModal("grammarClrModal");
-  // $('.modal-backdrop.in').remove(); // The color selection tool is not totally removed so manually remove it. 05/15/2021
+  $('.modal-backdrop.in').remove(); // The color selection tool is not totally removed so manually remove it. 05/15/2021
 }
 
 function updateAllSettingsAndInputFields() {
@@ -1615,10 +1618,7 @@ function updateAllSettingsAndInputFields() {
   $('#grammarClrModal').modal({
     show: false
   });
-  if ($.getUrlVars().indexOf("debug") == -1)
-    $('#grammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.min.html');
-  else
-    $('#grammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.html');
+  step.util.showConfigGrammarColor();
 }
 
 function updateNounInputFields(inputOnOff) {
