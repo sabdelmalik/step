@@ -43,21 +43,14 @@ import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
-import com.tyndalehouse.step.core.utils.StringUtils;
 import org.codehaus.jackson.map.util.LRUMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
@@ -308,8 +301,11 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public String get_es_Vocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.es_VocabProvider);
+    public String get_es_Vocab(final String version, final String reference, String vocabIdentifiers) {
+        String tmp = vocabIdentifiers;
+        if (tmp.startsWith("Strong:"))
+            tmp = "strong:" + vocabIdentifiers.substring(7);
+        return getDataFromLexiconDefinition(version, reference, tmp, this.es_VocabProvider);
     }
 	
     @Override

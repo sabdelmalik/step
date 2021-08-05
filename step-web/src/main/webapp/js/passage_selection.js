@@ -137,7 +137,7 @@ step.passageSelect = {
 		else {
 			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + this.version + "%7C?lang=" + this.userLang;
 			$.getJSON(url, function (data) {
-				this._buildBookHTMLTable(data);
+				step.passageSelect._buildBookHTMLTable(data);
 			});
 		}	
 	},
@@ -356,7 +356,7 @@ step.passageSelect = {
 		}
 		else {
 			$.getJSON(url, function (data) {
-				this._buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, true);
+				step.passageSelect._buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, true);
 			});
 		}
 	},

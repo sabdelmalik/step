@@ -534,7 +534,7 @@ step.searchSelect = {
 			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + this.version + "%7C?lang=" + this.userLang;
 			$.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
-				this._buildBookHTMLTable(data);
+				step.searchSelect._buildBookHTMLTable(data);
 			});
 			$.ajaxSetup({async: true});
 		}	
