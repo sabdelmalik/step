@@ -16,6 +16,7 @@ var PassageMenuView = Backbone.View.extend({
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     similarWord: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.similar_word %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSimilarWord ? "visible" : "hidden" %>;"></span></a></li>',
+    // enWithEsLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_es_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithEsLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.zh_second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
@@ -409,6 +410,19 @@ var PassageMenuView = Backbone.View.extend({
             //toggle the tick
             self._setVisible(this, quickLexicon);
         }));
+        // if (step.userLanguageCode.toLowerCase().startsWith("es")) {
+            // var currentEnWithEsLexiconSetting = self.model.get("isEnWithEsLexicon");
+            // if (currentEnWithEsLexiconSetting == null) {
+                // this.model.save({ isEnWithEsLexicon: true });
+                // currentEnWithEsLexiconSetting = true;
+            // }
+            // dropdown.append($(_.template(this.enWithEsLexicon)({ isEnWithEsLexicon: currentEnWithEsLexiconSetting })).click(function (e) {
+                // e.stopPropagation(); //prevent the bubbling up
+                // var enWithEsLexicon = !self.model.get("isEnWithEsLexicon");
+                // self.model.save({ isEnWithEsLexicon: enWithEsLexicon });
+                // self._setVisible(this, enWithEsLexicon); // toggle the tick
+            // }));
+        // }
         if (step.userLanguageCode.toLowerCase().startsWith("zh")) {
             var currentEnWithZhLexiconSetting = self.model.get("isEnWithZhLexicon");
             if (currentEnWithZhLexiconSetting == null) {

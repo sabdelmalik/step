@@ -158,8 +158,9 @@ var SidebarView = Backbone.View.extend({
                 var hebrew = data.vocabInfos[i].strongNumber == 'H';
                 var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
 				var currentGloss = item.stepGloss;
-				currentGloss += (currentUserLang =="zh") ? " " + item._zh_Gloss : 
-					(currentUserLang =="zh_tw") ? " " + item._zh_tw_Gloss : "";
+				if (currentUserLang =="es") currentGloss += " " + item._es_Gloss;
+				else if (currentUserLang =="zh") currentGloss += " " + item._zh_Gloss;
+				else if (currentUserLang =="zh_tw") currentGloss += " " + item._zh_tw_Gloss;
                 var panelTitle = currentGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
                 var panelContentContainer = $('<div class="panel-collapse collapse">').attr("id", panelId);
                 var panelBody = $('<div class="panel-body"></div>');
@@ -208,15 +209,16 @@ var SidebarView = Backbone.View.extend({
         this.tabContainer.append(this.lexicon);
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
-        var chineseGloss = "";
-        if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Gloss != undefined)) chineseGloss = "&nbsp;" + mainWord._zh_tw_Gloss + "&nbsp;";
-        else if ((currentUserLang == "zh") && (mainWord._zh_Gloss != undefined)) chineseGloss = "&nbsp;" + mainWord._zh_Gloss + "&nbsp;";
+        var userLangGloss = "";
+        if ((currentUserLang == "es") && (mainWord._es_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._es_Gloss + "&nbsp;";
+        else if ((currentUserLang == "zh") && (mainWord._zh_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._zh_Gloss + "&nbsp;";
+        else if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Gloss != undefined)) userLangGloss = "&nbsp;" + mainWord._zh_tw_Gloss + "&nbsp;";
         panel.append(
             $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
                 .append(mainWord.accentedUnicode))
                 .append(" (")
                 .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
-                .append(") " + chineseGloss + "'")
+                .append(") " + userLangGloss + "'")
                 .append(mainWord.stepGloss)
                 .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
@@ -361,8 +363,18 @@ var SidebarView = Backbone.View.extend({
         this._appendLexiconSearch(panel, mainWord);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
-        if (currentUserLang.startsWith("zh")) {
-            displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon") || false;
+        if (currentUserLang.startsWith("es")) {
+            // displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon") ||
+									// false;
+            var spanishDef = mainWord._es_Definition;
+            if (spanishDef) {
+                panel.append($("<h2>").append(__s.es_lexicon_meaning));
+                this._addLinkAndAppend(panel, spanishDef, currentWordLanguageCode, bibleVersion);
+            }
+        }
+        else if (currentUserLang.startsWith("zh")) {
+            displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon") ||
+									false;
             var chineseDef;
             if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Definition != undefined)) chineseDef = mainWord._zh_tw_Definition;
             else if (mainWord._zh_Definition != undefined) chineseDef =  mainWord._zh_Definition;
@@ -374,7 +386,7 @@ var SidebarView = Backbone.View.extend({
             if ((useSecondZhLexicon == null) || (useSecondZhLexicon))
                 foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, bibleVersion, this._appendLexiconSearch, this._addLinkAndAppend);
         }
-		if (currentUserLang == "vi") {
+		else if (currentUserLang == "vi") {
 			var vietnameseDef = mainWord._vi_Definition;
 			if (vietnameseDef) {
 				panel.append($("<h2>").append("Từ điển Hy Lạp-Việt"));
@@ -399,11 +411,12 @@ var SidebarView = Backbone.View.extend({
             var matchingExpression = "";
             for (var i = 0; i < mainWord.relatedNos.length; i++) {
                 if (mainWord.relatedNos[i].strongNumber != mainWord.strongNumber) {
-                    var chineseGloss = "";
-                    if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) chineseGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
-                    else if ((currentUserLang == "zh") && (mainWord.relatedNos[i]._zh_Gloss != undefined)) chineseGloss =  mainWord.relatedNos[i]._zh_Gloss + "&nbsp;";
+                    var userLangGloss = "";
+                    if ((currentUserLang == "es") && (mainWord.relatedNos[i]._es_Gloss != undefined)) userLangGloss = mainWord.relatedNos[i]._es_Gloss + "&nbsp;";
+                    else if ((currentUserLang == "zh") && (mainWord.relatedNos[i]._zh_Gloss != undefined)) userLangGloss =  mainWord.relatedNos[i]._zh_Gloss + "&nbsp;";
+                    else if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) userLangGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
                     var li = $("<li></li>").append($('<a sbstrong href="javascript:void(0)">')
-                        .append(chineseGloss)
+                        .append(userLangGloss)
                         .append(mainWord.relatedNos[i].gloss)
                         .append(" (")
                         .append("<span class='transliteration'>" + mainWord.relatedNos[i].stepTransliteration + "</span>")

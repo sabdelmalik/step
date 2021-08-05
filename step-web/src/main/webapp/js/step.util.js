@@ -1387,7 +1387,8 @@ step.util = {
                                 var strongData = verseData[strong];
                                 if (strongData && strongData.strongNumber) {
                                     var counts = data.counts[strongData.strongNumber];
-                                    if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
+                                    if ((currentLang == "es") && (strongData._es_Gloss)) strongData.gloss = strongData._es_Gloss;
+                                    else if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
                                     else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
                                     rows.push({
                                         strongData: strongData,

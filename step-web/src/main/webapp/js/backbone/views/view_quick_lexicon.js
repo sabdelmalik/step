@@ -43,6 +43,9 @@ var QuickLexicon = Backbone.View.extend({
         '<% var urlLang = $.getUrlVar("lang") || ""; %>' +
         '<% urlLang = urlLang.toLowerCase(); %>' +
         '<% var currentLang = step.userLanguageCode.toLowerCase(); %>' +
+        // '<% var currentEnWithEsLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon"); %>' +
+        // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
+		'<% if ((currentLang.startsWith("es")) && (item._es_Gloss != undefined)) { %><span>&nbsp;<%= item._es_Gloss %></span> <% } %>' +
         '<% if (urlLang == "zh_tw") { currentLang = "zh_tw"; } else if (urlLang == "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
         '<% if (currentEnWithZhLexiconSetting == undefined) currentEnWithZhLexiconSetting = false; %>' +
@@ -50,8 +53,10 @@ var QuickLexicon = Backbone.View.extend({
         '&nbsp;(<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
+        '<% if ( (currentLang == "es") && (item._es_Definition != undefined) ) { %><div class="mediumDef"><%= item._es_Definition %></div><% } %>' +
         '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
         '<% if ( (currentLang == "vi") && (item._vi_Definition != undefined) ) { %><div class="mediumDef"><%= item._vi_Definition %></div> <% } %>' +
+        // '<% if ((currentEnWithZhLexiconSetting) || (currentEnWithEsLexiconSetting) || ( (!currentLang.startsWith("zh")) && (!currentLang.startsWith("es")))) { %>' +
         '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.startsWith("zh"))) { %>' +
             '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
             '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +

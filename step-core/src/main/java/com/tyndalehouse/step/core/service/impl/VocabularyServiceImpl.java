@@ -92,6 +92,12 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.get("stepGloss");
         }
     };
+	private final LexiconDataProvider es_VocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final EntityDoc l) {
+            return l.get("es_Gloss");
+        }
+    };
     private final LexiconDataProvider zh_tw_VocabProvider = new LexiconDataProvider() {
         @Override
         public String getData(final EntityDoc l) {
@@ -165,6 +171,10 @@ public class VocabularyServiceImpl implements VocabularyService {
             final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
             for (int i = 0; i < strongDefs.length; i ++) {
                 if ((userLanguage != null) && (userLanguage != "")) {
+                    if (!userLanguage.equalsIgnoreCase("es")) {
+                        strongDefs[0].removeField("es_Gloss");
+                        strongDefs[0].removeField("es_Definition");
+                    }
                     if (!userLanguage.equalsIgnoreCase("zh")) {
                         strongDefs[0].removeField("zh_Gloss");
                         strongDefs[0].removeField("zh_Definition");
@@ -174,10 +184,8 @@ public class VocabularyServiceImpl implements VocabularyService {
                         strongDefs[0].removeField("zh_tw_Definition");
                     }
                     if (!userLanguage.equalsIgnoreCase("vi")) {
-                        strongDefs[0].removeField("zh_tw_Gloss");
                         strongDefs[0].removeField("vi_Definition");
                     }
-
                 }
             }
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);
@@ -299,6 +307,11 @@ public class VocabularyServiceImpl implements VocabularyService {
         return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.englishVocabProvider);
     }
 
+    @Override
+    public String get_es_Vocab(final String version, final String reference, final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.es_VocabProvider);
+    }
+	
     @Override
     public String get_zh_tw_Vocab(final String version, final String reference, final String vocabIdentifiers) {
         return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider);

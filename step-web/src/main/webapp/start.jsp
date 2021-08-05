@@ -255,7 +255,11 @@
                                                                                strong="${ definition.strongNumber}">
                                                                                 <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
 
-                                                                                <%  if (locale.getLanguage().equalsIgnoreCase("zh")) {
+
+                                                                                <%  if (locale.getLanguage().equalsIgnoreCase("es")) { %>
+																						${ definition._es_Gloss}
+																				<%	}
+																					else if (locale.getLanguage().equalsIgnoreCase("zh")) {
                                                                                         if (locale.getCountry().equalsIgnoreCase("tw")) %>
                                                                                             ${ definition._zh_tw_Gloss}
                                                                                 <%      else %>
