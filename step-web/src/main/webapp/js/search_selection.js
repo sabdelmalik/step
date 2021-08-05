@@ -705,6 +705,10 @@ step.searchSelect = {
 		}
 		if (tableHTML.length > 0) {
 			if (htmlID === 'ob_table') $('#other_books_hdr').text('Other Books');
+			var bt = this._buildBookTableHeader(columns, htmlID);
+			console.log("htmlID " + htmlID);
+			console.log("bt " + bt);
+			console.log("th " + tableHTML);
 			$('#' + htmlID).append(this._buildBookTableHeader(columns, htmlID) + tableHTML + '</table>');
 		}
 	},
@@ -803,9 +807,7 @@ step.searchSelect = {
 	_buildBookTableHeader: function(columns, htmlID) {
 		var modalWidth = $('#' + htmlID).width();
 		var firstColumnSize = 145;
-		var columnSize = Math.floor((modalWidth - firstColumnSize) / columns);
-		
-		columnSize = Math.floor((modalWidth - firstColumnSize) / (columns - 1));
+		var columnSize = Math.max(Math.floor((modalWidth - firstColumnSize) / (columns - 1)), 10); // avoid negative length.  I have seen the modalWiidt is 0
 		html = '<table>' +
 			 '<colgroup>' +
 			 '<col span="1" style="width:' + firstColumnSize + 'px;">';

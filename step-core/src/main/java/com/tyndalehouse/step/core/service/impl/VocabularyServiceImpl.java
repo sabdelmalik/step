@@ -303,8 +303,11 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public String get_es_Vocab(final String version, final String reference, String vocabIdentifiers) {
         String tmp = vocabIdentifiers;
-        if (tmp.startsWith("Strong:"))
-            tmp = "strong:" + vocabIdentifiers.substring(7);
+		if (tmp.length() > 10) {
+			String prefixTmp = tmp.substring(0,7);
+			if ((!prefixTmp.equals("strong:")) && (prefixTmp.toLowerCase() .equals("strong:")))
+				tmp = "strong:" + tmp.substring(7);
+		}
         return getDataFromLexiconDefinition(version, reference, tmp, this.es_VocabProvider);
     }
 	
