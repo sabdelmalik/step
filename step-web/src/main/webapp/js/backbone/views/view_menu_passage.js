@@ -521,9 +521,11 @@ var PassageMenuView = Backbone.View.extend({
                 dropdown.append(panel);
             }
             else {
-                if ((items[i].initial == "Z") && (step.userLanguageCode.toLowerCase() == "zh")) items[i].initial = "S"; // Option code for Simplified Chinese is "S"
-                if ((items[i].initial != "Z") || ((items[i].initial == "Z") && (step.userLanguageCode.toLowerCase() == "zh_tw"))) {
-                    var keyText = __s[items[i].key];
+                if ((items[i].initial === "Z") && (step.userLanguageCode.toLowerCase() === "zh")) items[i].initial = "S"; // Option code for Simplified Chinese is "S"
+				if (!( ( (items[i].initial === "Z") && (step.userLanguageCode.toLowerCase() !== "zh_tw") ) ||
+					   ( (items[i].initial === "S") && (step.userLanguageCode.toLowerCase() !== "zh") ) ||
+					   ( (items[i].initial === "B") && (step.userLanguageCode.toLowerCase() !== "es") ) ) ) {
+					var keyText = __s[items[i].key];
                     var helpText = __s[items[i].help];
                     var link = this._createLink(items[i].initial, keyText, helpText);
                     this._setVisible(link, selectedOptions.indexOf(items[i].initial) != -1);
