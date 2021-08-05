@@ -45,7 +45,7 @@ var QuickLexicon = Backbone.View.extend({
         '<% var currentLang = step.userLanguageCode.toLowerCase(); %>' +
         // '<% var currentEnWithEsLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon"); %>' +
         // '<% if (currentEnWithEsLexiconSetting == undefined) currentEnWithEsLexiconSetting = false; %>' +
-		'<% if ((currentLang.startsWith("es")) && (item._es_Gloss != undefined)) { %><span>&nbsp;<%= item._es_Gloss %></span> <% } %>' +
+		'<% if ((currentLang.startsWith("es")) && (item._es_Gloss != undefined)) { %><span>,&nbsp;<%= item._es_Gloss %></span> <% } %>' +
         '<% if (urlLang == "zh_tw") { currentLang = "zh_tw"; } else if (urlLang == "zh") { currentLang = "zh"; } %>' +
         '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
         '<% if (currentEnWithZhLexiconSetting == undefined) currentEnWithZhLexiconSetting = false; %>' +
