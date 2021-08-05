@@ -34,6 +34,7 @@ var PassageMenuView = Backbone.View.extend({
                 {initial: "E", key: "display_englishVocab"},
                 {initial: "A", key: "display_greekVocab"},
                 {initial: "T", key: "display_transliteration"},
+                {initial: "B", key: "display_spanishVocab"},
                 {initial: "Z", key: "display_chineseVocab"}
             ]
         },
