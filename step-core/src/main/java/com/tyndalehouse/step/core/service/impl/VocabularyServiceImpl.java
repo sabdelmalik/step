@@ -305,7 +305,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         String tmp = vocabIdentifiers;
 		if (tmp.length() > 10) {
 			String prefixTmp = tmp.substring(0,7);
-			if ((!prefixTmp.equals("strong:")) && (prefixTmp.toLowerCase() .equals("strong:")))
+			if ((!prefixTmp.equals("strong:")) && (prefixTmp.toLowerCase().equals("strong:")))
 				tmp = "strong:" + tmp.substring(7);
 		}
         return getDataFromLexiconDefinition(version, reference, tmp, this.es_VocabProvider);

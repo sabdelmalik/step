@@ -90,16 +90,17 @@ step.passageSelect = {
 		}
 		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
 		this._displayListOfBooks();
-		$("textarea#enterYourPassage").keyup(function(e) {
-			var code = (e.keyCode ? e.keyCode : e.which);
-			step.passageSelect._handleKeyboardEntry(code);
+		$("textarea#enterYourPassage").on('input', function(e){
+		// .keyup(function(e) {
+			step.passageSelect._handleKeyboardEntry(e);
 		});
 		var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
 		if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourPassage').focus();
 	},
 
-	_handleKeyboardEntry: function(code) {
+	_handleKeyboardEntry: function(e) {
 		var input = $('textarea#enterYourPassage').val();
+		var returnKey = (input.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak");
 		input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
 		input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
 		$("td").css("background-color", "white");
@@ -113,9 +114,10 @@ step.passageSelect = {
 			var regex1 = RegExp("^" + firstWord, "i")
 			$("td").filter(function () { return regex1.test($(this).text());}).css("background-color", "fafad2");
 		}
-		if (code == 13) this._handleEnteredPassage(false, input); // 13 is return
-		else if (code == 44) this._handleEnteredPassage(true, input); // 44 is ,
-		else if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
+		if (returnKey) this._handleEnteredPassage(false, input); // 13 is return
+		else if ((e.originalEvent.inputType === "insertText") && (e.originalEvent.data === ",")) this._handleEnteredPassage(true, input); // user entered a comma
+		else if ( (e.originalEvent.inputType === "deleteContentBackward") ||
+			((e.originalEvent.inputType === "insertText") && (e.originalEvent.data === ".")) ) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
 	},
 
 	_displayListOfBooks: function() {

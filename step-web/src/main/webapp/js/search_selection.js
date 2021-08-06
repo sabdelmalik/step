@@ -222,10 +222,14 @@ step.searchSelect = {
 		$('#searchHdrTable').append(this._buildSearchHeaderAndTable());
 		$('#srchModalBackButton').hide();
 		$(function(){
-			$('textarea#userTextInput').keyup(function(e){
+			$('textarea#userTextInput').on('input', function(e){
 				this.timer && clearTimeout(this.timer);
 				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
 			});
+			// .keyup(function(e){
+				// this.timer && clearTimeout(this.timer);
+				// this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
+			// })
 		});
 		$('textarea#userTextInput').focus();
 	},
@@ -267,10 +271,9 @@ step.searchSelect = {
 	},
 
 	handleKeyboardInput: function(e) {
-		var code = (e.keyCode ? e.keyCode : e.which);
-		if (code == 13) {
+		var userInput =  $('textarea#userTextInput').val();
+		if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
 			$('#warningMessage').text(__s.click_to_select_search);
-			var userInput =  $('textarea#userTextInput').val();
 			userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 			$('textarea#userTextInput').val(userInput);
 			if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true);
@@ -291,10 +294,14 @@ step.searchSelect = {
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) $('#srchModalBackButton').hide();
 			$(function(){
-				$('textarea#userTextInput').keyup(function(e){
+				$('textarea#userTextInput').on('input', function(e){
 					this.timer && clearTimeout(this.timer);
 					this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
 				});
+				// .keyup(function(e){
+					// this.timer && clearTimeout(this.timer);
+					// this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
+				// });
 			});
 			$('textarea#userTextInput').focus();
 			this._handleEnteredSearchWord(null, this.searchUserInput);
