@@ -696,6 +696,7 @@ var PassageMenuView = Backbone.View.extend({
     },
     removeSearchArgs: function(args) {
         return args.replace(new RegExp('\\|?' + STRONG_NUMBER    + '[^|]+', "ig"), "")
+		           .replace(new RegExp('\\|?' + SYNTAX           + '[^|]+', "ig"), "")
                    .replace(new RegExp('\\|?' + TEXT_SEARCH      + '[^|]+', "ig"), "")
                    .replace(new RegExp('\\|?' + SUBJECT_SEARCH   + '[^|]+', "ig"), "")
                    .replace(new RegExp('\\|?' + GREEK            +  '[^|]+', "ig"), "")
