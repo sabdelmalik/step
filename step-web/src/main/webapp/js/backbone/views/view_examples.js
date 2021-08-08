@@ -12,8 +12,12 @@ var ExamplesView = Backbone.View.extend({
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<br>' +
+					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black"><%= __s.display_classical_ui %></span>' +
+					'<br><span class="explanationText"><%= __s.advanced_interface_explain %></span>' +
+					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+					'</div>' +
 
-					'<span class="input-group" style="overflow:hidden">' +
+					'<br><span class="input-group" style="overflow:hidden">' +
 					'<a href="/?q=version=ESV|reference=Ps.23&options=VHNUG" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">ESV</span><span class="argSelect stepButton">Psalm 23</span></span>' +
@@ -83,11 +87,6 @@ var ExamplesView = Backbone.View.extend({
                     '<a href="https://drive.google.com/drive/folders/19OgRWS8Rbk92V5zAETpJ14QFSNjf76um">' +
                     'user guide.</a>' +
 
-					'<br><br><div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black"><%= __s.display_classical_ui %></span>' +
-					'<br><span class="explanationText"><%= __s.advanced_interface_explain %></span>' +
-					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-					'</div>' +
-					
 				'</div>' +
 			'</div>' +
 			'<div class="accordion-row" data-row="1">' +
