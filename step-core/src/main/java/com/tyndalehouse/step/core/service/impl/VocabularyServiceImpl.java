@@ -297,18 +297,23 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.englishVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.englishVocabProvider);
+    }
+
+    // The Spanish SpaRV1909 uses a "Strong:" tag.  Change "Strong:" or "StRoNg:" (any upper or lower case) to "strong:"
+    public String checkStrongCode(final String input) {
+        String result = input;
+        if (result.length() > 10) {
+            String prefixTmp = result.substring(0, 7);
+            if ((!prefixTmp.equals("strong:")) && (prefixTmp.toLowerCase().equals("strong:")))
+                result = "strong:" + result.substring(7);
+        }
+        return result;
     }
 
     @Override
     public String get_es_Vocab(final String version, final String reference, String vocabIdentifiers) {
-        String tmp = vocabIdentifiers;
-		if (tmp.length() > 10) {
-			String prefixTmp = tmp.substring(0,7);
-			if ((!prefixTmp.equals("strong:")) && (prefixTmp.toLowerCase().equals("strong:")))
-				tmp = "strong:" + tmp.substring(7);
-		}
-        return getDataFromLexiconDefinition(version, reference, tmp, this.es_VocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.es_VocabProvider);
     }
 	
     @Override
@@ -323,12 +328,12 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public String getGreekVocab(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.greekVocabProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.greekVocabProvider);
     }
 
     @Override
     public String getDefaultTransliteration(final String version, final String reference, final String vocabIdentifiers) {
-        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.transliterationProvider);
+        return getDataFromLexiconDefinition(version, reference, checkStrongCode(vocabIdentifiers), this.transliterationProvider);
     }
 
     /**
