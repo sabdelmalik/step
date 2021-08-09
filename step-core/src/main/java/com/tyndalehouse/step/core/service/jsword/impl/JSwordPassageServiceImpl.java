@@ -1198,9 +1198,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
                     // set parameters here
                     String changeVersion = "";
-                    if (userLanguage.equalsIgnoreCase("zh")) changeVersion = "CUns";
+                    if (userLanguage.toLowerCase().startsWith("es")) changeVersion = "SpaRV1909";
+                    else if (userLanguage.equalsIgnoreCase("zh")) changeVersion = "CUns";
                     else if (userLanguage.equalsIgnoreCase("zh_tw")) changeVersion = "CUn";
-                    else if (userLanguage.toLowerCase().startsWith("es")) changeVersion = "SpaRV1909";
 					else if (userLanguage.toLowerCase().startsWith("bg")) changeVersion = "BulProtRev";
 					else if (userLanguage.toLowerCase().startsWith("hi")) changeVersion = "HinULB";
                     if (changeVersion.length() > 0) {
@@ -1376,6 +1376,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     case ENGLISH_VOCAB:
                     case ZH_TW_VOCAB:
                     case ZH_VOCAB:
+					case ES_VOCAB:
                     case TRANSLITERATION:
                     case GREEK_VOCAB:
                     case TRANSLITERATE_ORIGINAL:

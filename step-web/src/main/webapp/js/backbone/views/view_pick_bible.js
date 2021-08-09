@@ -69,8 +69,12 @@ var PickBibleView = Backbone.View.extend({
         '<div class="tab-pane" id="commentaryList">' +
         '</div>' +
         '</div>' + //end body
-        '<div class="modal-footer"><button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
-                                  '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
+        '<div class="modal-footer">' +
+			'<img id="keyboard_icon" class="pull-left" src="/images/keyboard.jpg" alt="Keyboard entry">' +
+			'<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:16px; width: 18%;"></textarea>' +
+			'<span class="tagLine"></span>' +
+			'<button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
+            '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
         '</div>' + //end dialog
         '</div>' +
@@ -148,7 +152,7 @@ var PickBibleView = Backbone.View.extend({
 
         this.$el.find(this._getSelectedTab()).addClass("active");
         this.bibleVersions = this.$el.find("#bibleVersions").modal({ show: true});
-        this.$el.find("input[type='text']").focus();
+        // this.$el.find("input[type='text']").focus();
         this.$el.find(".btn").click(this.handleLanguageButton);
         this.$el.find(".closeModal").click(this.closeModal);
         this.$el.find("#order_button_bible_modal").click(this.orderButton);
@@ -157,7 +161,35 @@ var PickBibleView = Backbone.View.extend({
             $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
         });
         this._filter();
+	    $("textarea#enterYourTranslation").keyup(function(e) {
+			var code = (e.keyCode ? e.keyCode : e.which);
+			self._handleEnteredTranslation(code, self._filter);
+		});
+		var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
+		if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourTranslation').focus();
     },
+	_handleEnteredTranslation: function (keyCode, filterFunc) {
+		var userInput = $('textarea#enterYourTranslation').val();
+		userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '')
+		if (keyCode !== 13) { // 13 is enter key
+			if (userInput.length > 0) {
+				filterFunc(true);
+				$('.langSpan').hide();
+				$('.langBtn').hide();
+				$('.list-group').show();
+				$('.list-group-item').hide();
+				$('.list-group-item.active').show();
+				var regex1 = new RegExp("(^\\w*" + userInput + "|[\\s\\.]" + userInput + ")", "i");
+				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
+				step.util.addTagLine();
+			}
+			else filterFunc(); // reset back to the modal without keyboard input
+		}
+		else {
+			$('textarea#enterYourTranslation').val(userInput);
+			$('.list-group-item:visible')[0].click();
+		}
+	},
     closeModal: function (ev) {
         if (ev) ev.preventDefault();
         this.bibleVersions.modal("hide");
@@ -165,18 +197,42 @@ var PickBibleView = Backbone.View.extend({
     },
     orderButton: function (ev) {
         this.closeModal(ev);
-        var orderVersionDiv = $('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">');
-        if (document.getElementById('orderVersionModal')) {
-            var element = document.getElementById('orderVersionModal');
-            element.parentNode.removeChild(element);
-        }
-        orderVersionDiv.appendTo("body");
-        if ($.getUrlVars().indexOf("debug") == -1)
-            $('#orderVersionModal').modal('show').find('.modal-content').load('/html/order_version.min.html');
-        else
-            $('#orderVersionModal').modal('show').find('.modal-content').load('/html/order_version.html');
+        element = document.getElementById('orderVersionModal');
+        if (element) element.parentNode.removeChild(element);
+
+		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+		$('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<style>' +
+						'#nestedVersion div, .nested-1 {' +
+							'margin-top: 5px;' +
+						'}' +
+						'.nested-1 {' +
+							'background-color: #e6e6e6;' +
+						'}' +
+					'</style>' +  
+					'<div class="modal-header">' +
+						'<button type="button" class="close" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button>' +
+					'</div>' +
+					'<div class="modal-body">' +
+						'<div id="sortVersionModal"></div>' +
+							'<div class="footer">' +
+								'<button id="updateVersionOrderButton" class="btn btn-default btn-xs closeModal stepButton pull-right" onclick=saveVersionOrder()><label>Update order</label></button>' +
+								'<br>' +
+							'</div>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+				'<script src="/js/order_version.' + jsVersion + 'js"></script>' +
+				'<script src="/libs/Sortable.min.js"></script>' +
+				'<script>' +
+					'$( document ).ready(function() {' +
+						'init_order_version();' +
+					'});' +
+				'</script>' +
+			'</div>' +
+		'</div>').modal("show");;
     },
     okButton: function (ev) {
         this.closeModal(ev);
@@ -213,21 +269,17 @@ var PickBibleView = Backbone.View.extend({
         }
         return selectedLanguage;
     },
-    _filter: function () {
+    _filter: function (keyboard) {
         var self = this;
         var selectedTab = this._getSelectedTab();
-        var selectedLanguage = this._getLanguage();
+        var selectedLanguage = (keyboard) ? "_all" : this._getLanguage();
         var origLanguage = selectedLanguage;
 		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
 
-        var filter = "BIBLE"
-        var showGeoSelection = false;
-        if (selectedTab == '#commentaryList') {
-            filter = "COMMENTARY";
-        }
-        else if (selectedLanguage == "_all") showGeoSelection = true;
+        var filter = (selectedTab == '#commentaryList') ? "COMMENTARY" : "BIBLE";
+		$('.form-inline').find('.btn.btn-default.btn-sm.stepButton').removeClass("active");
         this.$el.find(".btn.stepPressedButton").removeClass("stepPressedButton");
-        this.$el.find(".btn").has("input[data-lang='" + origLanguage + "']").addClass("stepPressedButton");
+        this.$el.find(".btn").has("input[data-lang='" + origLanguage + "']").addClass("stepPressedButton").addClass("active");
 
         var bibleList = {};
         if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
@@ -332,7 +384,10 @@ var PickBibleView = Backbone.View.extend({
                 el.addClass("active");
             }
         });
-        if (showGeoSelection) $('.selectGeo').show();
+        if ((selectedTab !== '#commentaryList') && (selectedLanguage == "_all")) {
+			if (keyboard) $('.selectGeo').hide();
+			else $('.selectGeo').show();
+		}
         else {
             $('.selectGeo').hide();
             $('.langSpan').show();
@@ -341,7 +396,10 @@ var PickBibleView = Backbone.View.extend({
             $('.langPlusMinus').text('-');
             $('.langUL').show();
         }
-        step.util.addTagLine();
+		if (!keyboard) {
+			step.util.addTagLine();
+			$('textarea#enterYourTranslation').val("");
+		}
         this.$el.find(".langBtn").click(this._handleUsrClick);
         this.$el.find(".langPlusMinus").click(this._handleUsrClick);
     },

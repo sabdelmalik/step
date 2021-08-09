@@ -1156,12 +1156,12 @@ step.util = {
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "lexiconFocus"
-                    });
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "lexiconFocus"
+					});
                 }
             }).on("touchstart", function (ev) {
                 that.touchstart = new Date().getTime();
@@ -1171,19 +1171,19 @@ step.util = {
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "lexiconFocus"
-                    });
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "lexiconFocus"
+					});
                 } else {
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "primaryLightBg"
-                    });
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "primaryLightBg"
+					});
 
                     var hoverContext = this;
                     require(['quick_lexicon'], function () {
@@ -1192,12 +1192,12 @@ step.util = {
                 }
                 that.lastTapStrong = $(this).attr("strong");
             }).hover(function (ev) {
-                step.passage.higlightStrongs({
-                    passageId: undefined,
-                    strong: $(this).attr('strong'),
-                    morph: $(this).attr('morph'),
-                    classes: "primaryLightBg"
-                });
+				step.passage.higlightStrongs({
+					passageId: undefined,
+					strong: $(this).attr('strong'),
+					morph: $(this).attr('morph'),
+					classes: "primaryLightBg"
+				});
 
                 var hoverContext = this;
                 require(['quick_lexicon'], function () {
@@ -1387,7 +1387,8 @@ step.util = {
                                 var strongData = verseData[strong];
                                 if (strongData && strongData.strongNumber) {
                                     var counts = data.counts[strongData.strongNumber];
-                                    if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
+                                    if ((currentLang == "es") && (strongData._es_Gloss)) strongData.gloss = strongData._es_Gloss;
+                                    else if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
                                     else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
                                     rows.push({
                                         strongData: strongData,
@@ -1494,32 +1495,188 @@ step.util = {
             doHighlight(nonJqElement, cssClasses, regex);
         }
     },
+	showConfigGrammarColor: function (e) {
+        if (e) e.preventDefault();
+        // var temp = document.getElementById("grammarClrModal");
+        // if (!temp) grammarColorConfigPage.appendTo("body");
+        var element = document.getElementById('grammarClrModal');
+        if (element) element.parentNode.removeChild(element);
+		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
+        $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<link href="css/color_code_grammar.' + jsVersion + 'css" rel="stylesheet"/>' +
+					'<link rel="stylesheet" href="css/spectrum.css"/>' +
+					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
+					'<script src="libs/spectrum.js"></script>' +
+					'<div class="modal-header">' +
+						'<button type="button" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+					'</div>' +
+					'<div class="modal-body">' +
+						'<div id="colortabs">' +
+							'<ul class="nav nav-tabs">' +
+								'<li class="active"><a href="#nounClrs" data-toggle="tab">Number & Gender</a></li>' +
+								'<li><a href="#verbClrs" data-toggle="tab">Greek Verbs</a></li>' +
+								'<li><a href="#hVerbClrs" data-toggle="tab">OT Verbs</a></li>' +
+							'</ul>' +
+							'<div class="tab-content">' +
+								'<div class="tab-pane fade in active" id="nounClrs"></div>' +
+								'<div class="tab-pane fade" id="verbClrs"></div>' +
+								'<div class="tab-pane fade" id="hVerbClrs"></div>' +
+							'</div>' +
+						'</div>' +
+					'</div>' +
+					'<div class="footer">' +
+						'<br>' +
+						'<button id="openButton" class="stepButton" onclick=openClrConfig()><label>Open</label></button>' +
+						'<button id="saveButton" class="stepButton" onclick=saveClrConfig()><label>Save</label></button>' +
+						'<button id="cancelButton" class="stepButton" onclick=cancelClrChanges()><label>Cancel</label></button>' +
+						'<button id="resetButton" class="stepButton" onclick=resetClrConfig()><label>Reset</label></button>' +
+						'<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>' +
+					'</div>' +
+				'</div>' +
+			'</div>' +
+			'<script>' +
+				'$( document ).ready(function() {' +
+					'initializeClrCodeHtmlModalPage();' +
+				'});' +
+			'</script>' +
+		'</div>').modal("show");
+    },
     passageSelectionModal: function (activePassageNumber) {
-        element = document.getElementById('passageSelectionModal');
+        var element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
-            var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                '<div class="modal-dialog">' +
-                '<div class="modal-content">');
-            passageSelectDiv.appendTo("body");
-            if ($.getUrlVars().indexOf("debug") == -1)
-                $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.min.html');
-            else
-                $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
+		$(_.template('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content">' +
+					'<div class="modal-header">' +
+						'<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.passageSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+						'<span class="pull-right">' +
+							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+							'<div id="modalonoffswitch" class="pull-right">' +
+								'<span id="select_verse_number">&nbsp;<b><%= __s.select_verse_number %></b></span>' +
+								'<div class="onoffswitch2 append pull-right">' +
+									'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>' +
+									'<label class="onoffswitch2-label" for="selectverseonoffswitch">' +
+									'<span class="onoffswitch2-inner"></span>' +
+									'<span class="onoffswitch2-switch"></span>' +
+									'</label>' +
+								'</div>' +
+							'</div>' +
+						'</span>' +
+						'<br>' +
+						'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
+							'<label for="displayLocation"><%= __s.display_passage_at %></label>' +
+							'<select type="text" id="displayLocation">' +
+								'<option value="replace"> <%= __s.current_panel %></option>' +
+								'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
+								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
+							'</select>' +
+						'</div>' +
+						'<br>' +
+					'</div>' +
+					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
+					'<div class="footer">' +
+						'<img id="keyboard_icon" src="/images/keyboard.jpg" alt="Keyboard entry" title="<%= __s.type_in_your_passage %>">' +
+						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"  title="<%= __s.type_in_your_passage %>"></textarea>' +
+						'<br>' +
+						'<span id="userEnterPassageError" style="color: red;"></span>' +
+					'</div>' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.passageSelect.initPassageSelect();' +
+						'});' +
+						'function addSelectVerse() {' +
+							'if (document.getElementById("selectverseonoffswitch").checked) {' +
+								'step.passageSelect.addVerseSelection = true;' +
+								'$("#select_verse_number").addClass("checked");' +
+							'}' +
+							'else {' +
+								'step.passageSelect.addVerseSelection = false;' +
+								'$("#select_verse_number").removeClass("checked");' +
+							'}' +
+						'}' +
+					'</script>' +
+				'</div>' +
+			'</div>' +
+		'</div>')()).modal("show");
     },
 
 	searchSelectionModal: function () {
         var element = document.getElementById('searchSelectionModal');
         if (element) element.parentNode.removeChild(element);
-        var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-            '<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">');
-        searchSelectDiv.appendTo("body");
-        if ($.getUrlVars().indexOf("debug") == -1)
-            $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.min.html');
-        else
-            $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
+				'<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
+					'<div class="modal-header">' +
+						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
+						'<span class="pull-right">' +
+							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>' +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
+								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
+								'<select type="text" id="displayLocation">' +
+									'<option value="replace"><%= __s.current_panel %></option>' +
+									'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
+								'</select>' +
+							'</span>' +
+						'</span>' +
+					'</div>' +
+					'<div id="searchmodalbody" class="modal-body">' +
+						'<div id="searchHdrTable"></div>' +
+						'<br>' +
+						'<div id="previousSearch"></div>' +
+					'</div>' +
+					'<div class="footer">' +
+						'<br>' +
+						'<span id="searchSelectError"></span>' +
+						'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
+						'onclick=step.searchSelect._updateRange()></button>' +
+						'<button id="updateButton" style="display:none;float:right" type="button" class="stepButton"' +
+						'onclick=step.searchSelect.goSearch()><%= __s.update_search %></button><br><br><br>' +
+					'</div>' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.searchSelect.initSearchSelection();' +
+						'});' +
+						'function showPreviousSearch() {' +
+							'var element = document.getElementById("showprevioussearchonoff");' +
+							'if ((element) && (element.checked)) {' +
+								'step.searchSelect.includePreviousSearches = true;' +
+								'$("#listofprevioussearchs").show();' +
+								'var onlyFoundSubjectOrMeaningsSearch = true;' +
+								'for (var i = 0; i < step.searchSelect.previousSearchTokens.length; i++) {' +
+									'if ((step.searchSelect.previousSearchTokens[i] !== "") &&' +
+										'(!step.searchSelect.previousSearchTokens[i].startsWith(MEANINGS)) &&' +
+										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
+										'onlyFoundSubjectOrMeaningsSearch = false;' +
+								'}' +
+								'if (onlyFoundSubjectOrMeaningsSearch) $("#searchAndOrNot").hide();' +
+								'else $("#searchAndOrNot").show();' +
+								'if (step.searchSelect.searchUserInput.length == 0) {' +
+									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
+										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
+								'}' +
+								'step.searchSelect.handlePreviousSearchAndOrNot();' +
+							'}' +
+							'else {' +
+								'step.searchSelect.includePreviousSearches = false;' +
+								'$("#listofprevioussearchs").hide();' +
+								'$("#searchAndOrNot").hide();' +
+								'$("#updateButton").hide();' +
+								'$("#searchResultssubject").show();' +
+								'$("#searchResultsmeanings").show();' +
+								'$("#searchResultssubjectWarn").hide();' +
+								'$("#searchResultsmeaningsWarn").hide();' +
+							'}' +
+						'}' +
+					'</script>' +
+				'</div>' +
+			'</div>' +
+		'</div>')()).modal("show");
     },
 	showVideoModal: function (videoFile, seconds) {
         var element = document.getElementById('videoModal');
@@ -1609,24 +1766,11 @@ step.util = {
 		}
     },
 	addTagLine: function(){
-        var bibleVersions = $("#bibleVersions");
-		var displayedLanguages = $('.langUL').filter(":visible");
-		var numOfBibleDisplayed = 0;
-		var numOfBibleInMostWidelyUsed = 0;
-		for (var i = 0; i < displayedLanguages.length; i ++) {
-			var langCode = "";
-			var classes = $(displayedLanguages[i]).attr('class').split(' ');
-			for (var j = 0; j < classes.length; j ++) {
-				if (classes[j].substr(0, 3) === "ul_") {
-					if (classes[j] === "ul_Most_widely_used") numOfBibleInMostWidelyUsed += $("." + classes[j]).find('.list-group-item').length;
-					else numOfBibleDisplayed += $("." + classes[j]).find('.list-group-item').length;
-				}
-			}
-		}
-		if (numOfBibleDisplayed < numOfBibleInMostWidelyUsed) numOfBibleDisplayed = numOfBibleInMostWidelyUsed; // All the language groups are not selected except the Most Widely Used group
-        var total = step.itemisedVersions.length;
-        var message = '<span class="tagLine">' + sprintf(__s.filtering_total_bibles_and_commentaries, numOfBibleDisplayed, total) + "</span>";
-        bibleVersions.find(".modal-footer").find(".tagLine").remove().end().prepend(message);
+		var numOfBibleDisplayed = $('.list-group-item:visible').length;
+		var numOfBibleInMostWidelyUsed = $('.ul_Most_widely_used').find('.list-group-item:visible').length;
+		if (numOfBibleDisplayed > numOfBibleInMostWidelyUsed)
+			numOfBibleDisplayed -= numOfBibleInMostWidelyUsed; // The most widely used can be included in other language groups 
+		$(".tagLine").text(sprintf(__s.filtering_total_bibles_and_commentaries, numOfBibleDisplayed, step.itemisedVersions.length));
     },
 	showByGeo: function(testMode) { // The following arrays need to be updated when new Bible with additional language codes are added.
 		var africa_lang = [

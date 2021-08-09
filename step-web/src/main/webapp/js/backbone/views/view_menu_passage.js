@@ -15,6 +15,8 @@ var PassageMenuView = Backbone.View.extend({
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+    similarWord: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.similar_word %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSimilarWord ? "visible" : "hidden" %>;"></span></a></li>',
+    // enWithEsLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_es_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithEsLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.zh_second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
@@ -32,6 +34,7 @@ var PassageMenuView = Backbone.View.extend({
                 {initial: "E", key: "display_englishVocab"},
                 {initial: "A", key: "display_greekVocab"},
                 {initial: "T", key: "display_transliteration"},
+                {initial: "B", key: "display_spanishVocab"},
                 {initial: "Z", key: "display_chineseVocab"}
             ]
         },
@@ -349,7 +352,7 @@ var PassageMenuView = Backbone.View.extend({
             '<button class="btn btn-default btn-xs grammarColor" type="button" title="<%= __s.config_color_grammar_explain %>">' +
             '<span class="glyphicon glyphicon-cog"></span></button></span></li>',
             dropdown.append(_.template(colorCodeGrammarButton)())
-                .find(".grammarColor").click(this.showConfigGrammarColor);
+                .find(".grammarColor").click(step.util.showConfigGrammarColor);
 
         dropdownContainer.append(displayOptionsHeading);
         dropdownContainer.append(dropdown);
@@ -408,6 +411,19 @@ var PassageMenuView = Backbone.View.extend({
             //toggle the tick
             self._setVisible(this, quickLexicon);
         }));
+        // if (step.userLanguageCode.toLowerCase().startsWith("es")) {
+            // var currentEnWithEsLexiconSetting = self.model.get("isEnWithEsLexicon");
+            // if (currentEnWithEsLexiconSetting == null) {
+                // this.model.save({ isEnWithEsLexicon: true });
+                // currentEnWithEsLexiconSetting = true;
+            // }
+            // dropdown.append($(_.template(this.enWithEsLexicon)({ isEnWithEsLexicon: currentEnWithEsLexiconSetting })).click(function (e) {
+                // e.stopPropagation(); //prevent the bubbling up
+                // var enWithEsLexicon = !self.model.get("isEnWithEsLexicon");
+                // self.model.save({ isEnWithEsLexicon: enWithEsLexicon });
+                // self._setVisible(this, enWithEsLexicon); // toggle the tick
+            // }));
+        // }
         if (step.userLanguageCode.toLowerCase().startsWith("zh")) {
             var currentEnWithZhLexiconSetting = self.model.get("isEnWithZhLexicon");
             if (currentEnWithZhLexiconSetting == null) {
@@ -453,6 +469,22 @@ var PassageMenuView = Backbone.View.extend({
             //toggle the tick
             self._setVisible(this, verseVocab);
         }));
+		var currentSimilarWordSetting = self.model.get("isSimilarWord");
+        if (currentSimilarWordSetting == null) {
+            this.model.save({isSimilarWord: true});
+            currentSimilarWordSetting = true;
+        }
+        dropdown.append($(_.template(this.similarWord)({isSimilarWord: currentSimilarWordSetting})).click(function (e) {
+            //prevent the bubbling up
+            e.stopPropagation();
+
+            //set the setting
+            var similarWord = !self.model.get("isSimilarWord");
+            self.model.save({isSimilarWord: similarWord});
+
+            //toggle the tick
+            self._setVisible(this, similarWord);
+        }));
 
         dropdown.append(li);
         dropdown.append(_.template(this.fontButtons)())
@@ -489,9 +521,11 @@ var PassageMenuView = Backbone.View.extend({
                 dropdown.append(panel);
             }
             else {
-                if ((items[i].initial == "Z") && (step.userLanguageCode.toLowerCase() == "zh")) items[i].initial = "S"; // Option code for Simplified Chinese is "S"
-                if ((items[i].initial != "Z") || ((items[i].initial == "Z") && (step.userLanguageCode.toLowerCase() == "zh_tw"))) {
-                    var keyText = __s[items[i].key];
+                if ((items[i].initial === "Z") && (step.userLanguageCode.toLowerCase() === "zh")) items[i].initial = "S"; // Option code for Simplified Chinese is "S"
+				if (!( ( (items[i].initial === "Z") && (step.userLanguageCode.toLowerCase() !== "zh_tw") ) ||
+					   ( (items[i].initial === "S") && (step.userLanguageCode.toLowerCase() !== "zh") ) ||
+					   ( (items[i].initial === "B") && (step.userLanguageCode.toLowerCase() !== "es") ) ) ) {
+					var keyText = __s[items[i].key];
                     var helpText = __s[items[i].help];
                     var link = this._createLink(items[i].initial, keyText, helpText);
                     this._setVisible(link, selectedOptions.indexOf(items[i].initial) != -1);
@@ -662,6 +696,7 @@ var PassageMenuView = Backbone.View.extend({
     },
     removeSearchArgs: function(args) {
         return args.replace(new RegExp('\\|?' + STRONG_NUMBER    + '[^|]+', "ig"), "")
+		           .replace(new RegExp('\\|?' + SYNTAX           + '[^|]+', "ig"), "")
                    .replace(new RegExp('\\|?' + TEXT_SEARCH      + '[^|]+', "ig"), "")
                    .replace(new RegExp('\\|?' + SUBJECT_SEARCH   + '[^|]+', "ig"), "")
                    .replace(new RegExp('\\|?' + GREEK            +  '[^|]+', "ig"), "")
@@ -736,22 +771,6 @@ var PassageMenuView = Backbone.View.extend({
 //            ensure last element
 //            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
 //        }
-    },
-
-    showConfigGrammarColor: function (e) {
-        var grammarColorConfigPage = $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">');
-        var temp = document.getElementById("grammarClrModal");
-        e.preventDefault();
-        if (!temp) grammarColorConfigPage.appendTo("body");
-        if ($.getUrlVars().indexOf("debug") == -1) {
-            $.ajaxSetup({ cache: true });
-            $('#grammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.min.html');
-        }
-        else
-            $('#grammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.html');
-
     }
 
 });
