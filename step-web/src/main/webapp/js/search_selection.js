@@ -967,7 +967,7 @@ step.searchSelect = {
 		else if (searchType === STRONG_NUMBER) {
 			if (!this.includePreviousSearches) currentSearch = '|strong=' + searchWord;
 			else {
-				if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a-g character
+				if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a, b, c, d, e, f or g
 				currentSearch = '|syntax=t=strong:' + searchWord;
 			}
 			step.util.putStrongDetails(searchWord, displayText);
@@ -976,18 +976,17 @@ step.searchSelect = {
 		var previousSearch = "";
 		if (this.includePreviousSearches) {
 			var searchAndOrNot = $("#searchAndOrNot option:selected").val();
-			var existingSyntaxSearch = (currentSearch.substr(0, 10) === "|syntax=t=") ? currentSearch.substr(8) : "";
+			var existingSyntaxSearch = (currentSearch.substr(0, 8) === "|syntax=") ? currentSearch.substr(8) : "";
+			existingSyntaxSearch = (existingSyntaxSearch.substr(0, 2) === "t=") ? existingSyntaxSearch.substr(2) : existingSyntaxSearch;
 			var previousSyntaxSearch = "";
 			var numOfPreviousSyntaxSearch = 0;
 			for (var i = 0; i < this.previousSearchTokens.length; i++) {
 				if (this.previousSearchTokens[i] !== "") {
 					var previousSearchRelationship = $("#searchAndOrNot" + i + " option:selected").val();
-					if (typeof previousSearchRelationship !== "undefined") {
+					if (typeof previousSearchRelationship !== "undefined")
 						previousSearchRelationship = " " + previousSearchRelationship + " ";
-					}
-					else {
+					else
 						previousSearchRelationship = " ";
-					}
 					var curSearchWord = "";
 					if (this.previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = this.previousSearchTokens[i].substr(5);
 					else if (this.previousSearchTokens[i].substr(0, 7) === "strong=")
@@ -996,8 +995,8 @@ step.searchSelect = {
 						numOfPreviousSyntaxSearch ++;
 						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=t=";
 						else {
-							if (numOfPreviousSyntaxSearch > 2) 
-								previousSyntaxSearch = previousSyntaxSearch.substr(0, 8) + "(" + previousSyntaxSearch.substr(8) + ")";
+							if (numOfPreviousSyntaxSearch > 2)
+								previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
 							previousSyntaxSearch += previousSearchRelationship;
 						}
 						previousSyntaxSearch += curSearchWord;
@@ -1008,7 +1007,7 @@ step.searchSelect = {
 			if (previousSyntaxSearch.length > 0) {
 				if (existingSyntaxSearch.length > 0) {
 					if (numOfPreviousSyntaxSearch >= 2) 
-						previousSyntaxSearch = previousSyntaxSearch.substr(0, 8) + "(" + previousSyntaxSearch.substr(8) + ")";
+						previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
 					currentSearch = previousSyntaxSearch + " " + searchAndOrNot + " " + existingSyntaxSearch;
 				}
 				else currentSearch = previousSyntaxSearch + currentSearch;
