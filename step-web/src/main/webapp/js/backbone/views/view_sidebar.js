@@ -266,7 +266,7 @@ var SidebarView = Backbone.View.extend({
             textToAdd2 += remainingText;
         }
         remainingText = textToAdd2;
-        var matchExpression = new RegExp(/[GH\s]\d{4,5}/g);
+        var matchExpression = new RegExp(/[GH]\d{4,5}/g);
         var matchResult = remainingText.match(matchExpression);
         if (matchResult != null) {
             for (var i = 0; i < matchResult.length; i++) {
