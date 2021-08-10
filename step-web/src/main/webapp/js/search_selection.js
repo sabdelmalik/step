@@ -963,12 +963,12 @@ step.searchSelect = {
 				allVersions += 'version=' + activePassageData[i].item.shortInitials;
 			}
 		}
-		if (searchType === TEXT_SEARCH) currentSearch = '|syntax=' + searchWord;
+		if (searchType === TEXT_SEARCH) currentSearch = '|syntax=t=' + searchWord;
 		else if (searchType === STRONG_NUMBER) {
 			if (!this.includePreviousSearches) currentSearch = '|strong=' + searchWord;
 			else {
 				if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a-g character
-				currentSearch = '|syntax=strong:' + searchWord;
+				currentSearch = '|syntax=t=strong:' + searchWord;
 			}
 			step.util.putStrongDetails(searchWord, displayText);
 		}
@@ -976,7 +976,7 @@ step.searchSelect = {
 		var previousSearch = "";
 		if (this.includePreviousSearches) {
 			var searchAndOrNot = $("#searchAndOrNot option:selected").val();
-			var existingSyntaxSearch = (currentSearch.substr(0, 8) === "|syntax=") ? currentSearch.substr(8) : "";
+			var existingSyntaxSearch = (currentSearch.substr(0, 10) === "|syntax=t=") ? currentSearch.substr(8) : "";
 			var previousSyntaxSearch = "";
 			var numOfPreviousSyntaxSearch = 0;
 			for (var i = 0; i < this.previousSearchTokens.length; i++) {
@@ -994,7 +994,7 @@ step.searchSelect = {
 						curSearchWord = "strong:" + this.previousSearchTokens[i].substr(7);
 					if (curSearchWord !== "") {
 						numOfPreviousSyntaxSearch ++;
-						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=";
+						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=t=";
 						else {
 							if (numOfPreviousSyntaxSearch > 2) 
 								previousSyntaxSearch = previousSyntaxSearch.substr(0, 8) + "(" + previousSyntaxSearch.substr(8) + ")";

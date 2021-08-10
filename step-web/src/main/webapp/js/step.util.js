@@ -396,6 +396,7 @@ step.util = {
         var quoteChar = "";
         for (var j = 0; j < syntaxWords.length; j++) {
             if (indxNeedConcatenate == -1) {
+				if (syntaxWords[j].substr(0, 2) === "t=") syntaxWords[j] = syntaxWords[j].substr(2);
                 if ((syntaxWords[j].substr(0, 1) === '"') ||
                     (syntaxWords[j].substr(0, 1) === "'")) {
                     indxNeedConcatenate = j;
