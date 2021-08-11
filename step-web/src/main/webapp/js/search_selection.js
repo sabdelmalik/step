@@ -158,7 +158,7 @@ step.searchSelect = {
 				else if (itemType !== VERSION) {
 					if (itemType === SYNTAX) {
 						var syntaxWords = actPsgeDataElm.token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
-						step.util.findSearchTermsInQuotes(syntaxWords);
+						step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
 						var searchRelationship = "";
 						for (var j = 0; j < syntaxWords.length; j++) {
 							if (syntaxWords[j] == "") continue;
@@ -226,10 +226,6 @@ step.searchSelect = {
 				this.timer && clearTimeout(this.timer);
 				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
 			});
-			// .keyup(function(e){
-				// this.timer && clearTimeout(this.timer);
-				// this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
-			// })
 		});
 		$('textarea#userTextInput').focus();
 	},
@@ -963,12 +959,12 @@ step.searchSelect = {
 				allVersions += 'version=' + activePassageData[i].item.shortInitials;
 			}
 		}
-		if (searchType === TEXT_SEARCH) currentSearch = '|syntax=' + searchWord;
+		if (searchType === TEXT_SEARCH) currentSearch = '|syntax=t=' + searchWord;
 		else if (searchType === STRONG_NUMBER) {
 			if (!this.includePreviousSearches) currentSearch = '|strong=' + searchWord;
 			else {
-				if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a-g character
-				currentSearch = '|syntax=strong:' + searchWord;
+				if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a, b, c, d, e, f or g
+				currentSearch = '|syntax=t=strong:' + searchWord;
 			}
 			step.util.putStrongDetails(searchWord, displayText);
 		}
@@ -977,27 +973,26 @@ step.searchSelect = {
 		if (this.includePreviousSearches) {
 			var searchAndOrNot = $("#searchAndOrNot option:selected").val();
 			var existingSyntaxSearch = (currentSearch.substr(0, 8) === "|syntax=") ? currentSearch.substr(8) : "";
+			if (existingSyntaxSearch.substr(0, 2) === "t=") existingSyntaxSearch = existingSyntaxSearch.substr(2);
 			var previousSyntaxSearch = "";
 			var numOfPreviousSyntaxSearch = 0;
 			for (var i = 0; i < this.previousSearchTokens.length; i++) {
 				if (this.previousSearchTokens[i] !== "") {
 					var previousSearchRelationship = $("#searchAndOrNot" + i + " option:selected").val();
-					if (typeof previousSearchRelationship !== "undefined") {
+					if (typeof previousSearchRelationship !== "undefined")
 						previousSearchRelationship = " " + previousSearchRelationship + " ";
-					}
-					else {
+					else
 						previousSearchRelationship = " ";
-					}
 					var curSearchWord = "";
 					if (this.previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = this.previousSearchTokens[i].substr(5);
 					else if (this.previousSearchTokens[i].substr(0, 7) === "strong=")
 						curSearchWord = "strong:" + this.previousSearchTokens[i].substr(7);
 					if (curSearchWord !== "") {
 						numOfPreviousSyntaxSearch ++;
-						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=";
+						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=t=";
 						else {
-							if (numOfPreviousSyntaxSearch > 2) 
-								previousSyntaxSearch = previousSyntaxSearch.substr(0, 8) + "(" + previousSyntaxSearch.substr(8) + ")";
+							if (numOfPreviousSyntaxSearch > 2)
+								previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
 							previousSyntaxSearch += previousSearchRelationship;
 						}
 						previousSyntaxSearch += curSearchWord;
@@ -1008,20 +1003,15 @@ step.searchSelect = {
 			if (previousSyntaxSearch.length > 0) {
 				if (existingSyntaxSearch.length > 0) {
 					if (numOfPreviousSyntaxSearch >= 2) 
-						previousSyntaxSearch = previousSyntaxSearch.substr(0, 8) + "(" + previousSyntaxSearch.substr(8) + ")";
+						previousSyntaxSearch = previousSyntaxSearch.substr(0, 10) + "(" + previousSyntaxSearch.substr(10) + ")";
 					currentSearch = previousSyntaxSearch + " " + searchAndOrNot + " " + existingSyntaxSearch;
 				}
 				else currentSearch = previousSyntaxSearch + currentSearch;
 			}
-			// if ( ((searchAndOrNot === "OR") || (searchAndOrNot === "NOT")) &&
-				 // ( (previousSearch !== "") || 
-					 // ((searchType !== TEXT_SEARCH) && (searchType !== STRONG_NUMBER)) ) )
-					// alert(searchAndOrNot + " search is not available for subject and fuzzy search.  An AND search will be used.");
 		}
 		var url = allVersions + range + previousSearch + currentSearch;
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
 		step.util.closeModal('searchSelectionModal');
-	//    console.log("navigateSearch from passage_selection.html: " + url);
 		if (selectedDisplayLoc === "new") step.util.createNewColumn();
 		step.router.navigateSearch(url, true, true);
 	},

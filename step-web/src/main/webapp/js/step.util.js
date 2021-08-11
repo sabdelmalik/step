@@ -391,11 +391,12 @@ step.util = {
 		$("#history").height(heightToSet);
 		$("#help").height(heightToSet);
     },
-    findSearchTermsInQuotes: function(syntaxWords) {
+    findSearchTermsInQuotesAndRemovePrefix: function(syntaxWords) {
         var indxNeedConcatenate = -1;
         var quoteChar = "";
         for (var j = 0; j < syntaxWords.length; j++) {
             if (indxNeedConcatenate == -1) {
+				if (syntaxWords[j].substr(0, 2) === "t=") syntaxWords[j] = syntaxWords[j].substr(2);
                 if ((syntaxWords[j].substr(0, 1) === '"') ||
                     (syntaxWords[j].substr(0, 1) === "'")) {
                     indxNeedConcatenate = j;
@@ -740,7 +741,7 @@ step.util = {
 						if (searchWords.length > 0) searchWords += ', ';
                         if (itemType === SYNTAX) {
                             var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
-                            step.util.findSearchTermsInQuotes(syntaxWords);
+                            step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
    							var searchRelationship = "";
                             for (var j = 0; j < syntaxWords.length; j++) {
                                 if (syntaxWords[j] == "") continue;
