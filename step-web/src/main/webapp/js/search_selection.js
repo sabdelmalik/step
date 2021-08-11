@@ -158,7 +158,7 @@ step.searchSelect = {
 				else if (itemType !== VERSION) {
 					if (itemType === SYNTAX) {
 						var syntaxWords = actPsgeDataElm.token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
-						step.util.findSearchTermsInQuotes(syntaxWords);
+						step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
 						var searchRelationship = "";
 						for (var j = 0; j < syntaxWords.length; j++) {
 							if (syntaxWords[j] == "") continue;
@@ -226,10 +226,6 @@ step.searchSelect = {
 				this.timer && clearTimeout(this.timer);
 				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
 			});
-			// .keyup(function(e){
-				// this.timer && clearTimeout(this.timer);
-				// this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
-			// })
 		});
 		$('textarea#userTextInput').focus();
 	},
@@ -977,7 +973,7 @@ step.searchSelect = {
 		if (this.includePreviousSearches) {
 			var searchAndOrNot = $("#searchAndOrNot option:selected").val();
 			var existingSyntaxSearch = (currentSearch.substr(0, 8) === "|syntax=") ? currentSearch.substr(8) : "";
-			existingSyntaxSearch = (existingSyntaxSearch.substr(0, 2) === "t=") ? existingSyntaxSearch.substr(2) : existingSyntaxSearch;
+			if (existingSyntaxSearch.substr(0, 2) === "t=") existingSyntaxSearch = existingSyntaxSearch.substr(2);
 			var previousSyntaxSearch = "";
 			var numOfPreviousSyntaxSearch = 0;
 			for (var i = 0; i < this.previousSearchTokens.length; i++) {
@@ -1012,15 +1008,10 @@ step.searchSelect = {
 				}
 				else currentSearch = previousSyntaxSearch + currentSearch;
 			}
-			// if ( ((searchAndOrNot === "OR") || (searchAndOrNot === "NOT")) &&
-				 // ( (previousSearch !== "") || 
-					 // ((searchType !== TEXT_SEARCH) && (searchType !== STRONG_NUMBER)) ) )
-					// alert(searchAndOrNot + " search is not available for subject and fuzzy search.  An AND search will be used.");
 		}
 		var url = allVersions + range + previousSearch + currentSearch;
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
 		step.util.closeModal('searchSelectionModal');
-	//    console.log("navigateSearch from passage_selection.html: " + url);
 		if (selectedDisplayLoc === "new") step.util.createNewColumn();
 		step.router.navigateSearch(url, true, true);
 	},
