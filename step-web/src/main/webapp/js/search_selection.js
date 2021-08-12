@@ -227,7 +227,6 @@ step.searchSelect = {
 				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
 			});
 		});
-		$('textarea#userTextInput').focus();
 	},
 
 	createPreviousSearchList: function(itemType, actPsgeDataElm, listOfPreviousSearch, previousSearchTokensArg, numOfPreviousSearchTokensArg, previousSearchRelationship) {
