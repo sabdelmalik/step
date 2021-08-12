@@ -1329,7 +1329,7 @@ step.util = {
                     features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";
                 }
             }
-            return features;
+            return features + "&nbsp;";
         },
         enhanceVerseNumbers: function (passageId, passageContent, version, isSearch) {
             $(".verseNumber", passageContent).closest("a").mouseenter(function () {
