@@ -1329,7 +1329,7 @@ step.util = {
                     features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";
                 }
             }
-            return features;
+            return features + "&nbsp;";
         },
         enhanceVerseNumbers: function (passageId, passageContent, version, isSearch) {
             $(".verseNumber", passageContent).closest("a").mouseenter(function () {
@@ -1604,6 +1604,8 @@ step.util = {
 				'</div>' +
 			'</div>' +
 		'</div>')()).modal("show");
+		var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
+		if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourPassage').focus();
     },
 
 	searchSelectionModal: function () {
@@ -1678,6 +1680,7 @@ step.util = {
 				'</div>' +
 			'</div>' +
 		'</div>')()).modal("show");
+		$('textarea#userTextInput').focus();
     },
 	showVideoModal: function (videoFile, seconds) {
         var element = document.getElementById('videoModal');
