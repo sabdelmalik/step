@@ -261,6 +261,7 @@
                 window.open(window.location);
             });
         }
+		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
 		step.util.showIntro();
     });
 	$( window ).resize(function() {
