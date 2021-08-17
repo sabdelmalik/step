@@ -464,7 +464,11 @@ step.util = {
         if (step.util.isBlank(chapterRef)) {
             chapterRef = verseRef;
         }
-
+		if (chapterRef.substr(chapterRef.indexOf(".")+1) === "1") { // if chapter number is 1
+			var bookName = chapterRef.substr(0, chapterRef.indexOf("."));
+			var numOfChaptersInBook = step.passageSelect.getNumOfChapters(bookName);
+			if (numOfChaptersInBook == 1) chapterRef = bookName;
+		}
         step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries);
 
         //we prevent the event from bubbling up to set the passage id, as we expect a new passage to take focus
