@@ -1168,7 +1168,7 @@ step.util = {
                 that.touchstart = new Date().getTime();
                 that.touchTriggered = true;
 
-                if (that.lastTapStrong == $(this).attr("strong")) {
+                if (that.lastTwoTapStrong == $(this).attr("strong")) { // touched 3rd time
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
@@ -1178,36 +1178,40 @@ step.util = {
 						morph: $(this).attr('morph'),
 						classes: "lexiconFocus"
 					});
-                } else {
+				}
+                else if (that.lastTapStrong == $(this).attr("strong")) { // touched 2nd time
+	                step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+                    var hoverContext = this;
+                    require(['quick_lexicon'], function () {
+                        step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
+                    });
+					that.lastTwoTapStrong = that.lastTapStrong;
 					step.passage.higlightStrongs({
 						passageId: undefined,
 						strong: $(this).attr('strong'),
 						morph: $(this).attr('morph'),
 						classes: "primaryLightBg"
 					});
-
-                    var hoverContext = this;
-                    require(['quick_lexicon'], function () {
-                        step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
-                    });
                 }
                 that.lastTapStrong = $(this).attr("strong");
             }).hover(function (ev) {
-				step.passage.higlightStrongs({
-					passageId: undefined,
-					strong: $(this).attr('strong'),
-					morph: $(this).attr('morph'),
-					classes: "primaryLightBg"
-				});
-
-                var hoverContext = this;
-                require(['quick_lexicon'], function () {
-                    step.util.delay(function () {
-                        // do the quick lexicon
-                        step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, false);
-                        step.util.keepQuickLexiconOpen = false;
-                    }, MOUSE_PAUSE, 'show-quick-lexicon');
-                });
+				var ua = navigator.userAgent.toLowerCase(); 
+				if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) {
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "primaryLightBg"
+					});
+					var hoverContext = this;
+					require(['quick_lexicon'], function () {
+						step.util.delay(function () {
+							// do the quick lexicon
+							step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, false);
+							step.util.keepQuickLexiconOpen = false;
+						}, MOUSE_PAUSE, 'show-quick-lexicon');
+					});
+				}
             }, function () {
                 step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
                 step.util.delay(undefined, 0, 'show-quick-lexicon');
