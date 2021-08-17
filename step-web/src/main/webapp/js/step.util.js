@@ -1172,7 +1172,8 @@ step.util = {
                 that.touchstart = new Date().getTime();
                 that.touchTriggered = true;
 
-                if (that.lastTwoTapStrong == $(this).attr("strong")) { // touched 3rd time
+                if (that.lastTapStrong == $(this).attr("strong")) { // touched 3rd time
+                // if (that.lastTwoTapStrong == $(this).attr("strong")) { // touched 3rd time
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
@@ -1183,13 +1184,14 @@ step.util = {
 						classes: "lexiconFocus"
 					});
 				}
-                else if (that.lastTapStrong == $(this).attr("strong")) { // touched 2nd time
+                // else if (that.lastTapStrong == $(this).attr("strong")) { // touched 2nd time
+                else {
 	                step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
                     var hoverContext = this;
                     require(['quick_lexicon'], function () {
                         step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
                     });
-					that.lastTwoTapStrong = that.lastTapStrong;
+					// that.lastTwoTapStrong = that.lastTapStrong;
 					step.passage.higlightStrongs({
 						passageId: undefined,
 						strong: $(this).attr('strong'),
