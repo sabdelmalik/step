@@ -1231,7 +1231,6 @@ step.util = {
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
-			debugger;
 			var pageY = 0;
 			if (typeof ev.pageY == "number") {
 				pageY = ev.pageY;
