@@ -1172,7 +1172,7 @@ step.util = {
                 that.touchstart = new Date().getTime();
                 that.touchTriggered = true;
 
-                if (that.lastTapStrong == $(this).attr("strong")) { // touched 3rd time
+                if (that.lastTapStrong == $(this).attr("strong")) { // touched 2nd time
                 // if (that.lastTwoTapStrong == $(this).attr("strong")) { // touched 3rd time
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
                     $(this).addClass("lexiconFocus");
