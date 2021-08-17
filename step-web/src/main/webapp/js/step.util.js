@@ -1231,11 +1231,22 @@ step.util = {
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
+			debugger;
+			var pageY = 0;
+			if (typeof ev.pageY == "number") {
+				pageY = ev.pageY;
+			}
+			else if ((typeof ev.originalEvent == "object") &&
+					 (typeof ev.originalEvent.touches == "object") &&
+					 (typeof ev.originalEvent.touches[0] == "object") &&
+					 (typeof ev.originalEvent.touches[0].pageY == "number")) {
+				pageY = ev.originalEvent.touches[0].pageY;
+			}
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
                     version: version, reference: reference,
-                    target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: touchEvent,
+                    target: hoverContext, position: pageY / $(window).height(), touchEvent: touchEvent,
                     passageId: passageId
                 });
             }
