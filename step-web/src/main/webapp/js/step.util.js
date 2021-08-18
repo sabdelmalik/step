@@ -1188,44 +1188,43 @@ step.util = {
 						sameTouch = (that.lastTapStrong == cmpValue);
 					}
 				}
-				if ((diff > 150) || (sameTouch)) {
-					if (sameTouch) { // touched 2nd time
-						$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
-						$(this).addClass("lexiconFocus");
-						step.util.ui.showDef(this);
-						step.passage.higlightStrongs({
-							passageId: undefined,
-							strong: $(this).attr('strong'),
-							morph: $(this).attr('morph'),
-							classes: "lexiconFocus"
-						});
-					}
-					else {
-						step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
-						var hoverContext = this;
-						require(['quick_lexicon'], function () {
-							step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
-						});
-						// that.lastTwoTapStrong = that.lastTapStrong;
-						step.passage.higlightStrongs({
-							passageId: undefined,
-							strong: $(this).attr('strong'),
-							morph: $(this).attr('morph'),
-							classes: "primaryLightBg"
-						});
-					}
-					that.lastTapStrong = "";
-					if (typeof $(this).attr("strong") === "string") {
-						that.lastTapStrong = $(this).attr("strong");
-						if ((typeof $(this).prev()[0] === "object") &&
-							(typeof $(this).prev()[0].outerHTML === "string"))
-							that.lastTapStrong += $(this).prev()[0].outerHTML;
-					}
+				if (sameTouch) { // touched 2nd time
+					$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
+					$(this).addClass("lexiconFocus");
+					step.util.ui.showDef(this);
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "lexiconFocus"
+					});
+				}
+				else if (diff > 200) {
+					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
+					var hoverContext = this;
+					require(['quick_lexicon'], function () {
+						step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
+					});
+					// that.lastTwoTapStrong = that.lastTapStrong;
+					step.passage.higlightStrongs({
+						passageId: undefined,
+						strong: $(this).attr('strong'),
+						morph: $(this).attr('morph'),
+						classes: "primaryLightBg"
+					});
+				}
+				that.lastTapStrong = "";
+				if (typeof $(this).attr("strong") === "string") {
+					that.lastTapStrong = $(this).attr("strong");
+					if ((typeof $(this).prev()[0] === "object") &&
+						(typeof $(this).prev()[0].outerHTML === "string"))
+						that.lastTapStrong += $(this).prev()[0].outerHTML;
 				}
 			}).on("touchstart", function (ev) {
-				that.touchstartTime = new Date().getTime()
+				that.touchstartTime = new Date().getTime();
 			}).on("touchmove", function (ev) {
-				that.touchstartTime = new Date().getTime()
+				that.touchstartTime = new Date().getTime();
+				console.log("touch move");
 			}).hover(function (ev) {
 				if (!that.touchDevice) {
 					step.passage.higlightStrongs({
