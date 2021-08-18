@@ -1156,7 +1156,8 @@ step.util = {
             var that = this;
             var allStrongElements = $("[strong]", passageContent);
 			var ua = navigator.userAgent.toLowerCase(); 
-			that.touchDevice = false
+			that.touchDevice = false;
+			that.pageY = 0;
 			if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1)) {
 				that.touchDevice = true;
 			}
@@ -1198,14 +1199,14 @@ step.util = {
 						morph: $(this).attr('morph'),
 						classes: "lexiconFocus"
 					});
+					that.lastTapStrong = "";
 				}
 				else if (diff > 200) {
 					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
 					var hoverContext = this;
 					require(['quick_lexicon'], function () {
-						step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
+						step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true, that.pageY);
 					});
-					// that.lastTwoTapStrong = that.lastTapStrong;
 					step.passage.higlightStrongs({
 						passageId: undefined,
 						strong: $(this).attr('strong'),
@@ -1220,11 +1221,13 @@ step.util = {
 						(typeof $(this).prev()[0].outerHTML === "string"))
 						that.lastTapStrong += $(this).prev()[0].outerHTML;
 				}
-			}).on("touchstart", function (ev) {
+			}).on("touchstart touchmove", function (ev) {
 				that.touchstartTime = new Date().getTime();
-			}).on("touchmove", function (ev) {
-				that.touchstartTime = new Date().getTime();
-				console.log("touch move");
+				if ((typeof ev.originalEvent == "object") &&
+					 (typeof ev.originalEvent.touches == "object") &&
+					 (typeof ev.originalEvent.touches[0] == "object") &&
+					 (typeof ev.originalEvent.touches[0].pageY == "number")) 
+					that.pageY = ev.originalEvent.touches[0].pageY;
 			}).hover(function (ev) {
 				if (!that.touchDevice) {
 					step.passage.higlightStrongs({
@@ -1250,7 +1253,7 @@ step.util = {
                 }
             });
         },
-        _displayNewQuickLexicon: function (hoverContext, ev, passageId, touchEvent) {
+        _displayNewQuickLexicon: function (hoverContext, ev, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
             var reference = step.util.ui.getVerseNumber(hoverContext);
@@ -1261,12 +1264,10 @@ step.util = {
 			if (typeof ev.pageY == "number") {
 				pageY = ev.pageY;
 			}
-			else if ((typeof ev.originalEvent == "object") &&
-					 (typeof ev.originalEvent.touches == "object") &&
-					 (typeof ev.originalEvent.touches[0] == "object") &&
-					 (typeof ev.originalEvent.touches[0].pageY == "number")) {
-				pageY = ev.originalEvent.touches[0].pageY;
+			else if (typeof pageYParam == "number") {
+				pageY = pageYParam;
 			}
+			console.log("pageY " + pageY);
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
