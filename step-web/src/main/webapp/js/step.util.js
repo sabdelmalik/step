@@ -1172,9 +1172,10 @@ step.util = {
             }).on("touchend", function (ev) {
 				var diff = new Date().getTime() - that.touchstartTime;
 				console.log("touchend" + that.touchstartTime + " " + diff);
-				if (diff > 500) {
+				var (sameTouch = that.lastTapStrong == $(this).attr("strong") + $(this).prev()[0].outerHTML);
+				if ((diff > 500) || (sameTouch)) {
 					that.touchTriggered = true;
-					if (that.lastTapStrong == $(this).attr("strong") + $(this).prev()[0].outerHTML) { // touched 2nd time
+					if (sameTouch) { // touched 2nd time
 						$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
 						$(this).addClass("lexiconFocus");
 						step.util.ui.showDef(this);
