@@ -1158,6 +1158,7 @@ step.util = {
 
             allStrongElements.click(function () {
                 if (!that.touchTriggered) {
+					console.log("touchTriggered" + new Date().getTime());
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
@@ -1168,39 +1169,42 @@ step.util = {
 						classes: "lexiconFocus"
 					});
                 }
-            }).on("touchstart", function (ev) {
-                that.touchstart = new Date().getTime();
-                that.touchTriggered = true;
-
-                if (that.lastTapStrong == $(this).attr("strong")) { // touched 2nd time
-                // if (that.lastTwoTapStrong == $(this).attr("strong")) { // touched 3rd time
-                    $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
-                    $(this).addClass("lexiconFocus");
-                    step.util.ui.showDef(this);
-					step.passage.higlightStrongs({
-						passageId: undefined,
-						strong: $(this).attr('strong'),
-						morph: $(this).attr('morph'),
-						classes: "lexiconFocus"
-					});
+            }).on("touchend", function (ev) {
+				var diff = new Date().getTime() - that.touchstartTime;
+				console.log("touchend" + that.touchstartTime + " " + diff);
+				if (diff > 500) {
+					that.touchTriggered = true;
+					if (that.lastTapStrong == $(this).attr("strong") + $(this).prev()[0].outerHTML) { // touched 2nd time
+						$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
+						$(this).addClass("lexiconFocus");
+						step.util.ui.showDef(this);
+						step.passage.higlightStrongs({
+							passageId: undefined,
+							strong: $(this).attr('strong'),
+							morph: $(this).attr('morph'),
+							classes: "lexiconFocus"
+						});
+					}
+					else {
+						step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+						var hoverContext = this;
+						require(['quick_lexicon'], function () {
+							step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
+						});
+						// that.lastTwoTapStrong = that.lastTapStrong;
+						step.passage.higlightStrongs({
+							passageId: undefined,
+							strong: $(this).attr('strong'),
+							morph: $(this).attr('morph'),
+							classes: "primaryLightBg"
+						});
+					}
+					that.lastTapStrong = $(this).attr("strong") + $(this).prev()[0].outerHTML;
 				}
-                // else if (that.lastTapStrong == $(this).attr("strong")) { // touched 2nd time
-                else {
-	                step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-                    var hoverContext = this;
-                    require(['quick_lexicon'], function () {
-                        step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true);
-                    });
-					// that.lastTwoTapStrong = that.lastTapStrong;
-					step.passage.higlightStrongs({
-						passageId: undefined,
-						strong: $(this).attr('strong'),
-						morph: $(this).attr('morph'),
-						classes: "primaryLightBg"
-					});
-                }
-                that.lastTapStrong = $(this).attr("strong");
-            }).hover(function (ev) {
+			}).on("touchstart", function (ev) {
+				that.touchstartTime = new Date().getTime()
+				console.log("touchstart" + that.touchstartTime);
+			}).hover(function (ev) {
 				var ua = navigator.userAgent.toLowerCase(); 
 				if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) {
 					step.passage.higlightStrongs({
