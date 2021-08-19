@@ -1178,9 +1178,14 @@ step.util = {
 						cmpValue = $(this).attr("strong");
 						if ((typeof $(this).prev()[0] === "object") &&
 							(typeof $(this).prev()[0].outerHTML === "string"))
-							cmpValue += $(this).prev()[0].outerHTML;
+							cmpValue += $(this).prev()[0].outerHTML.replace(/\s?primaryLightBg\s?/g, "")
+																   .replace(/\s?relatedWordEmphasisHover\s?/g, "")
+																   .replace(/\s?lexiconFocus\s?/g, "")
+																   .replace(/\s?lexiconRelatedFocus\s?/g, "")
+																   .replace(/\s?secondaryBackground\s?/g, "");
 						sameTouch = (that.lastTapStrong == cmpValue);
 					}
+					else console.log(" old: " + that.lastTapStrong + " new: " + cmpValue);
 				}
 				if (sameTouch) { // touched 2nd time
 					$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
@@ -1196,6 +1201,14 @@ step.util = {
 				}
 				else if (diff > 100) { // Should be 200 milliseconds
 					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
+					that.lastTapStrong = "";
+					if (typeof $(this).attr("strong") === "string") {
+						that.lastTapStrong = $(this).attr("strong");
+						if ((typeof $(this).prev()[0] === "object") &&
+							(typeof $(this).prev()[0].outerHTML === "string")) {
+							that.lastTapStrong += $(this).prev()[0].outerHTML;
+						}
+					}
 					var hoverContext = this;
 					require(['quick_lexicon'], function () {
 						step.util.ui._displayNewQuickLexicon(hoverContext, passageId, true, that.pageY);
@@ -1206,13 +1219,6 @@ step.util = {
 						morph: $(this).attr('morph'),
 						classes: "primaryLightBg"
 					});
-					that.lastTapStrong = "";
-					if (typeof $(this).attr("strong") === "string") {
-						that.lastTapStrong = $(this).attr("strong");
-						if ((typeof $(this).prev()[0] === "object") &&
-							(typeof $(this).prev()[0].outerHTML === "string"))
-							that.lastTapStrong += $(this).prev()[0].outerHTML;
-					}
 				}
 			}).on("touchstart touchmove", function (ev) {
 				that.touchstartTime = new Date().getTime();
