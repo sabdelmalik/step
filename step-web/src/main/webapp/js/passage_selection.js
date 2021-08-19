@@ -401,12 +401,14 @@ step.passageSelect = {
 		}
 		var tableColumns = 10;
 		var widthPercent = 10;
-		var ua = navigator.userAgent.toLowerCase();
-		if ( (ua.indexOf("android") > -1) ||
-			 (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
-				(ua.indexOf("safari/60") > -1)) ) {
-			tableColumns = 7;
-			widthPercent = 14;
+		if (step.touchDevice) {
+			var ua = navigator.userAgent.toLowerCase();
+			if ( (ua.indexOf("android") > -1) ||
+				 (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
+					(ua.indexOf("safari/60") > -1)) ) {
+				tableColumns = 7;
+				widthPercent = 14;
+			}
 		}
 
 		var html = '<h5>' + headerMsg + '</h5>' +

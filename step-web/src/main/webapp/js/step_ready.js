@@ -54,6 +54,12 @@
         //override some particular settings to avoid UI shifting on load:
         //we never open up a related words section
         step.settings.save({relatedWordsOpen: false});
+		
+		step.touchDevice = false;
+		var ua = navigator.userAgent.toLowerCase(); 
+		if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
+			((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))) // iPad requesting a desktop web site
+			step.touchDevice = true;
     };
 
     function initSearchDropdown() {

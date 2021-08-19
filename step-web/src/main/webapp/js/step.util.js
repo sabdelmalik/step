@@ -1155,17 +1155,9 @@ step.util = {
         addStrongHandlers: function (passageId, passageContent) {
             var that = this;
             var allStrongElements = $("[strong]", passageContent);
-			var ua = navigator.userAgent.toLowerCase(); 
-			that.touchDevice = false;
 			that.pageY = 0;
-			if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1)) {
-				that.touchDevice = true;
-			}
-			else if ((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))
-				that.touchDevice = true; // iPad requesting a desktop web site
-
             allStrongElements.click(function () {
-                if (!that.touchDevice) {
+                if (!step.touchDevice) {
                     $(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus");
                     $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
@@ -1178,6 +1170,7 @@ step.util = {
                 }
             }).on("touchend", function (ev) {
 				var diff = new Date().getTime() - that.touchstartTime;
+				console.log("diff " + diff);
 				var sameTouch = false;
 				if (typeof that.lastTapStrong === "string") {
 					var cmpValue = "";
@@ -1201,11 +1194,11 @@ step.util = {
 					});
 					that.lastTapStrong = "";
 				}
-				else if (diff > 200) {
+				else if (diff > 100) { // Should be 200 milliseconds
 					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
 					var hoverContext = this;
 					require(['quick_lexicon'], function () {
-						step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, true, that.pageY);
+						step.util.ui._displayNewQuickLexicon(hoverContext, passageId, true, that.pageY);
 					});
 					step.passage.higlightStrongs({
 						passageId: undefined,
@@ -1213,13 +1206,13 @@ step.util = {
 						morph: $(this).attr('morph'),
 						classes: "primaryLightBg"
 					});
-				}
-				that.lastTapStrong = "";
-				if (typeof $(this).attr("strong") === "string") {
-					that.lastTapStrong = $(this).attr("strong");
-					if ((typeof $(this).prev()[0] === "object") &&
-						(typeof $(this).prev()[0].outerHTML === "string"))
-						that.lastTapStrong += $(this).prev()[0].outerHTML;
+					that.lastTapStrong = "";
+					if (typeof $(this).attr("strong") === "string") {
+						that.lastTapStrong = $(this).attr("strong");
+						if ((typeof $(this).prev()[0] === "object") &&
+							(typeof $(this).prev()[0].outerHTML === "string"))
+							that.lastTapStrong += $(this).prev()[0].outerHTML;
+					}
 				}
 			}).on("touchstart touchmove", function (ev) {
 				that.touchstartTime = new Date().getTime();
@@ -1229,7 +1222,7 @@ step.util = {
 					 (typeof ev.originalEvent.touches[0].pageY == "number")) 
 					that.pageY = ev.originalEvent.touches[0].pageY;
 			}).hover(function (ev) {
-				if (!that.touchDevice) {
+				if (!step.touchDevice) {
 					step.passage.higlightStrongs({
 						passageId: undefined,
 						strong: $(this).attr('strong'),
@@ -1240,7 +1233,7 @@ step.util = {
 					require(['quick_lexicon'], function () {
 						step.util.delay(function () {
 							// do the quick lexicon
-							step.util.ui._displayNewQuickLexicon(hoverContext, ev, passageId, false);
+							step.util.ui._displayNewQuickLexicon(hoverContext, passageId, false, ev.pageY);
 							step.util.keepQuickLexiconOpen = false;
 						}, MOUSE_PAUSE, 'show-quick-lexicon');
 					});
@@ -1253,20 +1246,14 @@ step.util = {
                 }
             });
         },
-        _displayNewQuickLexicon: function (hoverContext, ev, passageId, touchEvent, pageYParam) {
+        _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
             var reference = step.util.ui.getVerseNumber(hoverContext);
             var version = step.passages.findWhere({passageId: passageId}).get("masterVersion");
 
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
-			var pageY = 0;
-			if (typeof ev.pageY == "number") {
-				pageY = ev.pageY;
-			}
-			else if (typeof pageYParam == "number") {
-				pageY = pageYParam;
-			}
+			var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
 			console.log("pageY " + pageY);
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
@@ -1650,7 +1637,7 @@ step.util = {
 			'</div>' +
 		'</div>')()).modal("show");
 		var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
-		if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourPassage').focus();
+		if (!step.touchDevice) $('textarea#enterYourPassage').focus();
     },
 
 	searchSelectionModal: function () {
