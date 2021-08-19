@@ -1245,7 +1245,7 @@ step.util = {
 					});
 				}
             }, function () {
-                step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+				if (!step.touchDevice) step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
                 step.util.delay(undefined, 0, 'show-quick-lexicon');
                 if (!step.util.keepQuickLexiconOpen) {
                     $("#quickLexicon").remove();
