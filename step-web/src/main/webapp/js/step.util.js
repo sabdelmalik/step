@@ -1227,7 +1227,7 @@ step.util = {
 					 (typeof ev.originalEvent.touches[0] == "object") &&
 					 (typeof ev.originalEvent.touches[0].pageY == "number")) 
 					that.pageY = ev.originalEvent.touches[0].pageY;
-			}).hover(function (ev) {
+			}).hover(function (ev) { // mouse pointer enter
 				if (!step.touchDevice) {
 					step.passage.higlightStrongs({
 						passageId: undefined,
@@ -1244,12 +1244,14 @@ step.util = {
 						}, MOUSE_PAUSE, 'show-quick-lexicon');
 					});
 				}
-            }, function () {
-				if (!step.touchDevice) step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-                step.util.delay(undefined, 0, 'show-quick-lexicon');
-                if (!step.util.keepQuickLexiconOpen) {
-                    $("#quickLexicon").remove();
-                }
+            }, function () { // mouse pointer leave
+				if (!step.touchDevice) {
+					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+					step.util.delay(undefined, 0, 'show-quick-lexicon');
+					if (!step.util.keepQuickLexiconOpen) {
+						$("#quickLexicon").remove();
+					}
+				}
             });
         },
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
