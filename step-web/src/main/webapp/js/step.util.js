@@ -1212,10 +1212,12 @@ step.util = {
 				}
 				else {
 					var diff = new Date().getTime() - timeOfQuickLexicon;
-					console.log("diff " + diff);
 					if (diff < 500) {
+						console.log("Clear quick lexicon, diff " + diff);
 						step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
 						$("#quickLexicon").remove();
+						that.lastTapStrong = "";
+						timeOfQuickLexicon = 0;
 					}
 				}
 			}).hover(function (ev) { // mouse pointer starts hover (enter)
