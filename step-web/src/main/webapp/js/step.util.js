@@ -1164,6 +1164,7 @@ step.util = {
 			var onLongTouch;
 			var timer;
 			var touchDuration = 170;
+			var timeOfQuickLexicon = 0;
 			that.pageY = 0;
             allStrongElements.click(function () {
                 if (!step.touchDevice) {
@@ -1193,14 +1194,29 @@ step.util = {
 						function( ) { 
 							step.util.ui._processTouchOnStrong(that.touchedObject, passageId, userTouchedSameWord, that.pageY); 
 							that.lastTapStrong = (userTouchedSameWord) ? "" : strongStringAndPrevHTML;
+							timeOfQuickLexicon = new Date().getTime();
 						},
 						requiredTouchDuration);
 				}
-			}).on("touchend touchmove touchcancel", function (ev) {
+			}).on("touchend touchcancel", function (ev) {
 			    //stops short touches from firing the event
 				if (timer) {
 					clearTimeout(timer);
 					timer = null;
+				}
+			}).on("touchmove", function (ev) {
+			    //stops short touches from firing the event
+				if (timer) {
+					clearTimeout(timer);
+					timer = null;
+				}
+				else {
+					var diff = new Date().getTime() - timeOfQuickLexicon;
+					console.log("diff " + diff);
+					if (diff < 75) {
+						step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+						$("#quickLexicon").remove();
+					}
 				}
 			}).hover(function (ev) { // mouse pointer starts hover (enter)
 				if (!step.touchDevice) {
