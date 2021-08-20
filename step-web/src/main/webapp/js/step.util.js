@@ -445,6 +445,12 @@ step.util = {
      * @param el
      */
     createNewLinkedColumn: function (passageId) {
+		if ($(window).width() < 768) {
+			var msg = "Your screen is not wide enough to open another panel.";
+			if ((step.touchDevice) && ($(window).height() > 768))
+				msg += " Rotate your screen to horizontal mode if available.";
+			alert(msg);
+		}
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
@@ -1155,6 +1161,9 @@ step.util = {
         addStrongHandlers: function (passageId, passageContent) {
             var that = this;
             var allStrongElements = $("[strong]", passageContent);
+			var onLongTouch;
+			var timer;
+			var touchDuration = 150;
 			that.pageY = 0;
             allStrongElements.click(function () {
                 if (!step.touchDevice) {
@@ -1168,66 +1177,32 @@ step.util = {
 						classes: "lexiconFocus"
 					});
                 }
-            }).on("touchend", function (ev) {
-				var diff = new Date().getTime() - that.touchstartTime;
-				console.log("diff " + diff);
-				var sameTouch = false;
-				if (typeof that.lastTapStrong === "string") {
-					var cmpValue = "";
-					if (typeof $(this).attr("strong") === "string") {
-						cmpValue = $(this).attr("strong");
-						if ((typeof $(this).prev()[0] === "object") &&
-							(typeof $(this).prev()[0].outerHTML === "string"))
-							cmpValue += $(this).prev()[0].outerHTML.replace(/\s?primaryLightBg\s?/g, "")
-																   .replace(/\s?relatedWordEmphasisHover\s?/g, "")
-																   .replace(/\s?lexiconFocus\s?/g, "")
-																   .replace(/\s?lexiconRelatedFocus\s?/g, "")
-																   .replace(/\s?secondaryBackground\s?/g, "");
-						sameTouch = (that.lastTapStrong == cmpValue);
-					}
-					else console.log(" old: " + that.lastTapStrong + " new: " + cmpValue);
-				}
-				if (sameTouch) { // touched 2nd time
-					$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
-					$(this).addClass("lexiconFocus");
-					step.util.ui.showDef(this);
-					step.passage.higlightStrongs({
-						passageId: undefined,
-						strong: $(this).attr('strong'),
-						morph: $(this).attr('morph'),
-						classes: "lexiconFocus"
-					});
-					that.lastTapStrong = "";
-				}
-				else if (diff > 100) { // Should be 200 milliseconds
-					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
-					that.lastTapStrong = "";
-					if (typeof $(this).attr("strong") === "string") {
-						that.lastTapStrong = $(this).attr("strong");
-						if ((typeof $(this).prev()[0] === "object") &&
-							(typeof $(this).prev()[0].outerHTML === "string")) {
-							that.lastTapStrong += $(this).prev()[0].outerHTML;
-						}
-					}
-					var hoverContext = this;
-					require(['quick_lexicon'], function () {
-						step.util.ui._displayNewQuickLexicon(hoverContext, passageId, true, that.pageY);
-					});
-					step.passage.higlightStrongs({
-						passageId: undefined,
-						strong: $(this).attr('strong'),
-						morph: $(this).attr('morph'),
-						classes: "primaryLightBg"
-					});
-				}
-			}).on("touchstart touchmove", function (ev) {
-				that.touchstartTime = new Date().getTime();
+			}).on("touchstart", function (ev) {
 				if ((typeof ev.originalEvent == "object") &&
-					 (typeof ev.originalEvent.touches == "object") &&
-					 (typeof ev.originalEvent.touches[0] == "object") &&
-					 (typeof ev.originalEvent.touches[0].pageY == "number")) 
+					(typeof ev.originalEvent.touches == "object") &&
+					(typeof ev.originalEvent.touches[0] == "object") &&
+					(typeof ev.originalEvent.touches[0].pageY == "number")) 
 					that.pageY = ev.originalEvent.touches[0].pageY;
-			}).hover(function (ev) { // mouse pointer enter
+				if (!timer) {
+					var requiredTouchDuration = touchDuration;
+					var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch
+					var userTouchedSameWord = (strongStringAndPrevHTML == that.lastTapStrong);
+					if (userTouchedSameWord) requiredTouchDuration = touchDuration - 50;
+					that.touchedObject = this;
+					timer = setTimeout(
+						function( ) { 
+							step.util.ui._processTouchOnStrong(that.touchedObject, passageId, userTouchedSameWord, that.pageY); 
+							that.lastTapStrong = (userTouchedSameWord) ? "" : strongStringAndPrevHTML;
+						},
+						requiredTouchDuration);
+				}
+			}).on("touchend touchmove touchcancel", function (ev) {
+			    //stops short touches from firing the event
+				if (timer) {
+					clearTimeout(timer);
+					timer = null;
+				}
+			}).hover(function (ev) { // mouse pointer starts hover (enter)
 				if (!step.touchDevice) {
 					step.passage.higlightStrongs({
 						passageId: undefined,
@@ -1244,7 +1219,7 @@ step.util = {
 						}, MOUSE_PAUSE, 'show-quick-lexicon');
 					});
 				}
-            }, function () { // mouse pointer leave
+            }, function () { // mouse pointer ends hover (leave)
 				if (!step.touchDevice) {
 					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
 					step.util.delay(undefined, 0, 'show-quick-lexicon');
@@ -1254,6 +1229,44 @@ step.util = {
 				}
             });
         },
+        _getStrongStringAndPrevHTML: function (touchedObject) {
+			var result = "";
+			if (typeof $(touchedObject).attr("strong") === "string") {
+				result = $(touchedObject).attr("strong");
+				if ((typeof $(touchedObject).prev()[0] === "object") &&
+					(typeof $(touchedObject).prev()[0].outerHTML === "string"))
+					result += $(touchedObject).prev()[0].outerHTML.replace(/\s?primaryLightBg\s?/g, "")
+														   .replace(/\s?relatedWordEmphasisHover\s?/g, "")
+														   .replace(/\s?lexiconFocus\s?/g, "")
+														   .replace(/\s?lexiconRelatedFocus\s?/g, "")
+														   .replace(/\s?secondaryBackground\s?/g, "");
+			}
+			return result;
+		},
+        _processTouchOnStrong: function (touchedObject, passageId, touchSameWord, pageY) {
+			var classToHighlight = "";
+			if (touchSameWord) { // touched 2nd time
+				$(".lexiconFocus, .lexiconRelatedFocus").removeClass("lexiconFocus lexiconRelatedFocus secondaryBackground");
+				$(touchedObject).addClass("lexiconFocus");
+				step.util.ui.showDef(touchedObject);
+				classToHighlight = "lexiconFocus";
+			}
+			else {
+				step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
+				// var hoverContext = touchedObject;
+				require(['quick_lexicon'], function () {
+					step.util.ui._displayNewQuickLexicon(touchedObject, passageId, true, pageY);
+				});
+				classToHighlight = "primaryLightBg";
+			}
+			step.passage.higlightStrongs({
+				passageId: undefined,
+				strong: $(touchedObject).attr('strong'),
+				morph: $(touchedObject).attr('morph'),
+				classes: classToHighlight
+			});
+
+		},
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
             var morph = $(hoverContext).attr('morph');
@@ -1262,7 +1275,6 @@ step.util = {
 
             var quickLexiconEnabled = step.passages.findWhere({ passageId: passageId}).get("isQuickLexicon");
 			var pageY = (typeof pageYParam == "number") ? pageYParam : 0;
-			console.log("pageY " + pageY);
             if (quickLexiconEnabled == true || quickLexiconEnabled == null) {
                 new QuickLexicon({
                     strong: strong, morph: morph,
