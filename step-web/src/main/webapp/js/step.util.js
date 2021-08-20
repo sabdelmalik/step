@@ -1163,7 +1163,7 @@ step.util = {
             var allStrongElements = $("[strong]", passageContent);
 			var onLongTouch;
 			var timer;
-			var touchDuration = 150;
+			var touchDuration = 170;
 			that.pageY = 0;
             allStrongElements.click(function () {
                 if (!step.touchDevice) {
@@ -1187,7 +1187,7 @@ step.util = {
 					var requiredTouchDuration = touchDuration;
 					var strongStringAndPrevHTML = step.util.ui._getStrongStringAndPrevHTML(this); // Try to get something unique on the word touch by the user to compare if it is the 2nd touch
 					var userTouchedSameWord = (strongStringAndPrevHTML == that.lastTapStrong);
-					if (userTouchedSameWord) requiredTouchDuration = touchDuration - 50;
+					if (userTouchedSameWord) requiredTouchDuration = touchDuration - 70;
 					that.touchedObject = this;
 					timer = setTimeout(
 						function( ) { 
