@@ -121,9 +121,8 @@ var QuickLexicon = Backbone.View.extend({
                 }
                 self.displayQuickDef(lexicon);
             }
-
-            for (var i = 0; i < (data.vocabInfos || []).length; i++) {
-                self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+			for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+				self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
             }
         });
     }, /**

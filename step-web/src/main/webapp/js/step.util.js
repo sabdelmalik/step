@@ -1163,7 +1163,7 @@ step.util = {
             var allStrongElements = $("[strong]", passageContent);
 			var onLongTouch;
 			var timer;
-			var touchDuration = 170;
+			var touchDuration = 125;
 			var timeOfQuickLexicon = 0;
 			that.pageY = 0;
             allStrongElements.click(function () {
@@ -1190,13 +1190,12 @@ step.util = {
 					var userTouchedSameWord = (strongStringAndPrevHTML == that.lastTapStrong);
 					if (userTouchedSameWord) requiredTouchDuration = touchDuration - 70;
 					that.touchedObject = this;
-					timer = setTimeout(
-						function( ) { 
-							step.util.ui._processTouchOnStrong(that.touchedObject, passageId, userTouchedSameWord, that.pageY); 
-							that.lastTapStrong = (userTouchedSameWord) ? "" : strongStringAndPrevHTML;
-							timeOfQuickLexicon = new Date().getTime();
-						},
-						requiredTouchDuration);
+					timer = setTimeout( function( ) { 
+											step.util.ui._processTouchOnStrong(that.touchedObject, passageId, userTouchedSameWord, that.pageY); 
+											that.lastTapStrong = (userTouchedSameWord) ? "" : strongStringAndPrevHTML;
+											timeOfQuickLexicon = new Date().getTime();
+										},
+										requiredTouchDuration);
 				}
 			}).on("touchend touchcancel", function (ev) {
 			    //stops short touches from firing the event
@@ -1210,15 +1209,20 @@ step.util = {
 					clearTimeout(timer);
 					timer = null;
 				}
-				else {
-					var diff = new Date().getTime() - timeOfQuickLexicon;
-					if (diff < 500) {
-						console.log("Clear quick lexicon, diff " + diff);
-						step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-						$("#quickLexicon").remove();
-						that.lastTapStrong = "";
-						timeOfQuickLexicon = 0;
-					}
+				// If touch moved shortly after it triggered a quick lexicon, the user probably wanted to scroll
+				// instead of quick lexicon.  
+				else if ((new Date().getTime() - timeOfQuickLexicon) < 900) {
+					that.lastTapStrong = "";
+					timeOfQuickLexicon = 0;
+					$("#quickLexicon").remove();
+					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+					// The QuickLexicon highlights the relatedWordEmphasisHover which can be delayed by the server's response.
+					// Therefore wait a little and try to clear the highlight again.
+					setTimeout(	function( ) {
+									$("#quickLexicon").remove();
+									step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+								},
+								1000);
 				}
 			}).hover(function (ev) { // mouse pointer starts hover (enter)
 				if (!step.touchDevice) {
@@ -1283,7 +1287,6 @@ step.util = {
 				morph: $(touchedObject).attr('morph'),
 				classes: classToHighlight
 			});
-
 		},
         _displayNewQuickLexicon: function (hoverContext, passageId, touchEvent, pageYParam) {
             var strong = $(hoverContext).attr('strong');
