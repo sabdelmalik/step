@@ -1213,7 +1213,7 @@ step.util = {
 				else {
 					var diff = new Date().getTime() - timeOfQuickLexicon;
 					console.log("diff " + diff);
-					if (diff < 75) {
+					if (diff < 500) {
 						step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
 						$("#quickLexicon").remove();
 					}
