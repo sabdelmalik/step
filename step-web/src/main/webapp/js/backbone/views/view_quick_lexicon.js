@@ -119,10 +119,38 @@ var QuickLexicon = Backbone.View.extend({
                 if (self.position > 0.66) {
                     lexicon.css({"top": "37", "bottom": "auto"});
                 }
-                self.displayQuickDef(lexicon);
-            }
-			for (var i = 0; i < (data.vocabInfos || []).length; i++) {
-				self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+				if (self.touchEvent) {
+					if (step.strongOfLastQuickLexicon == self.strong) {
+						var timeToWait = Math.max(0, 125 - (Date.now() - step.touchForQuickLexiconTime));
+						var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
+						var timer = setTimeout( function( ) { 
+							if ((step.strongOfLastQuickLexicon == self.strong) && // Make sure user has not touched another word after the timeout
+								(previoustouchForQuickLexiconTime == step.touchForQuickLexiconTime)) {
+								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
+								step.passage.higlightStrongs({
+									passageId: undefined,
+									strong: self.strong,
+									morph: self.morph,
+									classes: "primaryLightBg"
+								});
+								self.displayQuickDef(lexicon);
+								for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+									self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+								}
+								if (step.lastTapStrong.substr(0,12) === "notdisplayed") step.lastTapStrong = step.lastTapStrong.substr(12);
+								step.displayQuickLexiconTime = Date.now();
+							}
+							else console.log("skip quickLexicon");
+						  },
+						  timeToWait);
+					}
+				}
+				else {
+					self.displayQuickDef(lexicon);
+					for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+						self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+					}
+				}
             }
         });
     }, /**
@@ -166,6 +194,8 @@ var QuickLexicon = Backbone.View.extend({
         this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
             lexicon.remove();
         })
+		step.touchForQuickLexiconTime = 0;
+		step.strongOfLastQuickLexicon = "";
     },
 
     /**
