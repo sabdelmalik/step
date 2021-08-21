@@ -323,19 +323,11 @@ step.passageSelect = {
 		}
 		else {
 			if (selectedDisplayLoc === "new") {
-				//step.util.createNewLinkedColumn(0);
 				step.util.createNewColumn();
 			}
 			if (this.modalMode === "verse") {
 				ap=step.util.activePassage();
-				var numOfChaptersInBook = 0;
-				for (var i = 0; i < this.osisChapterJsword.length; i++) {
-					var currentOsisID = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
-					if (bookID === currentOsisID) {
-						numOfChaptersInBook = this.osisChapterJsword[i][1];
-						break;
-					}
-				}
+				var numOfChaptersInBook = this.getNumOfChapters(bookID);
 				if (numOfChaptersInBook === 1) {
 					var tmpOsisID = osisID.substring(0, osisID.indexOf(".")) + '.1.' + osisID.substring(osisID.indexOf(".") + 1);
 					ap.save({targetLocation: tmpOsisID}, {silent: true});
@@ -345,6 +337,15 @@ step.passageSelect = {
 			}
 	//        console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
 			step.router.navigatePreserveVersions("reference=" + osisID, false, true);
+		}
+	},
+
+	getNumOfChapters: function(bookID) {
+		for (var i = 0; i < this.osisChapterJsword.length; i++) {
+			var currentOsisID = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
+			if (bookID === currentOsisID) {
+				return this.osisChapterJsword[i][1];
+			}
 		}
 	},
 
@@ -400,12 +401,14 @@ step.passageSelect = {
 		}
 		var tableColumns = 10;
 		var widthPercent = 10;
-		var ua = navigator.userAgent.toLowerCase();
-		if ( (ua.indexOf("android") > -1) ||
-			 (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
-				(ua.indexOf("safari/60") > -1)) ) {
-			tableColumns = 7;
-			widthPercent = 14;
+		if (step.touchDevice) {
+			var ua = navigator.userAgent.toLowerCase();
+			if ( (ua.indexOf("android") > -1) ||
+				 (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
+					(ua.indexOf("safari/60") > -1)) ) {
+				tableColumns = 7;
+				widthPercent = 14;
+			}
 		}
 
 		var html = '<h5>' + headerMsg + '</h5>' +

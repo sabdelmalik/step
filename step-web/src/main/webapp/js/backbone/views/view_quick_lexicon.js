@@ -61,7 +61,7 @@ var QuickLexicon = Backbone.View.extend({
             '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
             '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
         '<% } %>' +
-        '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <%= __s.more_info_on_click_of_word %></span><% } %>' +
+        '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <span id="clickMoreInfo"><%= __s.more_info_on_click_of_word %></span></span><% } %>' +
         '</div>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
 		'&nbsp;&nbsp;<span><%= brief_morph_info[data_index] %></span> ' +
@@ -115,14 +115,41 @@ var QuickLexicon = Backbone.View.extend({
 					brief_morph_info: morph_information,
 					fontClass: step.util.ui.getFontForStrong(self.strong),
 					view: self }));
+				if (step.touchDevice) $(lexicon).find("#clickMoreInfo").text(__s.more_info_on_touch_of_word);
                 if (self.position > 0.66) {
                     lexicon.css({"top": "37", "bottom": "auto"});
                 }
-                self.displayQuickDef(lexicon);
-            }
-
-            for (var i = 0; i < (data.vocabInfos || []).length; i++) {
-                self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+				if (self.touchEvent) {
+					if (step.strongOfLastQuickLexicon == self.strong) {
+						var timeToWait = Math.max(0, TOUCH_DURATION - (Date.now() - step.touchForQuickLexiconTime));
+						var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
+						var timer = setTimeout( function( ) { 
+							if ((step.strongOfLastQuickLexicon == self.strong) && // Make sure user has not touched another word after the timeout
+								(previoustouchForQuickLexiconTime == step.touchForQuickLexiconTime)) {
+								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
+								step.displayQuickLexiconTime = Date.now();
+								step.passage.higlightStrongs({
+									passageId: undefined,
+									strong: self.strong,
+									morph: self.morph,
+									classes: "primaryLightBg"
+								});
+								self.displayQuickDef(lexicon);
+								for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+									self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+								}
+								if (step.lastTapStrong.substr(0,12) === "notdisplayed") step.lastTapStrong = step.lastTapStrong.substr(12);
+							}
+						  },
+						  timeToWait);
+					}
+				}
+				else {
+					self.displayQuickDef(lexicon);
+					for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+						self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+					}
+				}
             }
         });
     }, /**
@@ -166,6 +193,8 @@ var QuickLexicon = Backbone.View.extend({
         this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
             lexicon.remove();
         })
+		step.touchForQuickLexiconTime = 0;
+		step.strongOfLastQuickLexicon = "";
     },
 
     /**

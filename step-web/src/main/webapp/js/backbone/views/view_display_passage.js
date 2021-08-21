@@ -309,7 +309,7 @@ var PassageDisplayView = DisplayView.extend({
                 var link = $("a", item);
                 var note = $(".inlineNote", item);
 
-                link.on("touchstart", function () {
+                link.on("touchstart", function (ev) {
                     self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
                 }).hover(function (ev) {
                     // If another note is already open, don't replace the content on hover

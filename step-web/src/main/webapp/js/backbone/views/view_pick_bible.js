@@ -165,8 +165,7 @@ var PickBibleView = Backbone.View.extend({
 			var code = (e.keyCode ? e.keyCode : e.which);
 			self._handleEnteredTranslation(code, self._filter);
 		});
-		var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
-		if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourTranslation').focus();
+		if (!step.touchDevice) $('textarea#enterYourTranslation').focus();
     },
 	_handleEnteredTranslation: function (keyCode, filterFunc) {
 		var userInput = $('textarea#enterYourTranslation').val();
