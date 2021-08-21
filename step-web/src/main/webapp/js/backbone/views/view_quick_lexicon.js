@@ -127,6 +127,7 @@ var QuickLexicon = Backbone.View.extend({
 							if ((step.strongOfLastQuickLexicon == self.strong) && // Make sure user has not touched another word after the timeout
 								(previoustouchForQuickLexiconTime == step.touchForQuickLexiconTime)) {
 								step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover lexiconFocus lexiconRelatedFocus secondaryBackground");
+								step.displayQuickLexiconTime = Date.now();
 								step.passage.higlightStrongs({
 									passageId: undefined,
 									strong: self.strong,
@@ -138,7 +139,6 @@ var QuickLexicon = Backbone.View.extend({
 									self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
 								}
 								if (step.lastTapStrong.substr(0,12) === "notdisplayed") step.lastTapStrong = step.lastTapStrong.substr(12);
-								step.displayQuickLexiconTime = Date.now();
 							}
 							else console.log("skip quickLexicon");
 						  },
