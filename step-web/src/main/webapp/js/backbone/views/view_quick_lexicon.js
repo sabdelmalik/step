@@ -121,7 +121,7 @@ var QuickLexicon = Backbone.View.extend({
                 }
 				if (self.touchEvent) {
 					if (step.strongOfLastQuickLexicon == self.strong) {
-						var timeToWait = Math.max(0, 125 - (Date.now() - step.touchForQuickLexiconTime));
+						var timeToWait = Math.max(0, TOUCH_DURATION - (Date.now() - step.touchForQuickLexiconTime));
 						var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
 						var timer = setTimeout( function( ) { 
 							if ((step.strongOfLastQuickLexicon == self.strong) && // Make sure user has not touched another word after the timeout
