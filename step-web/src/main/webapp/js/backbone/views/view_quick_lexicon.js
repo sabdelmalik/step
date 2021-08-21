@@ -140,7 +140,6 @@ var QuickLexicon = Backbone.View.extend({
 								}
 								if (step.lastTapStrong.substr(0,12) === "notdisplayed") step.lastTapStrong = step.lastTapStrong.substr(12);
 							}
-							else console.log("skip quickLexicon");
 						  },
 						  timeToWait);
 					}

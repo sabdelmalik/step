@@ -1199,14 +1199,14 @@ step.util = {
 				if ((diff) < 900) {
 					$("#quickLexicon").remove();
 					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-					// The QuickLexicon highlights the relatedWordEmphasisHover which can be delayed by the server's response.
-					// Therefore wait a little and try to clear the highlight again.					
-					var waitTime = 1000 - diff;
-					setTimeout(	function( ) {
-									$("#quickLexicon").remove();
-									step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-								},
-								waitTime);
+					// The QuickLexicon highlights the relatedWordEmphasisHover can take some time to process.
+					// Therefore wait a little to make sure they have finished and try to clear the highlight again.
+					// var waitTime = 900 - diff;
+					// setTimeout(	function( ) {
+									// $("#quickLexicon").remove();
+									// step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+								// },
+								// waitTime);
 					step.lastTapStrong = "";
 				}
 			}).hover(function (ev) { // mouse pointer starts hover (enter)
