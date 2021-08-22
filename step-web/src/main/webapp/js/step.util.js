@@ -1189,26 +1189,22 @@ step.util = {
 				var userTouchedSameWord = (strongStringAndPrevHTML == step.lastTapStrong);
 				step.lastTapStrong = "notdisplayed" + strongStringAndPrevHTML;
 				step.util.ui._processTouchOnStrong(this, passageId, userTouchedSameWord, that.pageY); 
-			}).on("touchend touchcancel", function (ev) {
-				if ((Date.now() - step.displayQuickLexiconTime) < TOUCH_DURATION) {
+			}).on("touchend", function (ev) {
+				var diff = Date.now() - step.touchForQuickLexiconTime;
+				if (diff < TOUCH_DURATION) {
 					step.touchForQuickLexiconTime = 0; // If the quick lexicon has not been rendered, the quick lexicon code will see the change in this variable and not proceed
 					step.strongOfLastQuickLexicon = "";
 				}
+			}).on("touchcancel", function (ev) {
+				step.touchForQuickLexiconTime = 0; // If the quick lexicon has not been rendered, the quick lexicon code will see the change in this variable and not proceed
+				step.strongOfLastQuickLexicon = "";
 			}).on("touchmove", function (ev) {
 				step.touchForQuickLexiconTime = 0;
 				step.strongOfLastQuickLexicon = "";
 				var diff = Date.now() - step.displayQuickLexiconTime;
-				if ((diff) < 900) {
+				if ((diff) < 900) { // Cancel the quick lexicon and highlight of words because touch move detected less than 900 ms later.  The user probably want to scroll instead of quick lexicon.
 					$("#quickLexicon").remove();
 					step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-					// The QuickLexicon highlights the relatedWordEmphasisHover can take some time to process.
-					// Therefore wait a little to make sure they have finished and try to clear the highlight again.
-					// var waitTime = 900 - diff;
-					// setTimeout(	function( ) {
-									// $("#quickLexicon").remove();
-									// step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-								// },
-								// waitTime);
 					step.lastTapStrong = "";
 				}
 			}).hover(function (ev) { // mouse pointer starts hover (enter)

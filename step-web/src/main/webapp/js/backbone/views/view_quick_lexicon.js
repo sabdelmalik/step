@@ -120,8 +120,8 @@ var QuickLexicon = Backbone.View.extend({
                     lexicon.css({"top": "37", "bottom": "auto"});
                 }
 				if (self.touchEvent) {
-					if (step.strongOfLastQuickLexicon == self.strong) {
-						var timeToWait = Math.max(0, TOUCH_DURATION - (Date.now() - step.touchForQuickLexiconTime));
+					if ((step.strongOfLastQuickLexicon == self.strong) && (step.touchForQuickLexiconTime > 0)) {
+						var timeToWait = Math.max(0, (TOUCH_CANCELLATION_TIME) - (Date.now() - step.touchForQuickLexiconTime));
 						var previoustouchForQuickLexiconTime = step.touchForQuickLexiconTime;
 						var timer = setTimeout( function( ) { 
 							if ((step.strongOfLastQuickLexicon == self.strong) && // Make sure user has not touched another word after the timeout
@@ -160,6 +160,7 @@ var QuickLexicon = Backbone.View.extend({
         var self = this;
         if(this.text) {
             var note = $(this.templateHeader + this.text.html() + this.templateFooter);
+			$("#quickLexicon").remove();
             this.displayQuickDef(note);
         } else {
             //remove all quick lexicons
