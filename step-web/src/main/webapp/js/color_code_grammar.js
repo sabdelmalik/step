@@ -2040,8 +2040,8 @@ var cf = {
   c4VerbMoodTense2: function() {
     var r = cf.createC4();
     r[C_Greek][C_enableVerbClr] = true;
-    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = true;
-    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = true;
+    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = false;
+    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = false;
     r[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
     r[C_Greek][C_slctUlVerbItem] = ['Arrow', 'Dash', '2 lines', '2 lines', 'Underline', 'Dots', 'Underline'];
     r[C_Greek][C_orderOfTense] = ['p', 'i', 'r', 'l', 'a', 'f'];
