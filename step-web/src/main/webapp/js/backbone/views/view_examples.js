@@ -221,9 +221,10 @@ var ExamplesView = Backbone.View.extend({
 					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
-					'<div class="explanationText"><%= __s.interlinear_verb_color_explanation %></div><div id=\'colorCodeTableDiv\'></div>' +
+					'<div class="explanationText"><%= __s.interlinear_verb_color_explanation %></div>' +
 				'</div>' +
 			'</div>' +
+			'<div id=\'colorCodeTableDiv\'></div>' +
 			'<div class="text-muted step-copyright">' +
 				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2021</span>' +
 			'</div>' +
@@ -241,6 +242,11 @@ var ExamplesView = Backbone.View.extend({
 		if ($('#welcomeExamples').length == 0) {
 			this.$el.append(this.exampleTemplate);
 			this.initAccordions();
+            var options = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("selectedOptions") || [];
+            var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
+            var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
+            cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
+            if (cv[C_colorCodeGrammarAvailableAndSelected]) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
 		}
         var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
 		if (classicalUISetting === "true") $('#classicalUIVideo').hide();

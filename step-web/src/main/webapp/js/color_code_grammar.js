@@ -517,22 +517,22 @@ var cf = {
   initCanvasAndCssForClrCodeGrammar: function() {
       //  var a = performance.now();
       if (c4 === undefined) { cf.getC4(); } //c4 is currentClrCodeConfig.  It is changed to c4 to save space
-      cf.addVerbTable(false, '#colorCodeTableDiv');
-      cf.createUlArrow();
-      cf.createUlShortArrow();
-      cf.createUlReverseArrow();
-      cf.createUlShortReverseArrow();
-      cf.createUl_Dash();
-      cf.createUlSolid();
-      cf.createUlDash_Dot();
-      cf.createUlDashDotDot();
-      cf.createUlNone();
-      cf.createUlDoubleSolid();
-      cf.createUlDot();
-      cf.createUlWave();
-      cf.createUlForAllItemsInYAndX();
-      cf.createUlFor_OT();
-      cf.goAnimate(0);
+	  if ($("#colorCodeTableDiv").length > 0) cf.addVerbTable(false, '#colorCodeTableDiv');
+	  cf.createUlArrow();
+	  cf.createUlShortArrow();
+	  cf.createUlReverseArrow();
+	  cf.createUlShortReverseArrow();
+	  cf.createUl_Dash();
+	  cf.createUlSolid();
+	  cf.createUlDash_Dot();
+	  cf.createUlDashDotDot();
+	  cf.createUlNone();
+	  cf.createUlDoubleSolid();
+	  cf.createUlDot();
+	  cf.createUlWave();
+	  cf.createUlForAllItemsInYAndX();
+	  cf.createUlFor_OT();
+	  cf.goAnimate(0);
     //  var b = performance.now();
     //  console.log('init took ' + (b - a) + ' ms.');
   },
