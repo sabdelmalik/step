@@ -244,9 +244,7 @@ var ExamplesView = Backbone.View.extend({
 			this.initAccordions();
             var options = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("selectedOptions") || [];
             var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
-            var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
-            cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
-            if (cv[C_colorCodeGrammarAvailableAndSelected]) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
+            if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();
 		}
         var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
 		if (classicalUISetting === "true") $('#classicalUIVideo').hide();
