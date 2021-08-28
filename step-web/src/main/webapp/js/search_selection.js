@@ -429,7 +429,7 @@ step.searchSelect = {
 			}
 			for (var j = 0; j < curGroup.length; j++) {
 				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
-					if ( (curGroup[j].bookOrderPos[k] >= 0) &&
+					if ( (curGroup[j].bookOrderPos[k] > -1) &&
 						(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
 					   this._userClickedBook(idPrefix + j + 'b' + k);
 					}
@@ -484,7 +484,7 @@ step.searchSelect = {
 			}
 			for (var j = 0; j < curGroup.length; j++) {
 				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
-					if (curGroup[j].bookOrderPos[k] >= 0) {
+					if (curGroup[j].bookOrderPos[k] > -1) {
 						if ( ($(idPrefix + j + 'b' + k).hasClass('stepPressedButton')) &&
 							 (curGroup[j].bookOrderPos[k] > -1) )
 							this.bookOrder[curGroup[j].bookOrderPos[k]][1] = true;
