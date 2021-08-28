@@ -429,7 +429,8 @@ step.searchSelect = {
 			}
 			for (var j = 0; j < curGroup.length; j++) {
 				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
-					if (!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) {
+					if ( (curGroup[j].bookOrderPos[k] >= 0) &&
+						(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
 					   this._userClickedBook(idPrefix + j + 'b' + k);
 					}
 				}
@@ -451,11 +452,11 @@ step.searchSelect = {
 			'</div>' +
 			'<span id="updateFeedback"></span>' +
 			'<div id="search_range_table">' +
-			'<button id="ot_hdr" type="button" class="stepButton stepPressedButton" style="display:block;width:97%;font-size:' + fontSize + 'px" ' +
+			'<button id="ot_hdr" type="button" class="stepButton stepPressedButton" style="display:none;width:97%;font-size:' + fontSize + 'px" ' +
 			'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.old_testament + ' ' + __s.bible_book + '" ' +
 			'onclick=step.searchSelect._userClickedTestament(this.id)><i>' + __s.old_testament + ':</i></button>' +
 			'<div id="ot_table"/>' +
-			'<button id="nt_hdr" type="button" class="stepButton stepPressedButton" style="display:block;width:97%;font-size:' + fontSize + 'px" ' +
+			'<button id="nt_hdr" type="button" class="stepButton stepPressedButton" style="display:none;width:97%;font-size:' + fontSize + 'px" ' +
 			'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.new_testament + ' ' + __s.bible_book + '" ' +
 			'onclick=step.searchSelect._userClickedTestament(this.id)><i>' + __s.new_testament + ':</i></button>' +
 			'<div id="nt_table"/>' +
@@ -466,7 +467,6 @@ step.searchSelect = {
 
 	_updateRange: function() {
 		$('#searchSelectError').text("");
-		var curIndx = -1;
 		for (var i = 0; i < 3; i++) {
 			var curGroup;
 			var idPrefix;
@@ -484,11 +484,12 @@ step.searchSelect = {
 			}
 			for (var j = 0; j < curGroup.length; j++) {
 				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
-					curIndx ++;
-					if ( ($(idPrefix + j + 'b' + k).hasClass('stepPressedButton')) &&
-						 (curGroup[j].bookOrderPos[k] > -1) )
-						this.bookOrder[curGroup[j].bookOrderPos[k]][1] = true;
-					else this.bookOrder[curGroup[j].bookOrderPos[k]][1] = false;
+					if (curGroup[j].bookOrderPos[k] >= 0) {
+						if ( ($(idPrefix + j + 'b' + k).hasClass('stepPressedButton')) &&
+							 (curGroup[j].bookOrderPos[k] > -1) )
+							this.bookOrder[curGroup[j].bookOrderPos[k]][1] = true;
+						else this.bookOrder[curGroup[j].bookOrderPos[k]][1] = false;
+					}
 				}
 			}
 		}
@@ -712,6 +713,8 @@ step.searchSelect = {
 			console.log("bt " + bt);
 			console.log("th " + tableHTML);
 			$('#' + htmlID).append(this._buildBookTableHeader(columns, htmlID) + tableHTML + '</table>');
+			if (htmlID.substr(0, 2) == "nt") $("#nt_hdr").show();
+			else if (htmlID.substr(0, 2) == "ot") $("#ot_hdr").show();
 		}
 	},
 
