@@ -429,8 +429,9 @@ var PickBibleView = Backbone.View.extend({
 			$(".btn_Selected").click();
 		}
 		else {
+			var listObj = $(".ul_" + __s.widely_used.replace(/[()\s,']/g, "_"));
 			for (var i = 0; i < addedToSelectedGroup.length; i++) {
-				$(".ul_" + __s.widely_used).find("[data-initials='" + addedToSelectedGroup[i] + "']").hide()
+				listObj.find("[data-initials='" + addedToSelectedGroup[i] + "']").hide()
 			}
 		}
     },
