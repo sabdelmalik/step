@@ -102,19 +102,19 @@ var PickBibleView = Backbone.View.extend({
     },
     _populateAncientBibles: function (arr) {
         var addedBibles = {};
-        if (_.isEmpty(arr)) {
+        // if (_.isEmpty(arr)) {
             //pre-populate the groups in the right order
             for (var i = 0; i < this.ancientOrder.length; i++) {
                 var group = arr[this.ancientOrder[i][0]] = [];
                 for (var j = 0; j < this.ancientOrder[i][1].length; j++) {
                     var currentVersion = step.keyedVersions[this.ancientOrder[i][1][j]];
                     if (currentVersion) {
-                        group.push(currentVersion);
-                        addedBibles[currentVersion.shortInitials] = currentVersion;
+						group.push(currentVersion);
+						addedBibles[currentVersion.shortInitials] = currentVersion;
                     }
                 }
             }
-        }
+        // }
         return addedBibles;
     },
     _addGroupingByLanguage: function (arr, key, version) {
@@ -281,6 +281,36 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find(".btn").has("input[data-lang='" + origLanguage + "']").addClass("stepPressedButton").addClass("active");
 
         var bibleList = {};
+
+
+        var versionsSelected = (typeof self.searchView._getCurrentInitials === "undefined") ?
+			window.searchView._getCurrentInitials() : self.searchView._getCurrentInitials();
+        numberOfVersionsSelected = 0;
+        for (i = 0; i < versionsSelected.length; i ++) {
+            if (versionsSelected[i] !== undefined) {
+				numberOfVersionsSelected ++;
+			}
+			else {
+				versionsSelected.splice(i, 1);
+				i --;
+			}
+        }
+		var addedToSelectedGroup = [];
+		for (var v in step.keyedVersions) {
+			var version = step.keyedVersions[v];
+			var i = versionsSelected.indexOf(version.shortInitials);
+			if (version.category == 'BIBLE' && (i > -1) && addedToSelectedGroup.indexOf(version.shortInitials) == -1) {
+				if (!bibleList["Selected"]) {
+					bibleList["Selected"] = [];
+				}
+				version.languageCode = "selected";
+				bibleList["Selected"].push(version);
+				addedToSelectedGroup.push(version.shortInitials);
+				console.log("version " + version.shortInitials);
+			}
+		}
+
+
         if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
             var added = this._populateAncientBibles(bibleList);
             //now go through Bibles adding if not already present
@@ -290,7 +320,7 @@ var PickBibleView = Backbone.View.extend({
                     version.category == 'BIBLE' && 
                     !added[version.shortInitials] &&
                     this.ancientBlackList.indexOf(version.shortInitials) == -1) {
-                    bibleList[this.ancientOrder[this.ancientOrder.length - 1][0]].push(version);
+					bibleList[this.ancientOrder[this.ancientOrder.length - 1][0]].push(version);
                 }
             }
         } else {
@@ -299,10 +329,10 @@ var PickBibleView = Backbone.View.extend({
                 for (var i = 0; i < this.suggestedEnglish.length; i++) {
                     var v = step.keyedVersions[this.suggestedEnglish[i]];
                     if (v) {
-                        if (!bibleList[__s.widely_used]) {
-                            bibleList[__s.widely_used] = [];
-                        }
-                        bibleList[__s.widely_used].push(v);
+						if (!bibleList[__s.widely_used]) {
+							bibleList[__s.widely_used] = [];
+						}
+						bibleList[__s.widely_used].push(v);
                     }
                 }
             }
@@ -352,12 +382,6 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find(".glyphicon-info-sign").click(function (ev) {
             ev.stopPropagation();
         });
-        var versionsSelected = (typeof self.searchView._getCurrentInitials === "undefined") ?
-			window.searchView._getCurrentInitials() : self.searchView._getCurrentInitials();
-        numberOfVersionsSelected = 0;
-        for (i = 0; ((i < versionsSelected.length) && (numberOfVersionsSelected <= 1)); i ++) {
-            if (versionsSelected[i] !== undefined) numberOfVersionsSelected ++;
-        }
         if (numberOfVersionsSelected > 1) $('#order_button_bible_modal').show();
         else $('#order_button_bible_modal').hide();
         this.$el.find(".list-group-item").click(function () {
@@ -401,6 +425,14 @@ var PickBibleView = Backbone.View.extend({
 		}
         this.$el.find(".langBtn").click(this._handleUsrClick);
         this.$el.find(".langPlusMinus").click(this._handleUsrClick);
+		if (selectedLanguage === "_all") {
+			$(".btn_Selected").click();
+		}
+		else {
+			for (var i = 0; i < addedToSelectedGroup.length; i++) {
+				$(".ul_" + __s.widely_used).find("[data-initials='" + addedToSelectedGroup[i] + "']").hide()
+			}
+		}
     },
     _isLanguageValid: function (actualLanguage, wantedLanguage) {
         if (wantedLanguage == "_all") {
