@@ -60,6 +60,33 @@
 		if ((ua.indexOf("android") > -1) || (ua.indexOf("iphone") > -1) || (ua.indexOf("ipad") > -1) ||
 			((ua.indexOf("macintosh") > -1) && (navigator.maxTouchPoints == 5))) // iPad requesting a desktop web site
 			step.touchDevice = true;
+		step.tempKeyInput = "";
+		if (!step.touchDevice) {
+			var timer;
+			$(document).keyup(function(e) {
+				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0)) {
+					var code = (e.keyCode ? e.keyCode : e.which);
+					console.log("key " + code);
+					if ((code == 186) || (code == 13)) {
+						if (step.tempKeyInput === "t") step.util.startPickBible();
+						else if (step.tempKeyInput === "s") step.util.searchSelectionModal();
+						step.tempKeyInput = "";
+					}
+					else if ((code > 64) && (code < 91)) { // 65 = A, 90 = Z
+						timer && clearTimeout(timer);
+						step.tempKeyInput += String.fromCharCode(code).toLowerCase();
+						if (step.tempKeyInput.length >= 2) {
+							step.util.passageSelectionModal();
+						}
+						else {
+							timer = setTimeout( function( ) { // If there is not enough input to open the pick Bible, select passage or search modal, clear the input
+								step.tempKeyInput = "";
+							}, 400);
+						}
+					}
+				}
+			});
+		}
     };
 
     function initSearchDropdown() {

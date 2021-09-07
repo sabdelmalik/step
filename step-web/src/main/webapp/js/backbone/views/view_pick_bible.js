@@ -181,6 +181,18 @@ var PickBibleView = Backbone.View.extend({
 				$('.ul_selected').hide()
 				var regex1 = new RegExp("(^\\w*" + userInput + "|[\\s\\.]" + userInput + ")", "i");
 				$( ".list-group-item").filter(function () { return regex1.test($(this).text());}).show();
+				var itemsShown = $("li.list-group-item:visible");
+				for (var i = 0; i < itemsShown.length; i++) {
+					var classes = $(itemsShown[i]).parent().attr('class').split(' ');
+					for (var j = 0; j < classes.length; j++) {
+						if (classes[j].substr(0, 3) === "ul_") {
+							var langCode = classes[j].substr(3);
+							$('.span_' + langCode).show();
+							$('.btn_' + langCode).show();
+							break;
+						}
+					}
+				}
 				step.util.addTagLine();
 			}
 			else filterFunc(); // reset back to the modal without keyboard input
@@ -283,7 +295,6 @@ var PickBibleView = Backbone.View.extend({
 
         var bibleList = {};
 
-
         var versionsSelected = (typeof self.searchView._getCurrentInitials === "undefined") ?
 			window.searchView._getCurrentInitials() : self.searchView._getCurrentInitials();
         numberOfVersionsSelected = 0;
@@ -297,20 +308,21 @@ var PickBibleView = Backbone.View.extend({
 			}
         }
 		var addedToSelectedGroup = [];
-		for (var v in step.keyedVersions) {
-			var version = step.keyedVersions[v];
-			var i = versionsSelected.indexOf(version.shortInitials);
-			if (version.category == 'BIBLE' && (i > -1) && addedToSelectedGroup.indexOf(version.shortInitials) == -1) {
-				if (!bibleList["Selected"]) {
-					bibleList["Selected"] = [];
-				}
-				version.languageCode = "selected";
-				bibleList["Selected"].push(version);
-				addedToSelectedGroup.push(version.shortInitials);
-				console.log("version " + version.shortInitials);
-			}
-		}
-
+        if (filter == 'BIBLE') {
+            for (var v in step.keyedVersions) {
+                var version = step.keyedVersions[v];
+                var i = versionsSelected.indexOf(version.shortInitials);
+                if (version.category == 'BIBLE' && (i > -1) && addedToSelectedGroup.indexOf(version.shortInitials) == -1) {
+                    if (!bibleList["Selected"]) {
+                        bibleList["Selected"] = [];
+                    }
+                    version.languageCode = "selected";
+                    bibleList["Selected"].push(version);
+                    addedToSelectedGroup.push(version.shortInitials);
+                    console.log("version " + version.shortInitials);
+                }
+            }
+        }
 
         if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
             var added = this._populateAncientBibles(bibleList);
