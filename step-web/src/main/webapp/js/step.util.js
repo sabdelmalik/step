@@ -1659,7 +1659,10 @@ step.util = {
 				'</div>' +
 			'</div>' +
 		'</div>')()).modal("show");
-		if (!step.touchDevice) $('textarea#enterYourPassage').focus();
+		if (!step.touchDevice) {
+			$('textarea#enterYourPassage').focus().val(step.tempKeyInput);
+			step.tempKeyInput = "";
+		}
     },
 
 	searchSelectionModal: function () {

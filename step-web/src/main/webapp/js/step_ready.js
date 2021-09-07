@@ -81,7 +81,7 @@
 						else {
 							timer = setTimeout( function( ) { // If there is not enough input to open the pick Bible, select passage or search modal, clear the input
 								step.tempKeyInput = "";
-							}, 1000);
+							}, 2000);
 						}
 					}
 				}
