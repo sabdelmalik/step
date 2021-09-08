@@ -515,26 +515,23 @@ var cf = {
   },
   // Do not shorten name, called by Javascript functions outside of color_code_grammar and color_code_config
   initCanvasAndCssForClrCodeGrammar: function() {
-      //  var a = performance.now();
       if (c4 === undefined) { cf.getC4(); } //c4 is currentClrCodeConfig.  It is changed to c4 to save space
-      cf.addVerbTable(false, '#colorCodeTableDiv');
-      cf.createUlArrow();
-      cf.createUlShortArrow();
-      cf.createUlReverseArrow();
-      cf.createUlShortReverseArrow();
-      cf.createUl_Dash();
-      cf.createUlSolid();
-      cf.createUlDash_Dot();
-      cf.createUlDashDotDot();
-      cf.createUlNone();
-      cf.createUlDoubleSolid();
-      cf.createUlDot();
-      cf.createUlWave();
-      cf.createUlForAllItemsInYAndX();
-      cf.createUlFor_OT();
-      cf.goAnimate(0);
-    //  var b = performance.now();
-    //  console.log('init took ' + (b - a) + ' ms.');
+	  cf.addVerbTable(false, '#colorCodeTableDiv');
+	  cf.createUlArrow();
+	  cf.createUlShortArrow();
+	  cf.createUlReverseArrow();
+	  cf.createUlShortReverseArrow();
+	  cf.createUl_Dash();
+	  cf.createUlSolid();
+	  cf.createUlDash_Dot();
+	  cf.createUlDashDotDot();
+	  cf.createUlNone();
+	  cf.createUlDoubleSolid();
+	  cf.createUlDot();
+	  cf.createUlWave();
+	  cf.createUlForAllItemsInYAndX();
+	  cf.createUlFor_OT();
+	  cf.goAnimate(0);
   },
 
   calcAnimationPixelIncrement: function (width) {
@@ -921,7 +918,6 @@ var cf = {
       $('.sing').removeClass('sing').addClass('hide_sing');
       $('.plur').removeClass('plur').addClass('hide_plur');
     }
-  //  var a = performance.now();
     if ((ntCSSOnThisPage == undefined) || (ntCSSOnThisPage.length > 0)) {
       for (var j = 0; j < cv[C_ulVerbCSS].length; j += 1) {
         if (cf.displayVerbUlOrNot(j)) {
@@ -952,8 +948,6 @@ var cf = {
         }
       }
     }
-  //  var b = performance.now();
-  //  console.log('refresh took ' + (b - a) + ' ms.');
     $('.primaryLightBg').css('text-shadow', 'none'); // Need to set it in the program, if not the browser will prioritize the CSS updated in this Javascript.
   },
 
@@ -1691,6 +1685,10 @@ var cf = {
   },
 
   addVerbTable: function (createUserInputs, htmlElement) {
+	if ($(htmlElement).length == 0) {
+		console.log("addVerbTable return without creating table, no html element: " + htmlElement + " to append to");
+		return;
+	}
     var r = cf.getVariablesForVerbTable();
     var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
     xAxisItems = r.orderOfXAxisItems;
@@ -2042,8 +2040,8 @@ var cf = {
   c4VerbMoodTense2: function() {
     var r = cf.createC4();
     r[C_Greek][C_enableVerbClr] = true;
-    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = true;
-    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = true;
+    r[C_Greek][C_chkbxPassiveBkgrdColrValue] = false;
+    r[C_Greek][C_chkbxMiddleBkgrdColrValue] = false;
     r[C_Greek][C_inClrVerbItem] = ['#000000', '#ff0000', '#ff8800', '#ff8800', '#0000ff', '#ff00ff', '#000000'];
     r[C_Greek][C_slctUlVerbItem] = ['Arrow', 'Dash', '2 lines', '2 lines', 'Underline', 'Dots', 'Underline'];
     r[C_Greek][C_orderOfTense] = ['p', 'i', 'r', 'l', 'a', 'f'];

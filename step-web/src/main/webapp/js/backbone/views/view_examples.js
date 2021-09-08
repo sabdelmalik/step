@@ -12,7 +12,7 @@ var ExamplesView = Backbone.View.extend({
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<br>' +
-					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black"><%= __s.display_classical_ui %></span>' +
+					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black"><mark><%= __s.display_classical_ui %></mark></span>' +
 					'<br><span class="explanationText"><%= __s.advanced_interface_explain %></span>' +
 					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'</div>' +
@@ -221,9 +221,10 @@ var ExamplesView = Backbone.View.extend({
 					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
-					'<div class="explanationText"><%= __s.interlinear_verb_color_explanation %></div><div id=\'colorCodeTableDiv\'></div>' +
+					'<div class="explanationText"><%= __s.interlinear_verb_color_explanation %></div>' +
 				'</div>' +
 			'</div>' +
+			'<div id=\'colorCodeTableDiv\'></div>' +
 			'<div class="text-muted step-copyright">' +
 				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2021</span>' +
 			'</div>' +
@@ -241,6 +242,9 @@ var ExamplesView = Backbone.View.extend({
 		if ($('#welcomeExamples').length == 0) {
 			this.$el.append(this.exampleTemplate);
 			this.initAccordions();
+            var options = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("selectedOptions") || [];
+            var availableOptions = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("options") || [];
+            if ((options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1)) cf.initCanvasAndCssForClrCodeGrammar();
 		}
         var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
 		if (classicalUISetting === "true") $('#classicalUIVideo').hide();

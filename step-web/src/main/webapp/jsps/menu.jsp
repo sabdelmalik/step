@@ -115,7 +115,7 @@
                 <!-- # Reset everything -->
                 <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile"/></a></li>
                 <!-- # We need your help! -->
-                <li><a href="https://stepweb.atlassian.net/wiki/x/iICV" target="_blank"><fmt:message key="we_need_help"/></a></li>
+                <li><a href="https://stepbibleguide.blogspot.com/p/volunteers.html" target="_blank"><fmt:message key="we_need_help"/></a></li>
                 <!-- # Feedback & contact -->
                 <%
                     if (!appManager.isLocal()) {
