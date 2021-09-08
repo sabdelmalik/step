@@ -79,9 +79,9 @@
 							step.util.passageSelectionModal();
 						}
 						else {
-							timer = setTimeout( function( ) { // If there is not enough input to open the pick Bible, select passage or search modal, clear the input
+							timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
 								step.tempKeyInput = "";
-							}, 2000);
+							}, 1500);
 						}
 					}
 				}

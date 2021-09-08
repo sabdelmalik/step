@@ -316,10 +316,10 @@ var PickBibleView = Backbone.View.extend({
                     if (!bibleList["Selected"]) {
                         bibleList["Selected"] = [];
                     }
-                    version.languageCode = "selected";
-                    bibleList["Selected"].push(version);
+					var copiedVersion = JSON.parse(JSON.stringify(version)); // Don't want to update the original step.keyedVersions object
+                    copiedVersion.languageCode = "selected";
+                    bibleList["Selected"].push(copiedVersion);
                     addedToSelectedGroup.push(version.shortInitials);
-                    console.log("version " + version.shortInitials);
                 }
             }
         }
@@ -379,7 +379,7 @@ var PickBibleView = Backbone.View.extend({
 		var uniqueBibleList = [];
 		for (var key in bibleList) { 
 			if (bibleList[key].length == 0) {
-				console.log("No Bible module for " + key);
+				// console.log("No Bible module for " + key);
 				delete bibleList[key];
 			}
 			else if (selectedLanguage == "_all") {
