@@ -94,7 +94,7 @@
                         var curChar = String.fromCharCode(code).toLowerCase();
                         if (step.tempKeyInput === "^") {
                             step.tempKeyInput = "";
-                            if (curChar === "t") {
+                            if ((curChar === "t") || (curChar === "b")) {
                                 step.util.startPickBible();
                                 return;
                             }
@@ -102,11 +102,11 @@
                                 step.util.searchSelectionModal();
                                 return;
                             }
-                            else if (curChar === "b") {
+                            else if (curChar === "h") {
                                 step.util.ui.initSidebar('history');
                                 return;
                             }
-                            else if (curChar === "p") {
+                            else if ((curChar === "p") || (curChar === "r")) {
                                 step.tempKeyInput = "";
                                 step.util.passageSelectionModal();
                                 return;
