@@ -67,14 +67,43 @@
 				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0)) {
 					var code = (e.keyCode ? e.keyCode : e.which);
 					console.log("key " + code);
-					if ((code == 186) || (code == 13)) {
+                    if (code == 37) $("a.previousChapter").click();
+                    else if (code == 39) $("a.nextChapter").click();
+                    else if (code == 187) step.util.createNewColumn();
+                    else if (code == 16) step.tempKeyInput = "^";
+                    else if (code == 191) step.util.ui.showTutorial();
+					else if ((code == 186) || (code == 13)) {
 						if (step.tempKeyInput === "t") step.util.startPickBible();
 						else if (step.tempKeyInput === "s") step.util.searchSelectionModal();
 						step.tempKeyInput = "";
 					}
-					else if ((code > 64) && (code < 91)) { // 65 = A, 90 = Z
+					else if (((code > 48) && (code < 52)) || ((code > 64) && (code < 91))) { // 49 = 1, 51 = 3, 65 = A, 90 = Z
+                        var curChar = String.fromCharCode(code).toLowerCase();
+                        if (step.tempKeyInput === "^") {
+                            step.tempKeyInput = "";
+                            if (curChar === "t") {
+                                step.util.startPickBible();
+                                return;
+                            }
+                            else if (curChar === "s") {
+                                step.util.searchSelectionModal();
+                                return;
+                            }
+                            else if (curChar === "b") {
+                                step.util.ui.initSidebar('history');
+                                return;
+                            }
+                            else if (curChar === "p") {
+                                step.util.passageSelectionModal();
+                                return;
+                            }
+                            else if (curChar === "a") {
+                                step.util.ui.initSidebar('analysis');
+                                return;
+                            }
+                        }
 						timer && clearTimeout(timer);
-						step.tempKeyInput += String.fromCharCode(code).toLowerCase();
+						step.tempKeyInput += curChar;
 						if (step.tempKeyInput.length >= 2) {
 							step.util.passageSelectionModal();
 						}
