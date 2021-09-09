@@ -67,8 +67,22 @@
 				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0)) {
 					var code = (e.keyCode ? e.keyCode : e.which);
 					console.log("key " + code);
-                    if (code == 37) $(".passageContainer.active").find("a.previousChapter").click();
-                    else if (code == 39) $(".passageContainer.active").find("a.nextChapter").click();
+                    if (code == 37) {
+                        if (step.tempKeyInput === "^") {
+                            $("a.previousChapter").click();
+                            step.tempKeyInput = "";
+                        }
+                        else $(".passageContainer.active").find("a.previousChapter").click();
+                        return;
+                    }
+                    else if (code == 39) {
+                        if (step.tempKeyInput === "^") {
+                            $("a.nextChapter").click();
+                            step.tempKeyInput = "";
+                        }
+                        else $(".passageContainer.active").find("a.nextChapter").click();
+                        return;
+                    }
                     else if (code == 187) step.util.createNewColumn();
                     else if (code == 191) step.util.ui.showTutorial();
 					else if ((code == 186) || (code == 13)) {
@@ -99,14 +113,6 @@
                             }
                             else if (curChar === "a") {
                                 step.util.ui.initSidebar('analysis');
-                                return;
-                            }
-                            else if (code == 37) {
-                                $("a.previousChapter").click();
-                                return;
-                            }
-                            else if (code == 39) {
-                                $("a.nextChapter").click();
                                 return;
                             }
                         }
