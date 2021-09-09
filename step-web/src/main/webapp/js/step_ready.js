@@ -111,7 +111,7 @@
                                 step.util.passageSelectionModal();
                                 return;
                             }
-                            else if (curChar === "a") {
+                            else if ((curChar === "a") || (curChar === "v")) {
                                 step.util.ui.initSidebar('analysis');
                                 return;
                             }
