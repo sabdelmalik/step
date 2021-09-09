@@ -70,7 +70,6 @@
                     if (code == 37) $("a.previousChapter").click();
                     else if (code == 39) $("a.nextChapter").click();
                     else if (code == 187) step.util.createNewColumn();
-                    else if (code == 16) step.tempKeyInput = "^";
                     else if (code == 191) step.util.ui.showTutorial();
 					else if ((code == 186) || (code == 13)) {
 						if (step.tempKeyInput === "t") step.util.startPickBible();
@@ -94,6 +93,7 @@
                                 return;
                             }
                             else if (curChar === "p") {
+                                step.tempKeyInput = "";
                                 step.util.passageSelectionModal();
                                 return;
                             }
@@ -106,6 +106,7 @@
 						step.tempKeyInput += curChar;
 						if (step.tempKeyInput.length >= 2) {
 							step.util.passageSelectionModal();
+                            step.tempKeyInput = "";
 						}
 						else {
 							timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
@@ -113,6 +114,17 @@
 							}, 1500);
 						}
 					}
+				}
+			}).keydown(function(e) {
+				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0)) {
+					var code = (e.keyCode ? e.keyCode : e.which);
+					console.log("key " + code);
+                    if (code == 16) {
+                        step.tempKeyInput = "^";
+                     	timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
+							step.tempKeyInput = "";
+						}, 1500);
+                    }
 				}
 			});
 		}
