@@ -115,17 +115,27 @@
                                 step.util.ui.initSidebar('analysis');
                                 return;
                             }
+                            else if (curChar === "c") {
+                                $(".sidebar-offcanvas").find("a.glyphicon-remove").click();
+                                $("#welcomeExamples").find(".closeColumn").click();
+                                return;
+                            }
                         }
 						timer && clearTimeout(timer);
 						step.tempKeyInput += curChar;
-						if (step.tempKeyInput.length >= 2) {
-							step.util.passageSelectionModal();
-                            step.tempKeyInput = "";
-						}
-						else {
-							timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
+                        timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
 								step.tempKeyInput = "";
-							}, 1500);
+						}, 1500);
+                        console.log("tmpkey: " + step.tempKeyInput);
+						if (step.tempKeyInput.length >= 2) {
+                   			for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {
+                                if (step.passageSelect.osisChapterJsword[i][0].toLowerCase().startsWith(step.tempKeyInput)) {
+                                    step.util.passageSelectionModal();
+                                    step.tempKeyInput = "";
+                                    return;
+                                }
+                            }
+                            step.tempKeyInput = step.tempKeyInput.substr(1); // does not match any of 66 books, remove the first character
 						}
 					}
 				}
