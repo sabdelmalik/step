@@ -1602,7 +1602,7 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
-		var placeHolderTag = step.touchDevice ? "" : 'placeholder="optionally type in passage, e.g.: \'Rev 21\' or \'John 3:16, Rom 3:23\'"';
+		var placeHolderTag = step.touchDevice ? "" : 'placeholder="Optionally type in passage, e.g.: \'Rev 21\' or \'John 3:16, Rom 3:23\'"';
 		$(_.template('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
 				'<div class="modal-content">' +
