@@ -224,6 +224,20 @@ var ExamplesView = Backbone.View.extend({
 					'<div class="explanationText"><%= __s.interlinear_verb_color_explanation %></div>' +
 				'</div>' +
 			'</div>' +
+            '<div id="keyboard_shortcut" class="accordion-row" data-row="3" style="display:none">' +
+				'<h5 class="accordion-heading stepButton"><%= __s.quick_tutorial_header4 %>' +
+					'<span class="plusminus">+</span>' +
+				'</h5>' +
+				'<div class="accordion-body">' +
+					'<br>' +
+
+					'<div><span style="font-size:14px;font-weight:bold;color:black"><%= __s.keyboard_explain1 %></span>' +
+					'<ul><%= __s.keyboard_explain2 %></ul>' +
+					'</div>' +
+
+				'</div>' +
+			'</div>' +
+            
 			'<div id=\'colorCodeTableDiv\'></div>' +
 			'<div class="text-muted step-copyright">' +
 				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2021</span>' +
@@ -249,9 +263,11 @@ var ExamplesView = Backbone.View.extend({
         var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
 		if (classicalUISetting === "true") $('#classicalUIVideo').hide();
 		else $('#classicalUIVideo').show();
+        if (step.touchDevice) $("#keyboard_shortcut").hide();
+        else $("#keyboard_shortcut").show();
     },
     initAccordions: function () {
-        var count = this.$el.find(".accordion-row").length;
+        var count = this.$el.find(".accordion-row").length - 1;
         var hasStoredState = false;
         var timesDisplayedKey = "accordionTimesDisplayed";
 		var timesDisplayed = localStorage.getItem(timesDisplayedKey);

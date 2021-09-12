@@ -67,7 +67,28 @@
 				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0)) {
 					var code = (e.keyCode ? e.keyCode : e.which);
 					console.log("key " + code + " shift key: " + e.shiftKey);
-                    if (code == 37) {
+                    if ((code == 188) || (code == 190)) {
+                        var pC = $(".passageContainer");
+                        if (pC.length > 1) {
+                            var curActiveId = $(".passageContainer.active")[0].getAttribute("passage-id");
+                            var panelToMakeActive = 0;
+                            for (var i = 0; i < pC.length; i ++) {
+                                if ($(".passageContainer")[i].getAttribute("passage-id") == curActiveId) {
+                                    if (code == 188) {
+                                        if (i > 0) panelToMakeActive = i - 1;
+                                        else panelToMakeActive = pC.length - 1;
+                                    }
+                                    else {
+                                        if (i < (pC.length - 1)) panelToMakeActive = i + 1;
+                                        else panelToMakeActive = 0;
+                                    }
+                                    step.util.activePassageId(panelToMakeActive);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if (code == 37) {
                         if (e.shiftKey) $("a.previousChapter").click();
                         else $(".passageContainer.active").find("a.previousChapter").click();
                         step.tempKeyInput = "";

@@ -1816,6 +1816,26 @@ step.util = {
 			}).start();
 		}
 	},
+    showIntroOfMultiVersion: function () {
+	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.multiVersionCount") : $.cookie('step.multiVersionCount');
+		var introCount = parseInt(introCountFromStorageOrCookie, 10);
+		if (isNaN(introCount)) introCount = 0;
+		if ((window.innerWidth > 499) && (introCount < 2)) {
+			var introJsSteps = [
+				{
+					element: document.querySelector('.passageContainer.active').querySelector('.dropdown.settingsDropdown'),
+					intro: __s.introjs_multi_version,
+					position: 'left'
+				}
+            ];
+			introJs().setOptions({
+				steps: introJsSteps
+			}).start();
+       		introCount ++;
+            if (window.localStorage) window.localStorage.setItem("step.multiVersionCount", introCount);
+            else $.cookie('step.multiVersionCount', introCount);
+		}
+	},
 	closeModal: function (modalID) {
         var element = document.getElementById(modalID);
 		if (element) {	
