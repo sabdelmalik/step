@@ -87,6 +87,7 @@
                                 }
                             }
                         }
+                        step.tempKeyInput = "";
                     }
                     else if (code == 37) {
                         if (e.shiftKey) $("a.previousChapter").click();
@@ -98,8 +99,14 @@
                         else $(".passageContainer.active").find("a.nextChapter").click();
                         step.tempKeyInput = "";
                     }
-                    else if (code == 187) step.util.createNewColumn();
-                    else if (code == 191) step.util.ui.showTutorial();
+                    else if (code == 187) {
+                    	step.util.createNewColumn();
+                    	step.tempKeyInput = "";
+                    }
+                    else if (code == 191) {
+                    	step.util.ui.showTutorial();
+                    	step.tempKeyInput = "";
+                    }
 					else if (((code > 48) && (code < 52)) || ((code > 64) && (code < 91))) { // 49 = 1, 51 = 3, 65 = A, 90 = Z
                         var curChar = String.fromCharCode(code).toLowerCase();
                         if (e.shiftKey) {

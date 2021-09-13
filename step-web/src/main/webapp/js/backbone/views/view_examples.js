@@ -266,7 +266,7 @@ var ExamplesView = Backbone.View.extend({
         else $("#keyboard_shortcut").show();
     },
     initAccordions: function () {
-        var count = this.$el.find(".accordion-row").length - 1;
+        var count = this.$el.find(".accordion-row").length - 1; // Don't need to highlight keyboard shortcut
         var hasStoredState = false;
         var timesDisplayedKey = "accordionTimesDisplayed";
 		var timesDisplayed = localStorage.getItem(timesDisplayedKey);

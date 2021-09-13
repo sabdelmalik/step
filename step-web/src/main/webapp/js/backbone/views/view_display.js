@@ -43,7 +43,7 @@ var DisplayView = Backbone.View.extend({
 			var data = step.util.activePassage().get("searchTokens") || [];
 			var numOfVersion = 0;
             var allCanShowGrammar = true;
-			for (var i = 0; (i < data.length) && (numOfVersion < 2); i++) {
+			for (var i = 0; i < data.length; i++) {
 				if (data[i].tokenType == VERSION) {
 					var versionInitials = data[i].enhancedTokenInfo.initials;
                     allCanShowGrammar = ((allCanShowGrammar) &&
