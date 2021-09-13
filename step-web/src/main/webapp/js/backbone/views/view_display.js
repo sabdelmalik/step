@@ -42,16 +42,18 @@ var DisplayView = Backbone.View.extend({
         if (options.indexOf("M") != -1) {
 			var data = step.util.activePassage().get("searchTokens") || [];
 			var numOfVersion = 0;
-			var versionInitials = "";
+            var allCanShowGrammar = true;
 			for (var i = 0; (i < data.length) && (numOfVersion < 2); i++) {
 				if (data[i].tokenType == VERSION) {
-					versionInitials = data[i].enhancedTokenInfo.initials;
+					var versionInitials = data[i].enhancedTokenInfo.initials;
+                    allCanShowGrammar = ((allCanShowGrammar) &&
+                        (step.keyedVersions[versionInitials].hasMorphology) &&
+                        ((step.keyedVersions[versionInitials].languageCode === "grc") || (versionInitials.toLowerCase().startsWith("kjv"))) ) // As of Sept 2021, there is no support of Hebrew grammar.  The code on the backend has not been created.
 					numOfVersion ++;
 				}
 			}
-			if ((numOfVersion == 1) &&
-				(step.keyedVersions[versionInitials].hasMorphology) &&
-				(step.keyedVersions[versionInitials].languageCode === "grc")) // As of Sept 2021, there is no support of Hebrew grammar.  The code on the backend has not been created.
+			if ( ((numOfVersion == 1) || ((numOfVersion > 1) && (interlinearMode === "INTERLINEAR"))) && 
+                (allCanShowGrammar) )
 				languages.splice(indexToSplice++, 0, "en");
         }
 

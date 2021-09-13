@@ -1739,11 +1739,12 @@ step.util = {
 		'</div>')()).modal("show");
 		$('textarea#userTextInput').focus();
     },
-	showVideoModal: function (videoFile, seconds) {
+	showVideoModal: function (videoFile, seconds, width) {
         var element = document.getElementById('videoModal');
         if (element) element.parentNode.removeChild(element);
+        var widthStyle = (typeof width === "number") ? ' style="width:' + (width + 32) + ';max-width:95%"' : '';
         var videoModalDiv = $('<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-videofile="' + videoFile + '" data-videotime="' + seconds + '">' +
-            '<div class="modal-dialog">' +
+            '<div class="modal-dialog"' + widthStyle + '>' +
             '<div class="modal-content">');
         videoModalDiv.appendTo("body");
         $('#videoModal').modal('show').find('.modal-content').load('/html/video_modal.html');

@@ -14,7 +14,7 @@ var ExamplesView = Backbone.View.extend({
 					'<br>' +
 					'<div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black"><mark><%= __s.display_classical_ui %></mark></span>' +
 					'<br><span class="explanationText"><%= __s.advanced_interface_explain %></span>' +
-					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 23, 580)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'</div>' +
 
 					'<br><span class="input-group" style="overflow:hidden">' +
@@ -24,7 +24,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.simple_passage_explanation %></span>' +
-					'<a id="firstVideoLink" href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">&nbsp;' +
+					'<a id="firstVideoLink" href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15, 434)">&nbsp;' +
 					'<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
@@ -34,7 +34,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.multiple_versions_explanation %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'John3.gif\', 27)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'John3.gif\', 27, 434)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					
 					'<span class="input-group" style="overflow:hidden">' +
 					'<a href="/?q=version=ESV|strong=G0080&options=HVNGU" title="<%= __s.click_to_try_this %>">' +
@@ -43,7 +43,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.simple_search_explanation %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'ESV_brother.gif\', 39)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'ESV_brother.gif\', 39, 467)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
 						'<a href="/?q=version=NIV|version=ESV|text=land|strong=H2617a&options=VGUVNH&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
@@ -52,7 +52,7 @@ var ExamplesView = Backbone.View.extend({
 						'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.chained_searches_explanation %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'ESV_NIV_land_chesed.gif\', 65)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'ESV_NIV_land_chesed.gif\', 65, 452)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
 					'<a href="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG" title="<%= __s.click_to_try_this %>">' +
@@ -66,7 +66,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.chained_searches_explanation_subject %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'ESV_Isa_Rev_throne_david.gif\', 63)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'ESV_Isa_Rev_throne_david.gif\', 63, 452)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
 						'<a href="javascript:cf.setNextPageURL(\'/?q=version=ESV|reference=1Jo.1&options=HVGUN\', \'function:openStats\', \'esv_word_frequency_explanation\')" title="<%= __s.click_to_try_this %>">' +
@@ -76,7 +76,7 @@ var ExamplesView = Backbone.View.extend({
 						'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.esv_word_frequency_explanation %></span>' +
-  					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+  					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<br><br><a href="javascript:step.util.showIntro(true)">' +
 					'<span id="quickTour"><span style="font-size:14px;font-weight:bold;color:black"><%= __s.quick_tour %></span>' +
@@ -103,7 +103,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.interlinear_grammar_explanation %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 35)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 35, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
 					'<a href="/?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR" title="<%= __s.click_to_try_this %>">' +
@@ -112,7 +112,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.interlinear_ot_explanation %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'OHB_ESV_Gen1.gif\', 40)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'OHB_ESV_Gen1.gif\', 40, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
                     '<a href="/?q=version=ESV|reference=John.1&options=TLHVAGUN" title="<%= __s.click_to_try_this %>">' +
@@ -122,7 +122,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.vocab_explanation %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'ESV_orig_voc_transliteration.gif\', 35)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'ESV_orig_voc_transliteration.gif\', 35, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
                     '<a href="?q=version=LXX|version=AB|version=ABGk|version=ABEn|reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
@@ -157,7 +157,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.kjv_verb_imperative_explanation %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'color_code_1.gif\', 93)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'color_code_1.gif\', 93, 480)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Col.1&options=HVGUNC\', \'verb, main vs supporting verbs\', \'kjv_verb_main_supporting_explanation\')" title="<%= __s.click_to_try_this %>">' +
@@ -230,11 +230,10 @@ var ExamplesView = Backbone.View.extend({
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<br>' +
-
 					'<div><span style="font-size:14px;font-weight:bold;color:black"><%= __s.keyboard_explain1 %></span>' +
+                    '<a href="javascript:step.util.showVideoModal(\'Keyboard.gif\', 85, 1153)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'<ul><%= __s.keyboard_explain2 %></ul>' +
 					'</div>' +
-
 				'</div>' +
 			'</div>' +
             
@@ -324,14 +323,14 @@ var ExamplesView = Backbone.View.extend({
     },
     onClickClose: function () {
         step.util.showOrHideTutorial(true);
-    },
-	showVideoModal: function (videoFile) {
-        var element = document.getElementById('videoModal');
-        if (element) element.parentNode.removeChild(element);
-        var videoModalDiv = $('<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-test="' + videoFile + '">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">');
-        videoModalDiv.appendTo("body");
-        $('#videoModal').modal('show').find('.modal-content').load('/html/video_modal.html');
     }
+	// showVideoModal: function (videoFile) {
+        // var element = document.getElementById('videoModal');
+        // if (element) element.parentNode.removeChild(element);
+        // var videoModalDiv = $('<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-test="' + videoFile + '">' +
+            // '<div class="modal-dialog">' +
+            // '<div class="modal-content">');
+        // videoModalDiv.appendTo("body");
+        // $('#videoModal').modal('show').find('.modal-content').load('/html/video_modal.html');
+    // }
 });
