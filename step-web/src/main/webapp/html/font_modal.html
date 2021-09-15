@@ -48,7 +48,7 @@
 	    showPalette: true,
 		palette: [
 			['rgb(23, 117, 143);', 'green'],
-			['rgb(128, 0, 28);', 'rgb(110, 11, 116);']
+			['rgb(136, 47, 61);', 'rgb(110, 11, 116);']
 		],
         change: function(color) {
             var currentClrPicker = $('#inClrStrongFont').spectrum('get').toHexString();
@@ -83,7 +83,7 @@
 		var hsl = t.toHsl();
 		var colorH = hsl["h"];
 		var colorS = hsl["s"] * 100;
-		var colorL = hsl["l"] * 100;   
+		var colorL = hsl["l"] * 100;
 		var rootVar = document.querySelector(':root');
 		rootVar.style.setProperty('--highlight_color',baseColor);
         step.settings.save({"highlight_color":baseColor});
