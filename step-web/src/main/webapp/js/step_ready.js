@@ -64,7 +64,8 @@
 		if (!step.touchDevice) {
 			var timer;
 			$(document).keyup(function(e) {
-				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0)) {
+				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0) &&
+					(!e.altKey) && (!e.ctrlKey)) {
 					var code = (e.keyCode ? e.keyCode : e.which);
 					console.log("key " + code + " shift key: " + e.shiftKey);
                     if ((code == 188) || (code == 190)) {

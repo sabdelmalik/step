@@ -48,7 +48,7 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="input-group" style="overflow:hidden">' +
 						'<a href="/?q=version=NIV|version=ESV|text=land|strong=H2617a&options=VGUVNH&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
 						'<span class="argSummary argSumSpan">' +
-						'<span class="argSelect stepButton">NIV, ESV</span><span class="argSelect stepButton"><span class="glyphicon glyphicon-search" style="font-size:12px"></span><span> land,&nbsp;</span><span class="transliteration" style="color:#498090;line-height:13px">he.sed</span></span></span>' +
+						'<span class="argSelect stepButton">NIV, ESV</span><span class="argSelect stepButton"><span class="glyphicon glyphicon-search" style="font-size:12px"></span><span> land,&nbsp;</span><span class="transliteration" style="color:var(--strong_color);line-height:13px">he.sed</span></span></span>' +
 						'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.chained_searches_explanation %></span>' +
@@ -72,7 +72,7 @@ var ExamplesView = Backbone.View.extend({
 						'<a href="javascript:cf.setNextPageURL(\'/?q=version=ESV|reference=1Jo.1&options=HVGUN\', \'function:openStats\', \'esv_word_frequency_explanation\')" title="<%= __s.click_to_try_this %>">' +
 							'<span class="argSummary argSumSpan">' +
 							'<span class="argSelect stepButton">ESV</span><span class="argSelect stepButton">1Jo 1</span>' +
-							'&nbsp;<span class=\'glyphicon glyphicon-stats\' style="line-height:13px;color:#498090"></span>' +
+							'&nbsp;<span class=\'glyphicon glyphicon-stats\' style="line-height:13px;color:var(--strong_color)"></span>' +
 						'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.esv_word_frequency_explanation %></span>' +
@@ -118,7 +118,7 @@ var ExamplesView = Backbone.View.extend({
                     '<a href="/?q=version=ESV|reference=John.1&options=TLHVAGUN" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">ESV</span><span class="argSelect stepButton">John 1</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_greekVocab %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_greekVocab %></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.vocab_explanation %></span>' +
@@ -153,7 +153,7 @@ var ExamplesView = Backbone.View.extend({
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Col.3&options=HVGUNC\', \'verb, imperative mood\', \'kjv_verb_imperative_explanation\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">KJV</span><span class="argSelect stepButton">Col 3</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.kjv_verb_imperative_explanation %></span>' +
@@ -164,7 +164,7 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton" style="line-height:13px">KJV</span>' +
 					'<span class="argSelect stepButton" style="line-height:13px">Col 1</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText"><%= __s.kjv_verb_main_supporting_explanation %></div>' +
@@ -173,7 +173,7 @@ var ExamplesView = Backbone.View.extend({
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Mat.1&options=HVGUNC\', \'gender and number\', \'kjv_verb_number_and_gender_explanation\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">KJV</span><span class="argSelect stepButton">Mat 1</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText"><%= __s.kjv_verb_number_and_gender_explanation %></div>' +
@@ -182,7 +182,7 @@ var ExamplesView = Backbone.View.extend({
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Eph.1&options=HVGUNC\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">KJV</span><span class="argSelect stepButton">Eph 1</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText"><%= __s.kjv_verb_colour_explanation %></div>' +
@@ -191,7 +191,7 @@ var ExamplesView = Backbone.View.extend({
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">SBLG</span><span class="argSelect stepButton">Rom 12</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
                    
@@ -200,7 +200,7 @@ var ExamplesView = Backbone.View.extend({
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=THOT|reference=Gen.1&options=HVLUNC\', \'verb, gender and number\', \'\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">THOT</span><span class="argSelect stepButton">Gen 1</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText">Look at Hebrew Testament with color code grammar and morphology information in the lexicon</div>' +
@@ -209,7 +209,7 @@ var ExamplesView = Backbone.View.extend({
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=CUn|reference=Col.1&options=HVGUNC\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">CUn</span><span class="argSelect stepButton">Col 1</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText">Look at Chinese Union New Testament with color highlighted verbs</div>' +
@@ -218,7 +218,7 @@ var ExamplesView = Backbone.View.extend({
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="argSummary argSumSpan">' +
 					'<span class="argSelect stepButton">SBLG, KJV, CUn</span><span class="argSelect stepButton">Eph 5</span>' +
-					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:#498090">&nbsp;</span><span style="line-height:13px;color:#498090"><%= __s.display_grammarColor %></span></span>' +
+					'&nbsp;<span class=\'glyphicon glyphicon-cog\' style="line-height:13px;color:var(--strong_color)">&nbsp;</span><span style="line-height:13px;color:var(--strong_color)"><%= __s.display_grammarColor %></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText"><%= __s.interlinear_verb_color_explanation %></div>' +

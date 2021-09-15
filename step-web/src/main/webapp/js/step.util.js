@@ -638,7 +638,6 @@ step.util = {
         var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
         var passageId = step.passage.getPassageId(source);
         var passageModel = step.passages.findWhere({ passageId: passageId});
-
         var key = this.getMainLanguage(passageModel);
         var fontClass = this.ui._getFontClassForLanguage(key);
         for (var i = 0; i < elements.length; i++) {
@@ -1748,6 +1747,15 @@ step.util = {
             '<div class="modal-content">');
         videoModalDiv.appendTo("body");
         $('#videoModal').modal('show').find('.modal-content').load('/html/video_modal.html');
+    },
+    showFontSettings: function () {
+        var element = document.getElementById('fontSettings');
+        if (element) element.parentNode.removeChild(element);
+        var fontModalDiv = $('<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog" style="width:300px">' +
+            '<div class="modal-content">');
+        fontModalDiv.appendTo("body");
+        $('#fontSettings').modal('show').find('.modal-content').load('/html/font_modal.html');
     },
     startPickBible: function () {
         require(["menu_extras"], function () {
