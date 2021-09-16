@@ -1,10 +1,10 @@
 /* TODO: Refactor font names to be abstracted away, since Cardo isn't really cardo!  */
-@font-face {
+/* @font-face {
   font-family: 'Cardo';
   font-style: normal;
   font-size: 18px;
   src: local("Times New Roman");
-}
+} */
 @font-face {
     font-family: 'Cardo';
     font-style: normal;
