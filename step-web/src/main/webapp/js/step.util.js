@@ -1893,8 +1893,8 @@ step.util = {
 							'<p class="passageContent lexiconFocus">Highlighted for lexicon</p>' +
 							'<p class="passageContent relatedWordEmphasisHover">Highlighted for related text</p>' +
 							'<div class="footer">' +
-								'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>Exit</label></button>' +
-								'<button class="stepButton pull-right" onclick=setColor()><label>Reset Color</label></button>' +
+								'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>Ok</label></button>' +
+								'<button class="stepButton pull-right" onclick=setColor()><label>Original color</label></button>' +
 							'</div>' +
 							'<br>' +
 						'</div>' +
