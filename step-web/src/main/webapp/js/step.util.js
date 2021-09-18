@@ -1601,8 +1601,7 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
-		var placeHolderTag = step.touchDevice ? "" : 'placeholder="Optionally type in passage, e.g.: \'Rev 21\' or \'John 3:16, Rom 3:23\'"';
-		$(_.template('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+		var modalHTML = '<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
 				'<div class="modal-content">' +
 					'<div class="modal-header">' +
@@ -1630,13 +1629,17 @@ step.util = {
 								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
 							'</select>' +
 						'</div>' +
-						'<br>' +
-					'</div>' +
+					'</div>' ;
+		if (!step.touchDevice) modalHTML +=
+						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 95%;"  title="<%= __s.type_in_your_passage %>"' +
+						' placeholder="Optionally type in passage, e.g.: \'Rev 21\' or \'John 3:16, Rom 3:23\'"></textarea>';
+		modalHTML +=
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
-					'<div class="footer">' +
-						'<img id="keyboard_icon" src="/images/keyboard.jpg" alt="Keyboard entry" title="<%= __s.type_in_your_passage %>">' +
-						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"  title="<%= __s.type_in_your_passage %>"' +
-						placeHolderTag + '></textarea>' +
+					'<div class="footer">';
+		if (step.touchDevice) modalHTML +=
+						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"  title="<%= __s.type_in_your_passage %>">' +
+						'</textarea>';
+		modalHTML +=
 						'<br>' +
 						'<span id="userEnterPassageError" style="color: red;"></span>' +
 					'</div>' +
@@ -1657,7 +1660,8 @@ step.util = {
 					'</script>' +
 				'</div>' +
 			'</div>' +
-		'</div>')()).modal("show");
+		'</div>';
+		$(_.template(modalHTML)()).modal("show");
 		if (!step.touchDevice) {
 			$('textarea#enterYourPassage').focus().val(step.tempKeyInput);
 			step.tempKeyInput = "";
