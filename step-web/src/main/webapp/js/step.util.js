@@ -1632,7 +1632,7 @@ step.util = {
 					'</div>' ;
 		if (!step.touchDevice) modalHTML +=
 						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 95%;"  title="<%= __s.type_in_your_passage %>"' +
-						' placeholder="Optionally type in passage, e.g.: \'Rev 21\' or \'John 3:16, Rom 3:23\'"></textarea>';
+						' placeholder="<%= __s.select_passage_input_placeholder %>"></textarea>';
 		modalHTML +=
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
 					'<div class="footer">';
