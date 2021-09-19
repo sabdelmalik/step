@@ -646,7 +646,7 @@ step.util = {
             var newFontSize = fontSize + increment;
 
             //key it to be the default font, unicodeFont or Hebrew font
-            var fontKey = fontClass || 'defaultfont';
+            var fontKey = fontClass;
             var diff = {};
             diff[fontKey] = newFontSize;
             step.settings.save(diff);
@@ -1869,7 +1869,7 @@ step.util = {
 						'}';
 
 		modalHTML +=	'function closeFontSetting(baseColor) {' +
-							'if (typeof baseColor === "string") setColor(baseColor);' +
+							'if ((typeof baseColor === "string") && (color.length == 7)) setColor(baseColor);' +
 							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
 							'step.util.closeModal("fontSettings");' +
 							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021
