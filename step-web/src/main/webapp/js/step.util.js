@@ -639,9 +639,10 @@ step.util = {
         var passageId = step.passage.getPassageId(source);
         var passageModel = step.passages.findWhere({ passageId: passageId});
         var key = this.getMainLanguage(passageModel);
-        var fontClass = this.ui._getFontClassForLanguage(key);
+        var fontClass = this.ui._getFontClassForLanguage(key) || 'defaultfont';
         for (var i = 0; i < elements.length; i++) {
             var fontSize = parseInt($(elements[i]).css("font-size"));
+			console.log("change font: " + fontClass + " " + fontSize);
             var newFontSize = fontSize + increment;
 
             //key it to be the default font, unicodeFont or Hebrew font
@@ -1631,13 +1632,13 @@ step.util = {
 						'</div>' +
 					'</div>' ;
 		if (!step.touchDevice) modalHTML +=
-						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 95%;"  title="<%= __s.type_in_your_passage %>"' +
+						'<textarea id="enterYourPassage" rows="1" style="font-size:13px; width: 95%;"  title="<%= __s.type_in_your_passage %>"' +
 						' placeholder="<%= __s.select_passage_input_placeholder %>"></textarea>';
 		modalHTML +=
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
 					'<div class="footer">';
 		if (step.touchDevice) modalHTML +=
-						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"  title="<%= __s.type_in_your_passage %>">' +
+						'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;">' +
 						'</textarea>';
 		modalHTML +=
 						'<br>' +
@@ -1797,6 +1798,8 @@ step.util = {
 						'$(document).ready(function () {' +
 							'var color = step.settings.get("highlight_color");' +
 							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+							'var closeButton = $("#fontSettings").find("button.close");' +
+							'if (closeButton.length == 1) $(closeButton[0]).attr("onclick", "closeFontSetting(\'" + color + "\')");' +
 							'$("#inClrStrongFont").spectrum({' +
 								'color: color,' +
 								'clickoutFiresChange: false,' +
@@ -1865,7 +1868,8 @@ step.util = {
 							'step.settings.save({"relatedWordBackground":lightHex});' +
 						'}';
 
-		modalHTML +=	'function closeFontSetting() {' +
+		modalHTML +=	'function closeFontSetting(baseColor) {' +
+							'if (typeof baseColor === "string") setColor(baseColor);' +
 							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
 							'step.util.closeModal("fontSettings");' +
 							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021

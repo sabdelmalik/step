@@ -62,10 +62,8 @@ var PickBibleView = Backbone.View.extend({
 		  '<option value="south_asia">South Asia</option>' +
 		  '<option value="western_asia">Western Asia</option>' +
 		'</select>' +
-        '<p> <%= __s.bible_version_features %></p>' +
-//		Características: N=Notas G=Gramática V=Vocabulario I=Interlineal S=Septuaginta interlineal A=numeración Alternativa de versículos
-		
-		((step.touchDevice) ? "" : '<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:16px; width: 95%;" placeholder="<%= __s.pick_bible_input_placeholder %>"></textarea><br><br>') +
+        '<p><%= __s.bible_version_features %></p>' +
+		((step.touchDevice) ? "" : '<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:13px; width: 95%;" placeholder="<%= __s.pick_bible_input_placeholder %>"></textarea><br><br>') +
         '<div class="tab-content">' +
         '<div class="tab-pane" id="bibleList">' +
         '</div>' +
