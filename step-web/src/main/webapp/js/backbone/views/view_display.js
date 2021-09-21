@@ -22,7 +22,6 @@ var DisplayView = Backbone.View.extend({
      * @private
      */
     doFonts: function (passageContent, options, interlinearMode, languages) {
-		debugger;
         var originalLanguageLength = languages.length;
 
         //for interlinear options, we need to splice in a few extra languages.
