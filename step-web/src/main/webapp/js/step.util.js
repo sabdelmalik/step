@@ -626,18 +626,44 @@ step.util = {
     },
     restoreFontSize: function (passageModel, element) {
         var passageId = passageModel.get("passageId");
+		var passageModel = step.passages.findWhere({ passageId: passageId});
+		var id = passageModel.attributes.id;
         var key = this.getMainLanguage(passageModel);
         var fontClass = this.ui._getFontClassForLanguage(key) || 'defaultfont';
-
-        var fontSize = step.settings.get(fontClass);
-        if (fontSize && fontSize != 0) {
+		var fontKey = id + ":" + fontClass;
+		var fontSize = step.settings.get(fontKey);
+		if (fontSize && fontSize != 0) {
             element.css("font-size", fontSize);
-        }
+		}
+		else {
+			var setElementFontSize = false;
+			var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
+			for (var j = 0; j < fontArray.length; j++) {
+				var fontSize = step.settings.get(fontArray[j]);
+				if (fontSize && fontSize != 0) {
+					if ($(element).hasClass(fontArray[j])) {
+						element.css("font-size", fontSize);
+						setElementFontSize = true;
+					}
+					var fontInElements = element.find("." + fontArray[j]);
+					if (fontInElements.length > 0) {
+						fontInElements.css("font-size", fontSize);
+					}
+				}
+			}
+			if (!setElementFontSize) {
+				var fontSize = step.settings.get('defaultfont');
+				if (fontSize && fontSize != 0) {
+					element.css("font-size", fontSize);
+				}
+			}
+		}
     },
     changeFontSize: function (source, increment) {
         var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
         var passageId = step.passage.getPassageId(source);
         var passageModel = step.passages.findWhere({ passageId: passageId});
+		var id = passageModel.attributes.id;
         var key = this.getMainLanguage(passageModel);
         var fontClass = this.ui._getFontClassForLanguage(key);
         for (var i = 0; i < elements.length; i++) {
@@ -646,6 +672,7 @@ step.util = {
 
             //key it to be the default font, unicodeFont or Hebrew font
             var fontKey = fontClass || 'defaultfont';
+			fontKey = id + ":" + fontKey;
             var diff = {};
             diff[fontKey] = newFontSize;
             step.settings.save(diff);
@@ -656,27 +683,60 @@ step.util = {
     changeSpecificFontSize: function (fontName, increment) {
 		var source = ".passageOptionsGroup";
         var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
-        var passageId = step.passage.getPassageId(source);
-        var passageModel = step.passages.findWhere({ passageId: passageId});
-        // var key = this.getMainLanguage(passageModel);
-        // var fontClass = this.ui._getFontClassForLanguage(key);
+		var hasPanelToProcess = false;
         for (var i = 0; i < elements.length; i++) {
-			var fontSize = (fontName === "defaultfont") ? parseInt($(elements[i]).css("font-size")) :
-								parseInt($(elements[i]).find("." + fontName).css("font-size"));			
-            var newFontSize = fontSize + increment;
-
-            //key it to be the default font, unicodeFont or Hebrew font
-            // var fontKey = fontClass || 'defaultfont';
-            var diff = {};
-            diff[fontName] = newFontSize;
-            step.settings.save(diff);
-			if (fontName === "defaultfont") $(elements[i]).css("font-size", newFontSize);
-			else $(elements[i]).find("." + fontName).css("font-size", newFontSize);
+			var passageId = step.passage.getPassageId(elements[i]);
+			var passageModel = step.passages.findWhere({ passageId: passageId});
+			var id = passageModel.attributes.id;
+			var key = this.getMainLanguage(passageModel);
+			var fontClass = this.ui._getFontClassForLanguage(key) || 'defaultfont';
+			var fontKey = id + ":" + fontClass;
+			var fontSizeOnPanelSpecificChange = step.settings.get(fontKey);
+			if (typeof fontSizeOnPanelSpecificChange !== "number") {
+				var fontSize = 0;
+				var fontNeedToRestoreSize = {};
+				if (fontName === "defaultfont") {
+					fontSize = parseInt($(elements[i]).css("font-size"));
+					var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
+					for (var j = 0; j < fontArray.length; j++) {
+						if ($(elements[i]).hasClass(fontArray[j])) {
+							fontSize = 0; // Should not change font because
+							break;
+						}
+						var fontInElements = $(elements[i]).find("." + fontArray[j]);
+						if (fontInElements.length > 0) {
+							var oldFontSize = parseInt(fontInElements.css("font-size"));
+							console.log("Old " + fontArray[j] + " font size: " + oldFontSize);
+							fontNeedToRestoreSize[fontArray[j]] = oldFontSize;
+						}
+					}
+				}
+				else {
+					if ($(elements[i]).hasClass(fontName)) fontSize = parseInt($(elements[i]).css("font-size"));
+					else fontSize = parseInt($(elements[i]).find("." + fontName).css("font-size"));
+				}
+				if (fontSize > 0) {
+					var newFontSize = fontSize + increment;
+					var diff = {};
+					diff[fontName] = newFontSize;
+					step.settings.save(diff);
+					if (fontName === "defaultfont") {
+						$(elements[i]).css("font-size", newFontSize);
+						for (var nameOfFont in fontNeedToRestoreSize) { // restore font size
+							$(elements[i]).find("." + nameOfFont).css("font-size", fontNeedToRestoreSize[nameOfFont]);
+						}
+					}
+					else {
+						if ($(elements[i]).hasClass(fontName)) $(elements[i]).css("font-size", newFontSize);
+						$(elements[i]).find("." + fontName).css("font-size", newFontSize);
+					}
+					$("#" + fontName + "Btn").find("." + fontName).css("font-size", newFontSize);
+					hasPanelToProcess = true;
+				}
+			}
         }
-		$("#" + fontName + "Btn").find("." + fontName).css("font-size", newFontSize);
-		$("#" + fontName + "Btn").find(".hbFont").css("font-size", newFontSize);
-
-        passageModel.trigger("font:change");
+		if (hasPanelToProcess) passageModel.trigger("font:change");
+		else alert("Since you have previous change the font size inside the panel, please change the font size inside the panel.");
     },
     getKeyValues: function (args) {
         var tokens = (args || "").split("|");
@@ -1924,7 +1984,7 @@ step.util = {
 						'<button type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
 					'</div>' +
 					'<div class="modal-body" style="text-align:center">' +
-						'<table style="height:auto;">' +
+						'<table style="height:auto;width:95%">' +
 							'<tr>' +
 								'<th style="width:70%">' +
 								'<th style="width:30%">' +
