@@ -361,7 +361,7 @@
         == Surround versenum with dup
         -->
 	  <!-- If the following are updated, please update doFonts function in view_display.js
-	       doFonts expects to find 'span.w.verseStart' and then "span.strongs" or "span.morphs" 
+	       doFonts expects to find 'span.w.verseStart' and then "span.strongs" or "span.morphs"
 		   doFonts also look for ["Text Trans", "Orig Vocab", "Vocab Trans", "Eng Vocab", "Esp Vocab", "中文詞", "中文词"] or "Grammar"
 	    -->
       <xsl:choose>
@@ -409,7 +409,7 @@
 		</span>
         </xsl:when>
 	  <!-- If the following are updated, please update doFonts function in view_display.js
-	       doFonts expects to find 'span.w.verseStart' and then "span.strongs" or "span.morphs" 
+	       doFonts expects to find 'span.w.verseStart' and then "span.strongs" or "span.morphs"
 		   doFonts also look for ["Text Trans", "Orig Vocab", "Vocab Trans", "Eng Vocab", "Esp Vocab", "中文詞", "中文词"] or "Grammar"
 	    -->
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
