@@ -655,29 +655,28 @@ step.util = {
 			}
 		}
     },
-    changeFontSize: function (source, increment) {
-        var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
-        for (var i = 0; i < elements.length; i++) {
-			var passageId = step.passage.getPassageId(elements[i]);
-			var passageModel = step.passages.findWhere({ passageId: passageId});
-			var id = passageModel.attributes.id;
-			var key = this.getMainLanguage(passageModel);
-			var fontClass = this.ui._getFontClassForLanguage(key);
-            var fontSize = parseInt($(elements[i]).css("font-size"));
-            var newFontSize = fontSize + increment;
-            //key it to be the default font, unicodeFont or Hebrew font
-            var fontKey = fontClass || 'defaultfont';
-			fontKey = "panel:" + id + "font:" + fontKey;
-            var diff = {};
-            diff[fontKey] = newFontSize;
-            step.settings.save(diff);
-            $(elements[i]).css("font-size", newFontSize);
-			// var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
-				// for (var j = 0; j < fontArray.length; j++) {
-
-        }
-        passageModel.trigger("font:change");
-    },
+    // changeFontSize: function (source, increment) {
+        // var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
+        // for (var i = 0; i < elements.length; i++) {
+			// var passageId = step.passage.getPassageId(elements[i]);
+			// var passageModel = step.passages.findWhere({ passageId: passageId});
+			// var id = passageModel.attributes.id;
+			// var key = this.getMainLanguage(passageModel);
+			// var fontClass = this.ui._getFontClassForLanguage(key);
+            // var fontSize = parseInt($(elements[i]).css("font-size"));
+            // var newFontSize = fontSize + increment;
+            // // key it to be the default font, unicodeFont or Hebrew font
+            // var fontKey = fontClass || 'defaultfont';
+			// fontKey = "panel:" + id + "font:" + fontKey;
+            // var diff = {};
+            // diff[fontKey] = newFontSize;
+            // step.settings.save(diff);
+            // $(elements[i]).css("font-size", newFontSize);
+			// // var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
+				// // for (var j = 0; j < fontArray.length; j++) {
+        // }
+        // passageModel.trigger("font:change");
+    // },
     changeSpecificFontSize: function (fontName, increment, panelNumber) {
 		var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
 		var key = fontName;
