@@ -1965,7 +1965,6 @@ step.util = {
 							'});';
 		modalHTML +=	'}); ' +
 						'function showFontSizeBtns(fontName, panelNumber) {' +
-						'debugger;' +
 							'var currentFontSize = step.util.getFontSize(fontName, panelNumber);' +
 							'if (fontName === "defaultfont") $("#" + fontName + "Btn").show();' +
 							'if (currentFontSize > 0) {' +
