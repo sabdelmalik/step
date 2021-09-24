@@ -3,34 +3,69 @@
 <head>
   <meta charset="utf-8">
   <title>STEP with another frame</title>
+  <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+  <style>
+
+</style>
 </head>
 <body style="margin:0">
-<iframe id="f1" src="https://www.stepbible.org/?q=reference=Neh.3|version=ESV&options=HVNUG"
+<div>
+  <span>Adjust width:</span><input type="range" min="30" max="70" value="50" id="myRange"> 
+  <span>2nd URL:</span><input type="url" id="url2">
+</div>
+<iframe id="f1" src="https://www.stepbible.org/?skipwelcome"
     frameborder="1" scrolling="yes"                           
-    style="display:block;background: #000;border: none;height: 100vh;width: 49vw;"
+    style="display:block;background: #000;border: none;height: 90vh;width: 49vw;"
     align="left">
 </iframe>  
 <iframe id="f2" src="https://docs.google.com/document/d/0BwZi_iH0jiVPYmFJaHF5cW5qZGI4SzdqVWk0X3puNWF2LTZj/edit?resourcekey=0--q7VMimwQ9ohi78YEDzBog"
     frameborder="1" scrolling="yes"  
-    style="display:block;background: #000;border: none;height: 100vh;width: 48vw;"
+    style="display:block;background: #000;border: none;height: 90vh;width: 48vw;"
     align="right">
 </iframe>
+
 <script>
 
 (function() {
     var queryString = window.location.search;
     if (queryString.substr(0,1) === "?") queryString = queryString.substr(1);
-    if (queryString.length < 30) return;
+    if (queryString.length < 15) return;
     var posOfSecondURL = queryString.indexOf("&secondURL=");
-    if (posOfSecondURL < 14) return;
     var firstURL = queryString.substr(0, posOfSecondURL);
-    var secondURL = queryString.substr(posOfSecondURL + 11);
+	posOfSecondURL += 11;
+	var posOfWidthPercent = queryString.indexOf("&widthPercent=");
+	var secondURLLength = (posOfWidthPercent == -1) ? queryString.length - posOfSecondURL : posOfWidthPercent - posOfSecondURL;
+	if ((posOfWidthPercent > -1) && (posOfWidthPercent < (posOfSecondURL + 15))) return;
+    var secondURL = queryString.substr(posOfSecondURL, secondURLLength);
+	var width = (posOfWidthPercent > -1) ? parseInt(queryString.substr(posOfWidthPercent + 14)) : 0;
+	
     console.log(queryString);
     console.log(firstURL);
     console.log(secondURL);
     if (firstURL.length > 13) document.getElementById("f1").src = firstURL;
     if (secondURL.length > 13) document.getElementById("f2").src = secondURL;
+	if ((width >= 30) && (width <= 70)) {
+		$("#f1").css("width", width + "vw");
+		$("#f2").css("width", (98 - width) + "vw");
+	}
+
 })();
+
+var slider = document.getElementById("myRange");
+
+slider.oninput = function() {
+	$("#f1").css("width", this.value + "vw");
+	$("#f2").css("width", (98 - this.value) + "vw");
+}
+
+$("#url2").on("keydown",function search(e) {
+    if (e.keyCode == 13) {
+		var newUrl = $(this).val();
+		if (!newUrl.toLowerCase().startsWith("http")) newUrl = "https://" + newUrl;
+		document.getElementById("f2").src = newUrl;
+    }
+});
+
 </script>
 </body>
 </html>
