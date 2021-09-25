@@ -45,23 +45,22 @@
 </style>
 </head>
 <body style="margin:0">
-<div>
+<div id="splithdr">
   <span>Adjust width:</span><input type="range" min="30" max="70" value="50" id="myRange"> 
   <span>2nd URL:</span><input type="url" id="url2">
   <div class="tooltip">
 	<button id="createURL" type="button" title="copy URL to clipboard" onclick="copyURLToClipboard()" onmouseout="outFunc()">
 	<span class="tooltiptext" id="myTooltip">Copy to clipboard</span>Copy URL</button>
   </div>
-  
 </div>
 <iframe id="f1" src="https://www.stepbible.org/?skipwelcome"
     frameborder="1" scrolling="yes"                           
-    style="display:block;background: #000;border: none;height: 90vh;width: 49vw;"
+    style="display:block;background: #000;border: none;height: 96vh;width: 49vw;"
     align="left">
 </iframe>  
 <iframe id="f2" src="https://docs.google.com/document/d/0BwZi_iH0jiVPYmFJaHF5cW5qZGI4SzdqVWk0X3puNWF2LTZj/edit?resourcekey=0--q7VMimwQ9ohi78YEDzBog"
     frameborder="1" scrolling="yes"  
-    style="display:block;background: #000;border: none;height: 90vh;width: 48vw;"
+    style="display:block;background: #000;border: none;height: 96vh;width: 48vw;"
     align="right">
 </iframe>
 
@@ -83,6 +82,10 @@
     console.log(queryString);
     console.log(firstURL);
     console.log(secondURL);
+	var fullHeight = $(document).height();
+	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;
+	$("#f1").css("height", remainingHeight + "vh");
+	$("#f2").css("height", remainingHeight + "vh");
     if (firstURL.length > 13) document.getElementById("f1").src = firstURL;
     if (secondURL.length > 13) document.getElementById("f2").src = secondURL;
 	if ((width >= 30) && (width <= 70)) {
@@ -90,7 +93,6 @@
 		$("#f2").css("width", (98 - width) + "vw");
 		$($("#myRange")[0]).val(width)
 	}
-
 })();
 
 var slider = document.getElementById("myRange");
