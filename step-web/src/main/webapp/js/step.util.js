@@ -2183,6 +2183,7 @@ step.util = {
 		// }
 	// },
 	showIntro: function (showAnyway) {
+		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
@@ -2214,6 +2215,7 @@ step.util = {
 		}
 	},
     showIntroOfMultiVersion: function () {
+		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.multiVersionCount") : $.cookie('step.multiVersionCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
