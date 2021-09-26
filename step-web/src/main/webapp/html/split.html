@@ -125,6 +125,19 @@ function outFunc() {
   tooltip.innerHTML = "Copy to clipboard";
 }
 
+window.onmessage = function(e) {
+    if (typeof e.data === "string") {
+        var curURL = document.getElementById("f1").contentWindow.location.href;
+        if (curURL.search(/reference=[A-Za-z0-9.,;-]+([%&|])/) > -1) {
+            var left = RegExp.leftContext;
+            var right = RegExp.rightContext;
+            var lastChar = RegExp.$1;
+            var newURL = left + "reference=" + e.data + lastChar + right;
+            document.getElementById("f1").src = newURL;
+        }
+    }
+};
+
 </script>
 </body>
 </html>
