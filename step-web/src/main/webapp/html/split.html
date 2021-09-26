@@ -134,6 +134,8 @@ window.onmessage = function(e) {
             var lastChar = RegExp.$1;
             var newURL = left + "reference=" + e.data + lastChar + right;
             document.getElementById("f1").src = newURL;
+            console.log("old: " + curURL);
+            console.log("new: " + newURL);
         }
     }
 };
