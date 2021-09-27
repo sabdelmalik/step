@@ -1723,7 +1723,7 @@ step.util = {
 			'</script>' +
 		'</div>').modal("show");
     },
-    passageSelectionModal: function (activePassageNumber, summaryMode) {
+    passageSelectionModal: function (activePassageNumber) {
         var element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
         $("div.modal-backdrop.in").remove();
@@ -1773,9 +1773,7 @@ step.util = {
 					'</div>' +
 					'<script>' +
 						'$(document).ready(function () {' +
-							'step.passageSelect.initPassageSelect(' + 
-                                ((summaryMode) ? "true" : "false") +
-                            ');' +
+							'step.passageSelect.initPassageSelect();' +
 						'});' +
 						'function addSelectVerse() {' +
 							'if (document.getElementById("selectverseonoffswitch").checked) {' +

@@ -133,7 +133,8 @@ step.passageSelect = {
 	},
 
 	_displayListOfBooks: function(summaryMode) {
-		var html = this._buildBookHeaderAndSkeleton();
+        $('#bookchaptermodalbody').empty();
+		var html = this._buildBookHeaderAndSkeleton(summaryMode);
 		$('#bookchaptermodalbody').append(html);
 		$('#keyboardEntry').show();
 		this._buildBookTable(summaryMode);
@@ -200,12 +201,14 @@ step.passageSelect = {
 		}
         else {
             columns = 1;
-            // $.ajaxSetup({async: false});
-            // $.getJSON("/summary/gen.json", function(summary) {
-                // var summaryInfo = '<p><b>Book summary:</b> ' + summary.book_summary + '</p>';
-            // });
-            // $.ajaxSetup({async: true});
-
+            bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
+            $.ajaxSetup({async: false});
+            $.getJSON("/summary/book_desc.json", function(desc) {
+                for (key in desc) {
+                    bookDescription[key] = desc[key];
+                }
+            });
+            $.ajaxSetup({async: true});
         }
 		var tableHTML = this._buildBookTableHeader(columns);
 		var typlicalBooksChapters = false;
@@ -274,7 +277,9 @@ step.passageSelect = {
                 ((summaryMode) ? ' style="text-align:left" ' : "") +
                 '>' +
 				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');">' +
-				shortNameToDisplay + '</a></td>';
+				shortNameToDisplay + 
+                ((summaryMode) ? " - " + bookDescription[currentOsisID.toLowerCase()] : "") +
+                '</a></td>';
 			counter++;
 			if ((counter % columns) == 0) {
 				tableHTML += '</tr><tr style="height:30px">';
@@ -286,12 +291,10 @@ step.passageSelect = {
 		else $('#nt_table').append(tableHTML);
 	},
 
-	_buildBookHeaderAndSkeleton: function() {
+	_buildBookHeaderAndSkeleton: function(summaryMode) {
 		 var html = '<div class="header">' +
 			'<h4>' + __s.please_select_book + '</h4>' +
-            '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.passageSelectionModal(\'' +
-                        step.util.activePassageId() + 
-                        '\', \'true\')" title="Show summary information" class="select-version stepButton">Summary</button>' +
+            ((summaryMode) ? "" : '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(true)()" title="Show summary information" class="select-version stepButton">Summary</button>') +
 			'</div>' +
 			'<h5>' + __s.old_testament + '</h5>' +
 			'<div id="ot_table"/>' +
@@ -377,19 +380,18 @@ step.passageSelect = {
 		}
 	},
 
-	getChapters: function(bookOsisID, version, userLang, numOfChptrsOrVrs) {
-		var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C" + REFERENCE + "%3D" + bookOsisID + "%7C?lang=" + userLang;
+	getChapters: function(bookOsisID, version, userLang, numOfChptrsOrVrs, summaryMode) {
 		$('#pssgModalBackButton').show();
 		if (numOfChptrsOrVrs > 0) {
-			this._buildChptrVrsTbl(null, bookOsisID, numOfChptrsOrVrs, true);
+			this._buildChptrVrsTbl(null, bookOsisID, numOfChptrsOrVrs, true, version, userLang, summaryMode);
 		}
 		else {
+            var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C" + REFERENCE + "%3D" + bookOsisID + "%7C?lang=" + userLang;
 			$.getJSON(url, function (data) {
-				step.passageSelect._buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, true);
+				step.passageSelect._buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, true, version, userLang, summaryMode);
 			});
 		}
 	},
-
 	_handleEnteredPassage: function(verifyOnly, input) {
 		if (input !== null) userInput = input;
 		else {
@@ -415,7 +417,7 @@ step.passageSelect = {
 		});
 	},
 
-	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter) {
+	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter, version, userLang, summaryMode) {
 		var headerMsg;
 		$('#enterYourPassage').hide();
 		$('#keyboard_icon').hide();
@@ -438,8 +440,31 @@ step.passageSelect = {
 				widthPercent = 14;
 			}
 		}
-
+        var chapterDescription = [];
+        if (summaryMode) {
+            tableColumns = 1;
+            for (var i = 0; i <= numOfChptrsOrVrs; i++) {
+                chapterDescription.push("");
+            }
+            $.ajaxSetup({async: false});
+            $.getJSON("/summary/" + bookOsisID.toLowerCase() + ".json", function(desc) {
+                for (key in desc) {
+                    if (key.startsWith("chapter_")) {
+                        var pos = key.indexOf("_description");
+                        if (pos > -1) {
+                            var chapter = key.substr(8, pos - 8);
+                            chapterDescription[chapter] = desc[key];
+                        }
+                    }
+                }
+            });
+            $.ajaxSetup({async: true});
+        }
 		var html = '<h5>' + headerMsg + '</h5>' +
+            ((summaryMode) ? "" : 
+            '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
+                bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',true)" title="Show summary information" class="select-version stepButton">Summary</button>') +
+
 			'<table>' +
 			'<colgroup>';
 		for (var c = 0; c < tableColumns; c++) {
@@ -458,7 +483,11 @@ step.passageSelect = {
 			for (var i = 0; i < numOfChptrsOrVrs; i++) {
 				chptrOrVrsNum++;
 				osisIDLink = (numOfChptrsOrVrs === 1) ? bookOsisID : bookOsisID + '.' + chptrOrVrsNum;
-				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');">' + chptrOrVrsNum + '</a></td>'
+				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
+                    ((summaryMode) ? ' style="text-align:left" ' : "") +
+                    '>' + chptrOrVrsNum + 
+                    ((summaryMode) ? " - " + chapterDescription[chptrOrVrsNum] : "") +
+                    '</a></td>'
 				if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
 					html += '</tr><tr style="height:30px">';
 				}
