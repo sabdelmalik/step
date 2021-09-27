@@ -1938,9 +1938,11 @@ step.util = {
         var chapterNum = (tmpArray.length > 1) ? parseInt(tmpArray[1].split(":")[0].split("-")[0].split(";")[0]) : 1;
         if (typeof chapterNum !== "number") chapterNum = 1;
         $.ajaxSetup({async: false});
-        $.getJSON("/summary/" + bookName + ".json", function(summary) {
-            var summaryInfo = '<p><b>Book summary:</b> ' + summary.book_summary + '</p>' +
-                '<p><b>Book description:</b> ' + summary["chapter_" + chapterNum + "_description"] + '</p>' +
+        $.getJSON("/html/json/" + bookName + ".json", function(summary) {
+            var summaryInfo = '<p><b>Book description:</b> ' + summary.book_description + '</p>' +
+                '<p><b>Book overview:</b> ' + summary.book_overview + '</p>' +
+                '<p><b>ESV summary:</b> ' + summary.ESV_summary + '</p>' +
+                '<p><b>Chapter description:</b> ' + summary["chapter_" + chapterNum + "_description"] + '</p>' +
                 '<p><b>Chapter overview:</b> ' + summary["chapter_" + chapterNum + "_overview"] + '</p>' +
                 '<p><b>Chapter summary:</b> ' + summary["chapter_" + chapterNum + "_summary"] + '</p>';
             $(_.template(
