@@ -76,7 +76,7 @@ step.passageSelect = {
 		["Rev", 22, [20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,21,15,27,21]]
 	],
 
-	initPassageSelect: function() {
+	initPassageSelect: function(summaryMode) {
         this.version = "ESV_th";
 		this.userLang = step.state.language() || "en-US";
 		this.addVerseSelection = false;
@@ -91,7 +91,7 @@ step.passageSelect = {
 			hideAppend = true;
 		}
 		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
-		this._displayListOfBooks();
+		this._displayListOfBooks(summaryMode);
 		$("textarea#enterYourPassage").on('input', function(e){
 			step.passageSelect._handleKeyboardEntry(e);
 		});
@@ -132,26 +132,26 @@ step.passageSelect = {
 			((e.originalEvent.inputType === "insertText") && (e.originalEvent.data === ".")) ) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
 	},
 
-	_displayListOfBooks: function() {
+	_displayListOfBooks: function(summaryMode) {
 		var html = this._buildBookHeaderAndSkeleton();
 		$('#bookchaptermodalbody').append(html);
 		$('#keyboardEntry').show();
-		this._buildBookTable();
+		this._buildBookTable(summaryMode);
 		$('#pssgModalBackButton').hide();
 	},
 
-	_buildBookTable: function() {
+	_buildBookTable: function(summaryMode) {
 		$('#enterYourPassage').show();
 		$('#keyboard_icon').show();
 		var translationType = this._getTranslationType();
 		if ((this.userLang.toLowerCase().startsWith("en") || this.userLang.toLowerCase().startsWith("es") || this.userLang.toLowerCase().startsWith("zh")) &&
 			(translationType !== "")) {
-			this._buildBookHTMLTable(translationType);
+			this._buildBookHTMLTable(translationType, summaryMode);
 		}
 		else {
 			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + this.version + "%7C?lang=" + this.userLang;
 			$.getJSON(url, function (data) {
-				step.passageSelect._buildBookHTMLTable(data);
+				step.passageSelect._buildBookHTMLTable(data, summaryMode);
 			});
 		}	
 	},
@@ -178,7 +178,7 @@ step.passageSelect = {
 		return translationType;		
 	},
 
-	_buildBookHTMLTable: function(data) {
+	_buildBookHTMLTable: function(data, summaryMode) {
 		var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
 		var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
 		var counter = 0;
@@ -186,16 +186,27 @@ step.passageSelect = {
 		var browserWidth = $(window).width();
 		var columns = 7;
 		var maxLength = 5;
-		if (browserWidth < 1100) {
-			columns = 6;
-			maxLength = 4;
-			if (browserWidth < 735) {
-				columns = 5;
-				maxLength = 3;
-				if ((browserWidth < 370) && (this.userLang.toLowerCase().startsWith("zh")))
-					maxLength = 2;
-			}
+        if (!summaryMode) {
+            if (browserWidth < 1100) {
+                columns = 6;
+                maxLength = 4;
+                if (browserWidth < 735) {
+                    columns = 5;
+                    maxLength = 3;
+                    if ((browserWidth < 370) && (this.userLang.toLowerCase().startsWith("zh")))
+                        maxLength = 2;
+                }
+            }
 		}
+        else {
+            columns = 1;
+            // $.ajaxSetup({async: false});
+            // $.getJSON("/summary/gen.json", function(summary) {
+                // var summaryInfo = '<p><b>Book summary:</b> ' + summary.book_summary + '</p>';
+            // });
+            // $.ajaxSetup({async: true});
+
+        }
 		var tableHTML = this._buildBookTableHeader(columns);
 		var typlicalBooksChapters = false;
 		var start = 0;
@@ -259,7 +270,9 @@ step.passageSelect = {
 				shortNameToDisplay += '<span style="color:brown">*</span>';
 				additionalBooks = true;
 			}
-			tableHTML += '<td title="' + longNameToDisplay + '">' +
+			tableHTML += '<td title="' + longNameToDisplay + '"' +
+                ((summaryMode) ? ' style="text-align:left" ' : "") +
+                '>' +
 				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');">' +
 				shortNameToDisplay + '</a></td>';
 			counter++;
@@ -276,6 +289,9 @@ step.passageSelect = {
 	_buildBookHeaderAndSkeleton: function() {
 		 var html = '<div class="header">' +
 			'<h4>' + __s.please_select_book + '</h4>' +
+            '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.passageSelectionModal(\'' +
+                        step.util.activePassageId() + 
+                        '\', \'true\')" title="Show summary information" class="select-version stepButton">Summary</button>' +
 			'</div>' +
 			'<h5>' + __s.old_testament + '</h5>' +
 			'<div id="ot_table"/>' +

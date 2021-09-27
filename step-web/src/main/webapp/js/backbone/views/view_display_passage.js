@@ -145,6 +145,11 @@ var PassageDisplayView = DisplayView.extend({
                     if (cv[C_handleOfRequestedAnimation] == -1) cf.goAnimate();
                 }
             }
+            if (((languages[0].startsWith("en")) || ((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
+                ($('.xgen').length == 1)) {
+                    $('.xgen').append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
+                        reference + '\')" title="Show summary information" class="select-version stepButton">Summary</button>');
+            }
         },
         scrollToTargetLocation: function (passageContainer) {
             var self = this;

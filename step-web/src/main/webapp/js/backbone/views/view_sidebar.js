@@ -294,7 +294,6 @@ var SidebarView = Backbone.View.extend({
         $.ajaxSetup({async: false});
         $.getJSON("/lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
             foundChineseJSON = true;
-            // appendLexiconSearchFunction(panel, mainWord);
             panel.append($("<h2>").append(__s.zh_lexicon_chinese_name + ':'));
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
             panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
