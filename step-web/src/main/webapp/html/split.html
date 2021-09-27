@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>STEP with another frame</title>
+  <link rel="shortcut icon" href="/images/step-favicon.ico"/>
   <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
   <style>
 .tooltip {
@@ -124,6 +125,21 @@ function outFunc() {
   var tooltip = document.getElementById("myTooltip");
   tooltip.innerHTML = "Copy to clipboard";
 }
+
+window.onmessage = function(e) {
+    if (typeof e.data === "string") {
+        var curURL = document.getElementById("f1").contentWindow.location.href;
+        if (curURL.search(/reference=[A-Za-z0-9.,;-]+([%&|])/) > -1) {
+            var left = RegExp.leftContext;
+            var right = RegExp.rightContext;
+            var lastChar = RegExp.$1;
+            var newURL = left + "reference=" + e.data + lastChar + right;
+            document.getElementById("f1").src = newURL;
+            console.log("old: " + curURL);
+            console.log("new: " + newURL);
+        }
+    }
+};
 
 </script>
 </body>
