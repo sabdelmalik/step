@@ -273,6 +273,12 @@ step.passageSelect = {
 				shortNameToDisplay += '<span style="color:brown">*</span>';
 				additionalBooks = true;
 			}
+            if ((summaryMode) &&
+                (typeof bookDescription[currentOsisID.toLowerCase() + "_header"] === "string")) {
+                tableHTML += '<td style="font-size:18px;text-align:left;padding:0"><b>' +
+                    bookDescription[currentOsisID.toLowerCase() + "_header"] +
+                '</b></td></tr><tr>';
+            }
 			tableHTML += '<td title="' + longNameToDisplay + '">' +
 				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');"' +
                 ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") + '>' +
@@ -447,6 +453,7 @@ step.passageSelect = {
 			}
 		}
         var chapterDescription = [];
+        var chapterHeader = [];
         if (summaryMode) {
             tableColumns = 1;
             for (var i = 0; i <= numOfChptrsOrVrs; i++) {
@@ -460,9 +467,11 @@ step.passageSelect = {
                         if (pos > -1) {
                             var chapter = key.substr(8, pos - 8);
                             if ((desc[key] === "*") || (desc[key] === "**"))
-                                chapterDescription[chapter] = "Summary: " + desc["chapter_" + chapter + "_overview"];
+                                chapterDescription[chapter] = desc["chapter_" + chapter + "_overview"];
                             else chapterDescription[chapter] = desc[key];
                         }
+                        else if (key.endsWith("_header"))
+                            chapterDescription[key] = desc[key];
                     }
                 }
             });
@@ -498,6 +507,12 @@ step.passageSelect = {
 			for (var i = 0; i < numOfChptrsOrVrs; i++) {
 				chptrOrVrsNum++;
 				osisIDLink = (numOfChptrsOrVrs === 1) ? bookOsisID : bookOsisID + '.' + chptrOrVrsNum;
+                if ((summaryMode) &&
+                    (typeof chapterDescription["chapter_" + chptrOrVrsNum + "_header"] === "string")) {
+                    html += '<td style="font-size:18px;text-align:left;padding:0"><b>' +
+                        chapterDescription["chapter_" + chptrOrVrsNum + "_header"] +
+                    '</b></td></tr><tr>';
+                }
 				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
                     ((summaryMode) ? ' style="text-align:left;padding:0px 0px 0px 22px;text-indent: -22px;" ' : "") +
                     '>' + chptrOrVrsNum + 
