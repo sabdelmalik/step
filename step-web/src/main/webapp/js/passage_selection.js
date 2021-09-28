@@ -455,7 +455,9 @@ step.passageSelect = {
                         var pos = key.indexOf("_description");
                         if (pos > -1) {
                             var chapter = key.substr(8, pos - 8);
-                            chapterDescription[chapter] = desc[key];
+                            if ((desc[key] === "*") || (desc[key] === "**"))
+                                chapterDescription[chapter] = "Summary: " + desc["chapter_" + chapter + "_overview"];
+                            else chapterDescription[chapter] = desc[key];
                         }
                     }
                 }
@@ -489,7 +491,7 @@ step.passageSelect = {
 				chptrOrVrsNum++;
 				osisIDLink = (numOfChptrsOrVrs === 1) ? bookOsisID : bookOsisID + '.' + chptrOrVrsNum;
 				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
-                    ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") +
+                    ((summaryMode) ? ' style="text-align:left;padding:0px 0px 0px 22px;text-indent: -22px;" ' : "") +
                     '>' + chptrOrVrsNum + 
                     ((summaryMode) ? " - " + chapterDescription[chptrOrVrsNum] : "") +
                     '</a></td>'
