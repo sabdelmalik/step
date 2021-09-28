@@ -294,7 +294,11 @@ step.passageSelect = {
 	_buildBookHeaderAndSkeleton: function(summaryMode) {
 		 var html = '<div class="header">' +
 			'<h4>' + __s.please_select_book + '</h4>' +
-            ((summaryMode) ? "" : '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(true)()" title="Show summary information" class="select-version stepButton">Summary</button>') +
+            '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(' +
+            ((summaryMode) ? 'false' : 'true') +
+            ')" title="Show summary information" class="select-version stepButton' +
+            ((summaryMode) ? ' stepPressedButton' : '') +
+            '">Summary</button>' +
 			'</div>' +
 			'<h5>' + __s.old_testament + '</h5>' +
 			'<div id="ot_table"/>' +
@@ -464,11 +468,15 @@ step.passageSelect = {
             });
             $.ajaxSetup({async: true});
         }
+        
 		var html = '<div class="header">' +
             '<h4>' + headerMsg + '</h4>' +
-            ((summaryMode) ? "" : 
             '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
-                bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',true)" title="Show summary information" class="select-version stepButton">Summary</button>') +
+                bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
+                ((summaryMode) ? 'false' : 'true') +
+                ')" title="Show summary information" class="select-version stepButton' +
+                ((summaryMode) ? ' stepPressedButton' : '') +
+                '">Summary</button>' +
             '</div>' +
 			'<table>' +
 			'<colgroup>';

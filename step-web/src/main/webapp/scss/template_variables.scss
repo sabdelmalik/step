@@ -17,7 +17,9 @@ $stepLG: 1120px;
 $brand-primary: #17758F;
 $brand-secondary: #9D0025;
 $text-color: #5D5D5D;
+$text-color: var(--stepTextColor);
 $border-color: #C8C8C8;
+$border-color: var(--highlight_color);
 
 $highlight-color: $brand-primary;
 
@@ -30,7 +32,9 @@ $lexiconFocusRelatedColour: #e0e0e0;
 
 //active colour of panel
 $header-background-color: #F2F2F2;
+$header-background-color: var(--stepBackground);
 $topHeaderLinkColour: #5E5E5E;
+$topHeaderLinkColour: var(--stepTextColor);
 $dividerColor: $topHeaderLinkColour;
 $warningColour: orange;
 $infoColour: #a9d3ff;

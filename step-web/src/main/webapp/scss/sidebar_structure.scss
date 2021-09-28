@@ -5,6 +5,7 @@
 #sidebar {
   display: none;
   background-color: $header-background-color;
+  background-color: var(--stepBackground);
   padding-top: 0;
   border-top: $border-width solid $border-color;
 

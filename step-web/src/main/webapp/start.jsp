@@ -64,6 +64,8 @@
 		--strong_color: #498090;
 		--lexiconFocusColour: #c8d8dc;
 		--relatedWordBackground: #b2e5f3;
+        --stepBackground: #ffffff;
+        --stepTextColor: #5d5d5d;
 	}
 	</style>
     <%
@@ -110,14 +112,14 @@
     </script>
     <% } %>
 </head>
-<body xmlns:fb="http://ogp.me/ns/fb#">
+<body xmlns:fb="http://ogp.me/ns/fb#" style="background-color:var(--stepBackground);color:var(--stepTextColor)">
 <!-- Wrap all page content here -->
 <div id="wrap">
 
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top">
         <div>
-            <div class="navbar-header search-form">
+            <div class="navbar-header search-form" style="background-color: var(--stepBackground)">
                 <div class="navbar-brand col-xs-12">
                         <span class="hidden-xs title">
                             <a href="/" id="logo">
