@@ -1907,30 +1907,33 @@ step.util = {
 			'</div>'
 		)()).modal("show");
     },
-    // showSummary: function (reference) {
-        // var element = document.getElementById('showSummaryModal');
-        // if (element) element.parentNode.removeChild(element);
-        // $(_.template(
-   			// '<div id="showSummaryModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-				// '<div class="modal-dialog" stype="width:300px">' +
-					// '<div class="modal-content">' +
-						// '<div class="modal-header">' +
-							// '<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("showSummaryModal")>X</button>' +
-						// '</div>' +
-						// '<div class="modal-body" style="text-align:center">' +
-                            // '<button type="button" onclick="step.util.showBookOrChapterSummary(\'' + reference + 
-                                // '\', \'book\')" title="Show book summary information" class="select-version stepButton">Book summary</button>' +
-                            // '<br>' +
-                            // '<button type="button" onclick="step.util.showBookOrChapterSummary(\'' + reference + 
-                                // '\', \'chapter\')" title="Show chapter summary information" class="select-version stepButton">Chapter summary</button>' +
-						// '</div>' +
-					// '</div>' +
-				// '</div>' +
-			// '</div>'
-		// )()).modal("show");
-    // },
     showSummary: function (reference) {
-        var element = document.getElementById('showBookOrChapterSummaryModal');
+        var element = document.getElementById('showSummaryModal');
+        if (element) element.parentNode.removeChild(element);
+        $(_.template(
+   			'<div id="showSummaryModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+				'<div class="modal-dialog" style="width:300px">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("showSummaryModal")>X</button>' +
+						'</div>' +
+						'<div class="modal-body" style="text-align:center">' +
+                            '<button type="button" onclick="step.util.showBookOrChapterSummary(\'' + reference + 
+                                '\', true)" title="Show book summary information" class="select-version stepButton">Book summary</button>' +
+                            '<br><br>' +
+                            '<button type="button" onclick="step.util.showBookOrChapterSummary(\'' + reference + 
+                                '\', false)" title="Show chapter summary information" class="select-version stepButton">Chapter summary</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>'
+		)()).modal("show");
+    },
+    showBookOrChapterSummary: function (reference, bookInsteadOfChapter) {
+        var element = document.getElementById('showSummaryModal');
+        if (element) element.parentNode.removeChild(element);
+        $(".modal-backdrop.in").remove();
+        element = document.getElementById('showBookOrChapterSummaryModal');
         if (element) element.parentNode.removeChild(element);
         reference = reference.toLowerCase();
         var tmpArray = reference.split(".");
@@ -1939,12 +1942,21 @@ step.util = {
         if (typeof chapterNum !== "number") chapterNum = 1;
         $.ajaxSetup({async: false});
         $.getJSON("/html/json/" + bookName + ".json", function(summary) {
-            var summaryInfo = '<p><b>Book description:</b> ' + summary.book_description + '</p>' +
+            var summaryInfo = "";
+            if (bookInsteadOfChapter) summaryInfo =
+                '<h4>Book summary</h4>' +
+                '<span style="font-size:16px">' +
+                '<p><b>Book description:</b> ' + summary.book_description + '</p>' +
                 '<p><b>Book overview:</b> ' + summary.book_overview + '</p>' +
                 '<p><b>ESV summary:</b> ' + summary.ESV_summary + '</p>' +
+                '</span>';
+            else summaryInfo =
+                '<h4>Chapter summary</h4>' +
+                '<span style="font-size:16px">' +
                 '<p><b>Chapter description:</b> ' + summary["chapter_" + chapterNum + "_description"] + '</p>' +
                 '<p><b>Chapter overview:</b> ' + summary["chapter_" + chapterNum + "_overview"] + '</p>' +
-                '<p><b>Chapter summary:</b> ' + summary["chapter_" + chapterNum + "_summary"] + '</p>';
+                '<p><b>Chapter summary:</b> ' + summary["chapter_" + chapterNum + "_summary"] + '</p>' +
+                '</span>';
             $(_.template(
                 '<div id="showBookOrChapterSummaryModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                     '<div class="modal-dialog">' +
@@ -1952,7 +1964,7 @@ step.util = {
                             '<div class="modal-header">' +
                                 '<button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("showBookOrChapterSummaryModal")>X</button>' +
                             '</div>' +
-                            '<div class="modal-body" style="text-align:left">' +
+                            '<div class="modal-body" style="text-align:left font-size:16px">' +
                                 summaryInfo +
                             '</div>' +
                         '</div>' +

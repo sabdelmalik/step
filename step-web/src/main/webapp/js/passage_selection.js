@@ -203,14 +203,14 @@ step.passageSelect = {
             columns = 1;
             bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
             $.ajaxSetup({async: false});
-            $.getJSON("/html/json/book_desc.json", function(desc) {
+            $.getJSON("/html/json/book_description.json", function(desc) {
                 for (key in desc) {
                     bookDescription[key] = desc[key];
                 }
             });
             $.ajaxSetup({async: true});
         }
-		var tableHTML = this._buildBookTableHeader(columns);
+		var tableHTML = this._buildBookTableHeader(columns, summaryMode);
 		var typlicalBooksChapters = false;
 		var start = 0;
 		var end = 0;
@@ -255,7 +255,7 @@ step.passageSelect = {
 				counter = 0; // reset counter for NT table
 				tableHTML += '</tr></table>';
 				$('#ot_table').append(tableHTML);
-				tableHTML = this._buildBookTableHeader(columns);
+				tableHTML = this._buildBookTableHeader(columns, summaryMode);
 			}
 			var bookDisplayName = longNameToDisplay;
 			if (this.userLang.toLowerCase().startsWith("zh")) {
@@ -273,16 +273,16 @@ step.passageSelect = {
 				shortNameToDisplay += '<span style="color:brown">*</span>';
 				additionalBooks = true;
 			}
-			tableHTML += '<td title="' + longNameToDisplay + '"' +
-                ((summaryMode) ? ' style="text-align:left" ' : "") +
-                '>' +
-				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');">' +
-				shortNameToDisplay + 
-                ((summaryMode) ? " - " + bookDescription[currentOsisID.toLowerCase()] : "") +
+			tableHTML += '<td title="' + longNameToDisplay + '">' +
+				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');"' +
+                ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") + '>' +
+                ((summaryMode) ? longNameToDisplay + " - " + bookDescription[currentOsisID.toLowerCase()] : shortNameToDisplay) +
                 '</a></td>';
 			counter++;
 			if ((counter % columns) == 0) {
-				tableHTML += '</tr><tr style="height:30px">';
+				tableHTML += '</tr><tr>'; // style="height:' +
+                    // ((summaryMode) ? '20' : '30') +
+                    // 'px">';
 			}
 		}
 		tableHTML += '</tr></table>';
@@ -304,7 +304,7 @@ step.passageSelect = {
 		return html;
 	},
 
-	_buildBookTableHeader: function(columns) {
+	_buildBookTableHeader: function(columns, summaryMode) {
 		var columnPercent = Math.floor(100 / columns);
 		html = '<table>' +
 			'<colgroup>';
@@ -312,7 +312,9 @@ step.passageSelect = {
 			html += '<col span="1" style="width:' + columnPercent + '%;">';
 		}
 		html += '</colgroup>';
-		html += '<tr style="height:30px">';
+		html += '<tr>'; // style="height:' +
+                    // ((summaryMode) ? '20' : '30') +
+                    // 'px">';
 		return html;
 	},
 
@@ -460,18 +462,21 @@ step.passageSelect = {
             });
             $.ajaxSetup({async: true});
         }
-		var html = '<h5>' + headerMsg + '</h5>' +
+		var html = '<div class="header">' +
+            '<h4>' + headerMsg + '</h4>' +
             ((summaryMode) ? "" : 
             '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
                 bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',true)" title="Show summary information" class="select-version stepButton">Summary</button>') +
-
+            '</div>' +
 			'<table>' +
 			'<colgroup>';
 		for (var c = 0; c < tableColumns; c++) {
 			html += '<col span="1" style="width:' + widthPercent + '%">';
 		}
 		html += '</colgroup>' +
-			'<tr style="height:30px">';
+			'<tr>'; // style="height:' +
+                // ((summaryMode) ? '20' : '30') +
+                // 'px">';
 
 		var chptrOrVrsNum = 0;
 		var osisIDLink = "";
@@ -484,12 +489,14 @@ step.passageSelect = {
 				chptrOrVrsNum++;
 				osisIDLink = (numOfChptrsOrVrs === 1) ? bookOsisID : bookOsisID + '.' + chptrOrVrsNum;
 				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
-                    ((summaryMode) ? ' style="text-align:left" ' : "") +
+                    ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") +
                     '>' + chptrOrVrsNum + 
                     ((summaryMode) ? " - " + chapterDescription[chptrOrVrsNum] : "") +
                     '</a></td>'
 				if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
-					html += '</tr><tr style="height:30px">';
+					html += '</tr><tr>'; // style="height:' +
+                        // ((summaryMode) ? '20' : '30') +
+                        // 'px">';
 				}
 			}
 		}
@@ -498,9 +505,15 @@ step.passageSelect = {
 				if (data[i].suggestion.sectionType == "PASSAGE") {
 					chptrOrVrsNum++;
 					osisIDLink = data[i].suggestion.osisID;
-					html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');">' + chptrOrVrsNum + '</a></td>'
+					html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
+                        ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") +
+                        '>' + chptrOrVrsNum +
+                        ((summaryMode) ? " - " + chapterDescription[chptrOrVrsNum] : "") +
+                        '</a></td>'
 					if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
-						html += '</tr><tr style="height:30px">';
+						html += '</tr><tr>'; // style="height:' +
+                            // ((summaryMode) ? '20' : '30') + 
+                            // 'px">';
 					}
 				}
 			}
