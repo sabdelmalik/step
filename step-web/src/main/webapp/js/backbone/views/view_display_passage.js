@@ -35,7 +35,7 @@ var PassageDisplayView = DisplayView.extend({
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
             if ((bibleVersions.indexOf('THOT') > -1)) {
                 if (cv[C_otMorph] == null) {
-                    var notIE = !(/*@cc_on!@*/false || !!document.documentMode);
+                    var notIE = !(false || !!document.documentMode);
                     // If browser is not IE, use "cache: true".  If IE, use "cache: false"
                     // This is required because of an IE and Jquery issue.
                     jQuery.ajax({

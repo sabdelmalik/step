@@ -324,13 +324,4 @@ var ExamplesView = Backbone.View.extend({
     onClickClose: function () {
         step.util.showOrHideTutorial(true);
     }
-	// showVideoModal: function (videoFile) {
-        // var element = document.getElementById('videoModal');
-        // if (element) element.parentNode.removeChild(element);
-        // var videoModalDiv = $('<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-test="' + videoFile + '">' +
-            // '<div class="modal-dialog">' +
-            // '<div class="modal-content">');
-        // videoModalDiv.appendTo("body");
-        // $('#videoModal').modal('show').find('.modal-content').load('/html/video_modal.html');
-    // }
 });

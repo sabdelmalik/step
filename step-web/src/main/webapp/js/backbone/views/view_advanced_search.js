@@ -6,7 +6,7 @@ var AdvancedSearchView = Backbone.View.extend({
     rowToCellTemplate: _.template('<% _.each(row.split("|"), function(cell, i) { %> <span class="col-sm-<%= view.sizes[i] %>"><%= cell %></span> <% }) %><span class="col-sm-2"></span>'),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="advancedSearch" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
-        '<div class="modal-content">' +
+        '<div class="modal-content" style="background:var(--stepBackground)">' +
         '<div class="modal-body">' +
         '<ul class="nav nav-tabs">' +
         '<li class="active"><a href="#advancedTextSearch" data-toggle="tab"><%= __s.search_advanced_text %></a></li>' +

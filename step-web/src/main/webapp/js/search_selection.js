@@ -190,7 +190,7 @@ step.searchSelect = {
 				'<div id="modalonoffswitch">' +
 					'<span class="pull-left" style="font-size:18px" id="search_with_previous">' + __s.search_with_previous + '&nbsp;&nbsp;</span>' +
 					'<span class="pull-left">' +
-						'<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text" onchange="javascript:step.searchSelect.handlePreviousSearchAndOrNot()">' +
+						'<select id="searchAndOrNot" style="display:none;font-size:16px:background:var(--stepBackground)" class="stepButton" type="text" onchange="javascript:step.searchSelect.handlePreviousSearchAndOrNot()">' +
 							'<option id="and_search" value="AND">' + __s.search_previous_and + '</option>' +
 							'<option id="or_search" value="OR">' + __s.search_previous_or + '</option>' +
 							'<option id="not_search" value="NOT">' + __s.search_previous_not + '</option>' +
@@ -341,7 +341,7 @@ step.searchSelect = {
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
 			'</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
-			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br><br>' + // size 16px so the mobile devices will not expand
+			'<textarea id="userTextInput" rows="1" style="font-size:16px;width:80%;background:var(--stepBackground)"></textarea><br><br>' + // size 16px so the mobile devices will not expand
 			'<div id="search_table">' +
 			'<table border="1">' +
 			'<colgroup>' +

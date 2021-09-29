@@ -131,7 +131,9 @@
                             if (step.tempKeyInput.length >= 2) {
                                 var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
                                 for (var i = 0; i < arrayOfTyplicalBooksChapters.length; i++) {
-                                    if (arrayOfTyplicalBooksChapters[i][0].normalize("NFD").replace(/[\u0300-\u036f\s]/g,"").toLowerCase().startsWith(step.tempKeyInput)) {
+                                    var tempVar = arrayOfTyplicalBooksChapters[i][0];
+                                    if (!(false || !!document.documentMode)) tempVar = tempVar.normalize("NFD"); // For characters with accent.  For example, Spanish
+                                    if (tempVar.replace(/[\u0300-\u036f\s]/g,"").toLowerCase().startsWith(step.tempKeyInput)) {
                                         step.util.passageSelectionModal();
                                         step.tempKeyInput = "";
                                         return;

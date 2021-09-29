@@ -10,9 +10,9 @@ var ViewHelpMenuOptions = Backbone.View.extend({
         $(_.template(
             '<div class="modal aboutModal" role="dialog" aria-labelledby="about" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
-                '<div class="modal-content">' +
+                '<div class="modal-content" style="background:var(--stepBackground)">' +
                 '<div class="modal-header">' +
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" aria-hidden="true">X</button>' +
                 '<img id="aboutLogo" src="images/step-top-left-logo.png">' +
                 '<h4 class="modal-title">STEP : Scripture Tools for Every Person</h4>' +
                 '</div>' + //end header

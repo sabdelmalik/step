@@ -34,7 +34,7 @@
 var QuickLexicon = Backbone.View.extend({
     templateHeader: '<div id="quickLexicon"><div>' +
         '<div>' +
-        '<button type="button" class="close" aria-hidden="true">&times;</button>',
+        '<button type="button" class="close" aria-hidden="true">X</button>',
     templateFooter: '</div>',
     templateDef: '<%= view.templateHeader %>' +
         '<% _.each(data, function(item, data_index) { %>' +
