@@ -410,7 +410,7 @@ var PassageMenuView = Backbone.View.extend({
             //toggle the tick
             self._setVisible(this, quickLexicon);
         }));
-        // if (step.userLanguageCode.toLowerCase().startsWith("es")) {
+        // if (step.userLanguageCode.toLowerCase().indexOf("es") == 0) {
             // var currentEnWithEsLexiconSetting = self.model.get("isEnWithEsLexicon");
             // if (currentEnWithEsLexiconSetting == null) {
                 // this.model.save({ isEnWithEsLexicon: true });
@@ -423,7 +423,7 @@ var PassageMenuView = Backbone.View.extend({
                 // self._setVisible(this, enWithEsLexicon); // toggle the tick
             // }));
         // }
-        if (step.userLanguageCode.toLowerCase().startsWith("zh")) {
+        if (step.userLanguageCode.toLowerCase().indexOf("zh") == 0) {
             var currentEnWithZhLexiconSetting = self.model.get("isEnWithZhLexicon");
             if (currentEnWithZhLexiconSetting == null) {
                 this.model.save({ isEnWithZhLexicon: false });

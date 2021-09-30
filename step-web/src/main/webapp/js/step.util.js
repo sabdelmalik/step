@@ -1929,14 +1929,14 @@ step.util = {
         if (typeof chapterNum !== "number") chapterNum = 1;
         $.ajaxSetup({async: false});
         $.getJSON("/html/json/" + osisID.toLowerCase() + ".json", function(summary) {
-            var chptSummary =
+            var bookSummary =
                 '<span style="font-size:18px"><b>Summary of ' + longBookName + '</b></span><br>' +
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary.book_description + '<br><br>' +
                     summary.book_overview + '</p>' +
                     '<p style="margin:8px">' + summary.ESV_summary + '</p>' +
                 '</span>';
-            var bookSummary =
+            var chptSummary =
                 '<span style="font-size:18px"><b>Summary of ' + longBookName + ' chapter ' + chapterNum + '</b></span><br>' +
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary["chapter_" + chapterNum + "_description"] + '<br><br>' +
@@ -2025,6 +2025,7 @@ step.util = {
 			singleOrAllPanel = "in current panel";
 		}
         var darkModeEnabled = (document.querySelector(':root').style.getPropertyValue("--stepBackground") === '#202124');
+		console.log("step background value " + document.querySelector(':root').style.getPropertyValue("--stepBackground"));
 		var modalHTML = '<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog" style="width:350px">' +
 				'<div class="modal-content" style="background:var(--stepBackground)">';
@@ -2115,11 +2116,11 @@ step.util = {
 							'var desColorL = desHsl["l"] * 100;' +
 
                             'var lightHex = baseColor;' +
-                            // 'if (darkMode) {' +
-                                // 'var lighten = desColorL + 10;' +
-                                // 'var lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
-                                // 'var lightHex = lightColor.toHexString();' +
-                            // '}' +
+                            'if (!darkMode) {' +
+                                'var lighten = desColorL + 10;' +
+                                'var lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
+                                'var lightHex = lightColor.toHexString();' +
+                            '}' +
 							'rootVar.style.setProperty("--strong_color",lightHex);' +
 							'step.settings.save({"strong_color":lightHex});' +
 

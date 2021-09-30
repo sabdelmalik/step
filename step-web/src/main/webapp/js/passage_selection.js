@@ -116,7 +116,7 @@ step.passageSelect = {
 					var first2Char = checkString.substr(0, 2);
 					if ((first2Char === "1 ") || (first2Char === "2 ") || (first2Char === "3 "))
 						checkString = checkString.substr(0,1) + checkString.substr(2);
-					if (checkString.startsWith(firstWord)) {
+					if (checkString.indexOf(firstWord) == 0) {
 						firstWord = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
 						firstWord = firstWord.toLowerCase();
 						break;
@@ -145,7 +145,7 @@ step.passageSelect = {
 		$('#enterYourPassage').show();
 		$('#keyboard_icon').show();
 		var translationType = this._getTranslationType();
-		if ((this.userLang.toLowerCase().startsWith("en") || this.userLang.toLowerCase().startsWith("es") || this.userLang.toLowerCase().startsWith("zh")) &&
+		if (((this.userLang.toLowerCase().indexOf("en") == 0) || (this.userLang.toLowerCase().indexOf("es") == 0) || (this.userLang.toLowerCase().indexOf("zh") == 0)) &&
 			(translationType !== "")) {
 			this._buildBookHTMLTable(translationType, summaryMode);
 		}
@@ -196,7 +196,7 @@ step.passageSelect = {
                 if (browserWidth < 735) {
                     columns = 5;
                     maxLength = 3;
-                    if ((browserWidth < 370) && (this.userLang.toLowerCase().startsWith("zh")))
+                    if ((browserWidth < 370) && (this.userLang.toLowerCase().indexOf("zh") == 0))
                         maxLength = 2;
                 }
             }
@@ -247,7 +247,7 @@ step.passageSelect = {
 				currentOsisID = data[i].suggestion.osisID;
 				numOfChapters = 0; // don't know yet, need to find out
 				longNameToDisplay = data[i].suggestion.fullName;
-				shortNameToDisplay = (this.userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
+				shortNameToDisplay = (this.userLang.toLowerCase().indexOf("en") == 0) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
 			}
 			var oldTestment = false;
 			var newTestament = (nt.indexOf(currentOsisID) > -1);
@@ -260,7 +260,7 @@ step.passageSelect = {
 				tableHTML = this._buildBookTableHeader(columns, summaryMode);
 			}
 			var bookDisplayName = longNameToDisplay;
-			if (this.userLang.toLowerCase().startsWith("zh")) {
+			if (this.userLang.toLowerCase().indexOf("zh") == 0) {
 				if (((bookDisplayName.length == maxLength) || (bookDisplayName.length == maxLength + 1)) &&
 					(chineseSuffix1ForBooks.indexOf(bookDisplayName.substr(-1)) > -1)) // If it is one character too long. Remove the last word 書記歌书记歌 (book, record or song)
 					bookDisplayName = bookDisplayName.substr(0, bookDisplayName.length - 1);
@@ -468,7 +468,7 @@ step.passageSelect = {
             $.ajaxSetup({async: false});
             $.getJSON("/html/json/" + bookOsisID.toLowerCase() + ".json", function(desc) {
                 for (key in desc) {
-                    if (key.startsWith("chapter_")) {
+                    if (key.indexOf("chapter_") == 0) {
                         var pos = key.indexOf("_description");
                         if (pos > -1) {
                             var chapter = key.substr(8, pos - 8);

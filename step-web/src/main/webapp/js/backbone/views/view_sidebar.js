@@ -61,7 +61,7 @@ var SidebarView = Backbone.View.extend({
             //load content
             var requestTime = new Date().getTime();
             lastMorphCode = '';
-            if ((this.model.get("morph") != undefined) && (this.model.get("morph").startsWith('TOS:'))) {
+            if ((this.model.get("morph") != undefined) && (this.model.get("morph").indexOf('TOS:') == 0)) {
                 lastMorphCode = this.model.get("morph");
             }
             $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
@@ -364,7 +364,7 @@ var SidebarView = Backbone.View.extend({
         this._appendLexiconSearch(panel, mainWord);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
-        if (currentUserLang.startsWith("es")) {
+        if (currentUserLang.indexOf("es") == 0) {
             // displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon") ||
 									// false;
             var spanishDef = mainWord._es_Definition;
@@ -373,7 +373,7 @@ var SidebarView = Backbone.View.extend({
                 this._addLinkAndAppend(panel, spanishDef, currentWordLanguageCode, bibleVersion);
             }
         }
-        else if (currentUserLang.startsWith("zh")) {
+        else if (currentUserLang.indexOf("zh") == 0) {
             displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon") ||
 									false;
             var chineseDef;

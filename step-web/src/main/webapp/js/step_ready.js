@@ -133,7 +133,7 @@
                                 for (var i = 0; i < arrayOfTyplicalBooksChapters.length; i++) {
                                     var tempVar = arrayOfTyplicalBooksChapters[i][0];
                                     if (!(false || !!document.documentMode)) tempVar = tempVar.normalize("NFD"); // For characters with accent.  For example, Spanish
-                                    if (tempVar.replace(/[\u0300-\u036f\s]/g,"").toLowerCase().startsWith(step.tempKeyInput)) {
+                                    if (tempVar.replace(/[\u0300-\u036f\s]/g,"").toLowerCase().indexOf(step.tempKeyInput) == 0) {
                                         step.util.passageSelectionModal();
                                         step.tempKeyInput = "";
                                         return;
