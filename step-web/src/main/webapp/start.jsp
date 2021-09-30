@@ -66,6 +66,7 @@
 		--relatedWordBackground: #b2e5f3;
         --stepBackground: #ffffff;
         --stepTextColor: #5d5d5d;
+        --secondardHoverColor: #d3d3d3;
 	}
 	</style>
     <%

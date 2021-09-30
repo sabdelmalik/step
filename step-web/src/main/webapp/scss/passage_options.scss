@@ -53,6 +53,8 @@
 
     &:hover, &:focus {
       text-decoration: none;
+      background-color: $secondaryHoverColour;
+      color: var(--stepTextColor);
     }
   }
 
@@ -144,6 +146,7 @@
 
         &:hover {
           background-color: $secondaryHoverColour;
+          color: var(--stepTextColor);
         }
       }
 

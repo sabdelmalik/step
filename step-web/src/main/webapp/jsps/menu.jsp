@@ -36,7 +36,7 @@
         <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="examples" /></span>
     </a>
     <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.showFontSettings();"
-        title="<fmt:message key="passage_larger_fonts"/>">
+        title="<fmt:message key="font_sizes"/>">
         <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
         <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font"/></span>
     </a>
