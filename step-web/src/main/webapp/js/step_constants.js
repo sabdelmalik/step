@@ -33,9 +33,9 @@ TOUCH_CANCELLATION_TIME=150; // If touch move detected with this time and before
 DS_VERSIONS = "allVersions";
 if (typeof STEP_SERVER_BASE_URL === "undefined") STEP_SERVER_BASE_URL = "/rest/";
 else {
-	if (STEP_SERVER_BASE_URL.startsWith("https://")) {
+	if (STEP_SERVER_BASE_URL.indexOf("https://") == 0) {
         var parts = STEP_SERVER_BASE_URL.substr(8).split(".");
-        if ((parts.length >= 4) && (parts[1] === "api") && (parts[2] === "stepbible") && (parts[3].startsWith("org/rest/"))) {
+        if ((parts.length >= 4) && (parts[1] === "api") && (parts[2] === "stepbible") && (parts[3].indexOf("org/rest/") == 0)) {
             $.getJSON(STEP_SERVER_BASE_URL.substring(0, STEP_SERVER_BASE_URL.length - 5) + "test/short.json", function() {
             }).fail(function() {
                 STEP_SERVER_BASE_URL = "/rest/";
@@ -47,9 +47,9 @@ else {
 updateVars();
 
 function changeBaseURL() {
-    if (STEP_SERVER_BASE_URL.startsWith("https://")) { // If there has been an error, change to the URL which is load balanced.
+    if (STEP_SERVER_BASE_URL.indexOf("https://") == 0) { // If there has been an error, change to the URL which is load balanced.
         var parts = STEP_SERVER_BASE_URL.substr(8).split(".");
-        if ((parts.length >= 4) && (parts[1] === "api") && (parts[2] === "stepbible") && (parts[3].startsWith("org"))) {
+        if ((parts.length >= 4) && (parts[1] === "api") && (parts[2] === "stepbible") && (parts[3].indexOf("org") == 0)) {
             STEP_SERVER_BASE_URL = "https://www.stepbible.org/rest/";
             updateVars();
             return true;
