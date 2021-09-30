@@ -102,7 +102,7 @@ step.passageSelect = {
 		var returnKey = (input.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak");
 		input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
 		input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
-		$("td").css("background-color", "white");
+		$("td").css("background-color", "var(--stepBackground)");
 		var lastPassageEntered  = input.replace(/\s+$/g, '').split(/,|;/);
 		lastPassageEntered  = lastPassageEntered[lastPassageEntered.length -1].replace(/^\s+/g, '').replace(/\s+$/g, '');
 		var firstWord = lastPassageEntered.split(/\.|:|\s/)[0].toLowerCase();
@@ -306,9 +306,9 @@ step.passageSelect = {
             ((summaryMode) ? ' stepPressedButton' : '') +
             '">Summary</button>' +
 			'</div>' +
-			'<h5>' + __s.old_testament + '</h5>' +
+			'<h5 style="background:var(--stepBackground)">' + __s.old_testament + '</h5>' +
 			'<div id="ot_table"/>' +
-			'<h5>' + __s.new_testament + '</h5>' +
+			'<h5 style="background:var(--stepBackground)">' + __s.new_testament + '</h5>' +
 			'<div id="nt_table"/>' +
 			'</div>';
 		return html;
@@ -470,7 +470,7 @@ step.passageSelect = {
                                 chapterDescription[chapter] = desc["chapter_" + chapter + "_overview"];
                             else chapterDescription[chapter] = desc[key];
                         }
-                        else if (key.endsWith("_header"))
+                        else if (key.indexOf("_header") > 8)
                             chapterDescription[key] = desc[key];
                     }
                 }

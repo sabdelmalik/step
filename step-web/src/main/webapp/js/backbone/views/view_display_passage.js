@@ -35,7 +35,7 @@ var PassageDisplayView = DisplayView.extend({
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
             if ((bibleVersions.indexOf('THOT') > -1)) {
                 if (cv[C_otMorph] == null) {
-                    var notIE = !(/*@cc_on!@*/false || !!document.documentMode);
+                    var notIE = !(false || !!document.documentMode);
                     // If browser is not IE, use "cache: true".  If IE, use "cache: false"
                     // This is required because of an IE and Jquery issue.
                     jQuery.ajax({
@@ -114,6 +114,18 @@ var PassageDisplayView = DisplayView.extend({
                 var color = step.settings.get("highlight_color");
 		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
 					rootVar.style.setProperty('--highlight_color',color);
+                color = step.settings.get("stepTextColor");
+		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
+                    rootVar.style.setProperty('--stepTextColor',color);
+                color = step.settings.get("stepBackground");
+		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) {
+                    rootVar.style.setProperty('--stepBackground',color);
+                    if (color === '#202124') $('body,html').css('color-scheme','dark');
+                    else $('body,html').css('color-scheme','normal');
+                }
+                color = step.settings.get("secondardHoverColor");
+		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
+                    rootVar.style.setProperty('--secondardHoverColor',color);
                 color = step.settings.get("strong_color");
 		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
 					rootVar.style.setProperty('--strong_color',color);
@@ -122,7 +134,7 @@ var PassageDisplayView = DisplayView.extend({
 					rootVar.style.setProperty('--lexiconFocusColour',color);
                 color = step.settings.get("relatedWordBackground");
 		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--relatedWordBackground',color);					
+					rootVar.style.setProperty('--relatedWordBackground',color);
 
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);

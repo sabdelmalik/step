@@ -37,9 +37,9 @@ var FeedbackView = Backbone.View.extend({
     },
     template: '<div class="modal" id="raiseSupport" tabindex="-1" role="dialog" aria-labelledby="raiseSupportLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
-        '<div class="modal-content">' +
+        '<div class="modal-content" style="background:var(--stepBackground)">' +
         '<div class="modal-header">' +
-        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+        '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" aria-hidden="true">X</button>' +
         '<h4 class="modal-title" id="raiseSupportLabel"><%= __s.help_feedback %></h4>' +
         '</div>' + //end header
         '<div class="modal-body">' +
@@ -73,8 +73,6 @@ var FeedbackView = Backbone.View.extend({
         '</form>' +
         '</div>' + //end body
         '<div class="modal-footer">' +
-//        '<button type="button" class="btn btn-default stepButton" data-dismiss="modal"><%= __s.close %></button>' +
-//        '<button type="button" class="btn btn-primary sendFeedback stepButton"><%= __s.help_feedback %></button>' +
         '<button type="button" class="btn stepButton" data-dismiss="modal"><%= __s.close %></button>' +
         '<button type="button" class="btn sendFeedback stepButton"><%= __s.help_feedback %></button>' +
         '</div>' + //end footer
