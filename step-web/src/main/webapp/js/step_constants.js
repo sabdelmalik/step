@@ -33,7 +33,7 @@ TOUCH_CANCELLATION_TIME=150; // If touch move detected with this time and before
 DS_VERSIONS = "allVersions";
 if (typeof STEP_SERVER_BASE_URL === "undefined") STEP_SERVER_BASE_URL = "/rest/";
 else {
-	if (STEP_SERVER_BASE_URL.startsWith("https://") == 0) {
+	if (STEP_SERVER_BASE_URL.startsWith("https://")) {
         var parts = STEP_SERVER_BASE_URL.substr(8).split(".");
         if ((parts.length >= 4) && (parts[1] === "api") && (parts[2] === "stepbible") && (parts[3].startsWith("org/rest/"))) {
             $.getJSON(STEP_SERVER_BASE_URL.substring(0, STEP_SERVER_BASE_URL.length - 5) + "test/short.json", function() {
