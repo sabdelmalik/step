@@ -303,8 +303,8 @@ step.passageSelect = {
             '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(' +
             ((summaryMode) ? 'false' : 'true') +
             ')" title="Show summary information" class="select-version stepButton' +
-            ((summaryMode) ? ' stepPressedButton' : '') +
-            '">Summary</button>' +
+            ((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
+            '</button>' +
 			'</div>' +
 			'<h5 style="background:var(--stepBackground)">' + __s.old_testament + '</h5>' +
 			'<div id="ot_table"/>' +
@@ -484,8 +484,8 @@ step.passageSelect = {
                 bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
                 ((summaryMode) ? 'false' : 'true') +
                 ')" title="Show summary information" class="select-version stepButton' +
-                ((summaryMode) ? ' stepPressedButton' : '') +
-                '">Summary</button>' +
+                ((summaryMode) ? ' stepPressedButton">Summary -' : 'Summary +') +
+                '</button>' +
             '</div>' +
 			'<table>' +
 			'<colgroup>';
