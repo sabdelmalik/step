@@ -538,7 +538,9 @@ step.searchSelect = {
 			$.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
 				step.searchSelect._buildBookHTMLTable(data);
-			});
+			}).fail(function() {
+                changeBaseURL();
+            });
 			$.ajaxSetup({async: true});
 		}	
 	},
@@ -938,7 +940,9 @@ step.searchSelect = {
 					else if (searchResultsToDisplay[l].length > 0) $('.select-' + step.searchSelect.searchTypeCode[l]).show()
 					else $('.select-' + step.searchSelect.searchTypeCode[l]).hide()
 				}
-			});
+			}).fail(function() {
+                changeBaseURL();
+            });
 			$.ajaxSetup({async: true});
 		}
 		else {

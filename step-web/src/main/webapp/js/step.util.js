@@ -117,6 +117,8 @@
                         userFunction(data);
                     }
                 }
+            }).error(function() {
+                changeBaseURL();
             });
         },
 
@@ -1639,6 +1641,8 @@ step.util = {
                         });
 
                         qtip.qtip("show");
+                    }).error(function() {
+                        changeBaseURL();
                     });
                 }, delay, 'delay-strong-popup');
                 element.one('mouseleave', function () {

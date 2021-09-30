@@ -68,6 +68,8 @@ var SidebarView = Backbone.View.extend({
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
                 self.createDefinition(data);
+            }).error(function() {
+                changeBaseURL();
             });
         }
         else if (this.model.get("mode") == 'analysis') {
@@ -401,7 +403,7 @@ var SidebarView = Backbone.View.extend({
             //longer definitions
             if (mainWord.lsjDefs) {
                 panel.append($("<h2>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
-                panel.append(mainWord.lsjDefs);
+                panel.append('<span class="unicodefont">' + mainWord.lsjDefs + '</span>');
             }
         }
         if (mainWord.relatedNos) {
@@ -624,6 +626,8 @@ var SidebarView = Backbone.View.extend({
                                 api.set('content.title.text', data.longName);
                                 api.set('content.text', data.value.replace(/ strong=['"][GHabcdef\d\s]{5,30}['"]/g, "")); // Strip the strong tag
                                 api.set('content.osisId', data.osisId)
+                            }).error(function() {
+                                changeBaseURL();
                             });
                         },
                         title: { text: xref, button: false }

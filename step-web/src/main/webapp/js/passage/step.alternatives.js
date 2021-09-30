@@ -95,6 +95,8 @@ step.alternatives = {
                         }
                     });
                 });
+            }).error(function() {
+                changeBaseURL();
             });
         },
         

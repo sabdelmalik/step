@@ -153,7 +153,9 @@ step.passageSelect = {
 			var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + this.version + "%7C?lang=" + this.userLang;
 			$.getJSON(url, function (data) {
 				step.passageSelect._buildBookHTMLTable(data, summaryMode);
-			});
+			}).fail(function() {
+                changeBaseURL();
+            });
 		}	
 	},
 
@@ -401,7 +403,9 @@ step.passageSelect = {
             var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C" + REFERENCE + "%3D" + bookOsisID + "%7C?lang=" + userLang;
 			$.getJSON(url, function (data) {
 				step.passageSelect._buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, true, version, userLang, summaryMode);
-			});
+			}).fail(function() {
+                changeBaseURL();
+            });
 		}
 	},
 	_handleEnteredPassage: function(verifyOnly, input) {
@@ -426,7 +430,9 @@ step.passageSelect = {
 				$('textarea#enterYourPassage').focus();
 				if (!verifyOnly) $('textarea#enterYourPassage').val(userInput);
 			}
-		});
+		}).fail(function() {
+            changeBaseURL();
+        });
 	},
 
 	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter, version, userLang, summaryMode) {

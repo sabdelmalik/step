@@ -473,6 +473,8 @@ var PassageDisplayView = DisplayView.extend({
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', data.value);
                                     api.set('content.osisId', data.osisId)
+                                }).error(function() {
+                                    changeBaseURL();
                                 });
                             },
                             title: {text: xref, button: false}

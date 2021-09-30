@@ -151,6 +151,8 @@ var QuickLexicon = Backbone.View.extend({
 					}
 				}
             }
+        }).error(function() {
+            changeBaseURL();
         });
     }, /**
      * Updates the text and shows it
