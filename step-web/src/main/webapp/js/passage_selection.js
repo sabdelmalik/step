@@ -484,7 +484,7 @@ step.passageSelect = {
                 bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
                 ((summaryMode) ? 'false' : 'true') +
                 ')" title="Show summary information" class="select-version stepButton' +
-                ((summaryMode) ? ' stepPressedButton">Summary -' : 'Summary +') +
+                ((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
                 '</button>' +
             '</div>' +
 			'<table>' +
