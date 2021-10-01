@@ -160,7 +160,7 @@ var PickBibleView = Backbone.View.extend({
         $('#bibleVersions').on('hidden.bs.modal', function (ev) {
             $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
         });
-        this._filter();
+        this._filter(false, true); // 1st param not called for Keyboard, 2nd param call from initialize()
 	    $("textarea#enterYourTranslation").keyup(function(e) {
 			var code = (e.keyCode ? e.keyCode : e.which);
 			self._handleEnteredTranslation(code, self._filter);
@@ -281,7 +281,7 @@ var PickBibleView = Backbone.View.extend({
         }
         return selectedLanguage;
     },
-    _filter: function (keyboard) {
+    _filter: function (keyboard, calledFromInitialize) {
         var self = this;
         var selectedTab = this._getSelectedTab();
         var selectedLanguage = (keyboard) ? "_all" : this._getLanguage();
@@ -298,11 +298,24 @@ var PickBibleView = Backbone.View.extend({
         var versionsSelected = (typeof self.searchView._getCurrentInitials === "undefined") ?
 			window.searchView._getCurrentInitials() : self.searchView._getCurrentInitials();
         numberOfVersionsSelected = 0;
+		var currentBiblesOpened = [];
+		if (calledFromInitialize) {
+			var currentTokens = step.util.activePassage().get("searchTokens") || [];
+			for (var i = 0; i < currentTokens.length; i++) {
+				if (currentTokens[i].itemType == VERSION)
+					currentBiblesOpened.push(currentTokens[i].item.shortInitials);
+			}
+		}
         for (i = 0; i < versionsSelected.length; i ++) {
-            if (versionsSelected[i] !== undefined) {
+            if ((versionsSelected[i] !== undefined) && 
+				((!calledFromInitialize) || (currentBiblesOpened.indexOf(versionsSelected[i]) > -1))) {
 				numberOfVersionsSelected ++;
 			}
-			else {
+			else { // Not a Bible which is open. Maybe user selected a Bible without clicking OK and then left the modal (e.g.: without clicking on the close button).
+				if ((versionsSelected[i] !== undefined) && (calledFromInitialize)) {
+					console.log("Remove " + versionsSelected[i] + " because it is not open");
+					Backbone.Events.trigger("search:remove", { value: step.keyedVersions[versionsSelected[i]], itemType: VERSION});
+				}
 				versionsSelected.splice(i, 1);
 				i --;
 			}

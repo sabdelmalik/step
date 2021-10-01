@@ -1930,14 +1930,14 @@ step.util = {
         $.ajaxSetup({async: false});
         $.getJSON("/html/json/" + osisID.toLowerCase() + ".json", function(summary) {
             var bookSummary =
-                '<span style="font-size:18px"><b>Summary of ' + longBookName + '</b></span><br>' +
+                '<span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary.book_description + '<br><br>' +
                     summary.book_overview + '</p>' +
                     '<p style="margin:8px">' + summary.ESV_summary + '</p>' +
                 '</span>';
             var chptSummary =
-                '<span style="font-size:18px"><b>Summary of ' + longBookName + ' chapter ' + chapterNum + '</b></span><br>' +
+                '<span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary["chapter_" + chapterNum + "_description"] + '<br><br>' +
                     summary["chapter_" + chapterNum + "_overview"] + '</p>' +
