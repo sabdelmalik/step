@@ -111,39 +111,7 @@ var PassageDisplayView = DisplayView.extend({
 
                 //needs to happen after appending to DOM
 				
-          		var rootVar = document.querySelector(':root');
-                var color = step.settings.get("highlight_color");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--highlight_color',color);
-				else rootVar.style.setProperty('--highlight_color', "#17758F");
-                color = step.settings.get("stepTextColor");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-                    rootVar.style.setProperty('--stepTextColor',color);
-				else rootVar.style.setProperty('--stepTextColor', "#5d5d5d");
-                color = step.settings.get("stepBackground");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) {
-                    rootVar.style.setProperty('--stepBackground',color);
-                    if (color === '#202124') $('body,html').css('color-scheme','dark');
-                    else $('body,html').css('color-scheme','normal');
-                }
-				else rootVar.style.setProperty('--stepBackground', "#ffffff");
-                color = step.settings.get("secondardHoverColor");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-                    rootVar.style.setProperty('--secondardHoverColor',color);
-				else rootVar.style.setProperty('--secondardHoverColor', "#d3d3d3");
-                color = step.settings.get("strong_color");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--strong_color',color);
-				else rootVar.style.setProperty('--strong_color', "#498090");
-
-                color = step.settings.get("lexiconFocusColour");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--lexiconFocusColour',color);
-				else rootVar.style.setProperty('--lexiconFocusColour', "#c8d8dc");
-                color = step.settings.get("relatedWordBackground");
-		        if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))) 
-					rootVar.style.setProperty('--relatedWordBackground',color);
-				else rootVar.style.setProperty('--relatedWordBackground', "#b2e5f3");
+                this.updateColor();
 				
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
@@ -621,6 +589,25 @@ var PassageDisplayView = DisplayView.extend({
             step.util.ui.addStrongHandlers(passageId, passageContent)
         },
 
+        updateColor: function () {
+            this.updateSpecificColor("highlight_color", "#17758F");
+            this.updateSpecificColor("stepTextColor", "#5d5d5d");
+            this.updateSpecificColor("secondardHoverColor", "#d3d3d3");
+            this.updateSpecificColor("strong_color", "#498090");
+            this.updateSpecificColor("lexiconFocusColour", "#c8d8dc");
+            this.updateSpecificColor("relatedWordBackground", "#b2e5f3");
+            var backgroundColor = this.updateSpecificColor("stepBackground", "#ffffff");
+            if (backgroundColor === '#202124') $('body,html').css('color-scheme','dark');
+            else $('body,html').css('color-scheme','normal');
+        },
+
+        updateSpecificColor: function (colorName, defaultColor) {
+            var color = step.settings.get(colorName);
+            if (!(((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))))
+                color = defaultColor;
+            document.querySelector(':root').style.setProperty('--' + colorName, color);
+            return color;
+        },
 
         handleFontSizeChange: function () {
             this.doInterlinearVerseNumbers(

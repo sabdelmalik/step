@@ -38,11 +38,11 @@ var PickBibleView = Backbone.View.extend({
         '<% } %>' +
         '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
         '</span>' +
-		'&nbsp;&nbsp;&nbsp;<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal">X</button>' +
+		'&nbsp;&nbsp;&nbsp;<button type="button" class="close stepFgBg" data-dismiss="modal">X</button>' +
         '</form>'),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
-        '<div class="modal-content" style="background:var(--stepBackground)">' +
+        '<div class="modal-content stepFgBg">' +
         '<div class="modal-body">' +
         '<span class="pull-right"><%= view.filtersTemplate({myLanguage: myLanguage}) %></span>' +
         '<ul class="nav nav-tabs">' +
@@ -63,7 +63,7 @@ var PickBibleView = Backbone.View.extend({
 		  '<option value="western_asia">Western Asia</option>' +
 		'</select>' +
         '<p><%= __s.bible_version_features %></p>' +
-		((step.touchDevice) ? "" : '<textarea id="enterYourTranslation" rows="1" style="font-size:13px;width:95%;resize=none;height:24px;background:var(--stepBackground)" placeholder="<%= __s.pick_bible_input_placeholder %>"></textarea><br><br>') +
+		((step.touchDevice) ? "" : '<textarea id="enterYourTranslation" rows="1" style="font-size:13px;width:95%;resize=none;height:24px" placeholder="<%= __s.pick_bible_input_placeholder %>"></textarea><br><br>') +
         '<div class="tab-content">' +
         '<div class="tab-pane" id="bibleList">' +
         '</div>' +
@@ -71,7 +71,7 @@ var PickBibleView = Backbone.View.extend({
         '</div>' +
         '</div>' + //end body
         '<div class="modal-footer">' +
-			((step.touchDevice) ? '<textarea id="enterYourTranslation" rows="1" style="font-size:16px;width:90%;resize=none;height:24px;background:var(--stepBackground)" placeholder="<%= __s.pick_bible_input_short_placeholder %>"></textarea>' : "") +
+			((step.touchDevice) ? '<textarea id="enterYourTranslation" rows="1" style="font-size:16px;width:90%;resize=none;height:24px" placeholder="<%= __s.pick_bible_input_short_placeholder %>"></textarea>' : "") +
 			'<br><br><span class="tagLine"></span>' +
 			'<button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
             '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
@@ -215,7 +215,7 @@ var PickBibleView = Backbone.View.extend({
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
 		$('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
-				'<div class="modal-content" style="background:var(--stepBackground)">' +
+				'<div class="modal-content stepFgBg">' +
 					'<style>' +
 						'#nestedVersion div, .nested-1 {' +
 							'margin-top: 5px;' +
@@ -225,7 +225,7 @@ var PickBibleView = Backbone.View.extend({
 						'}' +
 					'</style>' +  
 					'<div class="modal-header">' +
-						'<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button>' +
+						'<button type="button" class="close stepFgBg" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button><br>' +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="sortVersionModal"></div>' +

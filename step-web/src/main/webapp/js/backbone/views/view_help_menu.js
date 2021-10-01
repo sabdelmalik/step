@@ -10,9 +10,9 @@ var ViewHelpMenuOptions = Backbone.View.extend({
         $(_.template(
             '<div class="modal aboutModal" role="dialog" aria-labelledby="about" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
-                '<div class="modal-content" style="background:var(--stepBackground)">' +
+                '<div class="modal-content stepFgBg">' +
                 '<div class="modal-header">' +
-                '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" aria-hidden="true">X</button>' +
+                '<button type="button" class="close stepFgBg" data-dismiss="modal" aria-hidden="true">X</button>' +
                 '<img id="aboutLogo" src="images/step-top-left-logo.png">' +
                 '<h4 class="modal-title">STEP : Scripture Tools for Every Person</h4>' +
                 '</div>' + //end header
@@ -24,7 +24,7 @@ var ViewHelpMenuOptions = Backbone.View.extend({
                 '&copy; STEPBible, Cambridge <%= new Date().getYear() + 1900 %> </p>' +
                 '</div>' +
 				'<p>' + step.state.getCurrentVersion() + '</p>' +
-                '<div class="footer"><button class="btn btn-default btn-sm closeModal" data-dismiss="modal" ><label><%= __s.ok %></label></button></div>' +
+                '<div class="footer"><button class="btn btn-default btn-sm closeModal stepButton" data-dismiss="modal" ><label><%= __s.ok %></label></button></div>' +
                 '</div>' + //end modal body
                 '</div>' + //end content
                 '</div>' + //end dialog

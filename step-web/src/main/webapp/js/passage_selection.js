@@ -324,9 +324,7 @@ step.passageSelect = {
 			html += '<col span="1" style="width:' + columnPercent + '%;">';
 		}
 		html += '</colgroup>';
-		html += '<tr>'; // style="height:' +
-                    // ((summaryMode) ? '20' : '30') +
-                    // 'px">';
+		html += '<tr>';
 		return html;
 	},
 
@@ -485,13 +483,15 @@ step.passageSelect = {
         }
         
 		var html = '<div class="header">' +
-            '<h4>' + headerMsg + '</h4>' +
+            '<h4>' + headerMsg + '</h4>';
+        if (isChapter) html +=
             '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
                 bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
                 ((summaryMode) ? 'false' : 'true') +
                 ')" title="Show summary information" class="select-version stepButton' +
                 ((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
-                '</button>' +
+                '</button>';
+        html +=
             '</div>' +
 			'<table>' +
 			'<colgroup>';
@@ -499,9 +499,7 @@ step.passageSelect = {
 			html += '<col span="1" style="width:' + widthPercent + '%">';
 		}
 		html += '</colgroup>' +
-			'<tr>'; // style="height:' +
-                // ((summaryMode) ? '20' : '30') +
-                // 'px">';
+			'<tr>';
 
 		var chptrOrVrsNum = 0;
 		var osisIDLink = "";
@@ -525,9 +523,7 @@ step.passageSelect = {
                     ((summaryMode) ? " - " + chapterDescription[chptrOrVrsNum] : "") +
                     '</a></td>'
 				if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
-					html += '</tr><tr>'; // style="height:' +
-                        // ((summaryMode) ? '20' : '30') +
-                        // 'px">';
+					html += '</tr><tr>';
 				}
 			}
 		}
@@ -542,9 +538,7 @@ step.passageSelect = {
                         ((summaryMode) ? " - " + chapterDescription[chptrOrVrsNum] : "") +
                         '</a></td>'
 					if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
-						html += '</tr><tr>'; // style="height:' +
-                            // ((summaryMode) ? '20' : '30') + 
-                            // 'px">';
+						html += '</tr><tr>';
 					}
 				}
 			}

@@ -189,7 +189,7 @@ step.util = {
     },
     getErrorPopup: function (message, level) {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
-            '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="alert" aria-hidden="true">X</button>' +
+            '<button type="button" class="close stepFgBg" data-dismiss="alert" aria-hidden="true">X</button>' +
             '<%= message %></div>')({ message: message, level: level}));
         return errorPopup;
     },
@@ -823,7 +823,7 @@ step.util = {
     },
     ui: {
         selectMark: function (classes) {
-            return '<span style="color:var(--stepTextColor)" class="glyphicon glyphicon-ok ' + classes + '"></span>';
+            return '<span" class="glyphicon glyphicon-ok stepFgBg' + classes + '"></span>';
         },
         shortenDisplayText: function (text, maxLength) {
 			if (text.length <= maxLength) return text;
@@ -1688,13 +1688,13 @@ step.util = {
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
         $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-				'<div class="modal-content" style="background:var(--stepBackground)">' +
+				'<div class="modal-content stepFgBg"">' +
 					'<link href="css/color_code_grammar.' + jsVersion + 'css" rel="stylesheet"/>' +
 					'<link rel="stylesheet" href="css/spectrum.css"/>' +
 					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<div class="modal-header">' +
-						'<button style="background:var(--stepBackground);color:var(--stepTextColor)" type="button" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+						'<button type="button" class="close stepFgBg" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="colortabs">' +
@@ -1755,7 +1755,7 @@ step.util = {
 						'<br>' +
 						'<div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">' +
 							'<label for="displayLocation"><%= __s.display_passage_at %></label>' +
-							'<select style="background:var(--stepBackground)" type="text" id="displayLocation">' +
+							'<select class="stepFgBg" type="text" id="displayLocation">' +
 								'<option value="replace"> <%= __s.current_panel %></option>' +
 								'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
 								'<option id="append_to_panel" value="append"><%= __s.append_to_panel %></option>' +
@@ -1763,13 +1763,13 @@ step.util = {
 						'</div><br>' +
 					'</div>' ;
 		if (!step.touchDevice) modalHTML +=
-						'<textarea id="enterYourPassage" rows="1" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px;background:var(--stepBackground)" title="<%= __s.type_in_your_passage %>"' +
+						'<textarea id="enterYourPassage" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px" title="<%= __s.type_in_your_passage %>"' +
 						' placeholder="<%= __s.select_passage_input_placeholder %>"></textarea>';
 		modalHTML +=
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
 					'<div class="footer">';
 		if (step.touchDevice) modalHTML +=
-						'<textarea id="enterYourPassage" rows="1" style="font-size:16px;width:80%;margin-left:5;margin-bottom:5;resize=none;height:24px;background:var(--stepBackground)"' +
+						'<textarea id="enterYourPassage" rows="1"  class="stepFgBg" style="font-size:16px;width:80%;margin-left:5;margin-bottom:5;resize=none;height:24px"' +
 						' placeholder="<%= __s.select_passage_input_short_placeholder %>"></textarea>';
 		modalHTML +=
 						'<br>' +
@@ -1805,7 +1805,7 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
         $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-				'<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch;background:var(--stepBackground)">' +
+				'<div class="modal-content stepFgBg" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
 						'$(document).ready(function () {' +
 							'step.searchSelect.initSearchSelection();' +
@@ -1846,11 +1846,11 @@ step.util = {
 					'<div class="modal-header">' +
 						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
-							'<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>' +
+							'<button type="button" class="close stepFgBg" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>' +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
 							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
 								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
-								'<select type="text" id="displayLocation" style="background:var(--stepBackground)">' +
+								'<select type="text" id="displayLocation" class="stepFgBg">' +
 									'<option value="replace"><%= __s.current_panel %></option>' +
 									'<option class="hidden-xs" value="new"><%= __s.new_panel %></option>' +
 								'</select>' +
@@ -1881,7 +1881,7 @@ step.util = {
         $(_.template(
 			'<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-videofile="' + videoFile + '" data-videotime="' + seconds + '">' +
 				'<div class="modal-dialog">' +
-					'<div class="modal-content" style="background:var(--stepBackground)">' +
+					'<div class="modal-content stepFgBg">' +
 						'<script>' +
 							'$(document).ready(function () {' +
 								'var file = $("#videoModal").data("videofile");' +
@@ -1901,7 +1901,7 @@ step.util = {
 							'})' +
 						'</script>' +
 						'<div class="modal-header">' +
-							'<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" onclick=step.util.closeModal("videoModal")>X</button>' +
+							'<button type="button" class="close stepFgBg" data-dismiss="modal" onclick=step.util.closeModal("videoModal")>X</button>' +
 						'</div>' +
 						'<div id="videomodalbody" class="modal-body" style="text-align:center;background-color:grey">' +
 							'<p id="pleasewait">Loading video, please wait...</p>' +

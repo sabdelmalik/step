@@ -143,3 +143,10 @@ ul .glyphicon-ok {
 	color: white !important;
 	border: 1px solid black;
 }
+
+.stepFgBg {
+	background-color: #ffffff;
+	background-color: var(--stepBackground);
+	color: #5d5d5d;
+    color: var(--stepTextColor);
+}
