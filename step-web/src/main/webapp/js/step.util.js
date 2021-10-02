@@ -189,7 +189,8 @@ step.util = {
     },
     getErrorPopup: function (message, level) {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
-            '<button type="button" class="close stepFgBg" data-dismiss="alert" aria-hidden="true">X</button>' +
+			// the close button could not pickup the stepFgBg class so it has to be added in the style
+            '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="alert" aria-hidden="true">X</button>' +
             '<%= message %></div>')({ message: message, level: level}));
         return errorPopup;
     },
@@ -823,7 +824,7 @@ step.util = {
     },
     ui: {
         selectMark: function (classes) {
-            return '<span" class="glyphicon glyphicon-ok stepFgBg' + classes + '"></span>';
+            return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--stepTextColor);background:var(--stepBackground)"></span>';
         },
         shortenDisplayText: function (text, maxLength) {
 			if (text.length <= maxLength) return text;
@@ -1688,13 +1689,13 @@ step.util = {
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
         $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-				'<div class="modal-content stepFgBg"">' +
+				'<div class="modal-content stepModalFgBg"">' +
 					'<link href="css/color_code_grammar.' + jsVersion + 'css" rel="stylesheet"/>' +
 					'<link rel="stylesheet" href="css/spectrum.css"/>' +
 					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<div class="modal-header">' +
-						'<button type="button" class="close stepFgBg" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+						'<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="colortabs">' +
@@ -1735,11 +1736,11 @@ step.util = {
 			step.util.activePassageId(activePassageNumber); // make the passage active
 		var modalHTML = '<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
-				'<div class="modal-content" style="background:var(--stepBackground)">' +
+				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<div class="modal-header">' +
 						'<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.passageSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
-							'<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>' +
+							step.util.modalCloseBtn("passageSelectionModal") +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
 							'<div id="modalonoffswitch" class="pull-right">' +
 								'<span id="select_verse_number">&nbsp;<b><%= __s.select_verse_number %></b></span>' +
@@ -1805,7 +1806,7 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
         $(_.template('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-				'<div class="modal-content stepFgBg" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
+				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
 					'<script>' +
 						'$(document).ready(function () {' +
 							'step.searchSelect.initSearchSelection();' +
@@ -1846,7 +1847,7 @@ step.util = {
 					'<div class="modal-header">' +
 						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
-							'<button type="button" class="close stepFgBg" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>' +
+							step.util.modalCloseBtn("searchSelectionModal") +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
 							'<span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">' +
 								'<label for="displayLocation"><%= __s.display_result_in %>:</label>' +
@@ -1881,7 +1882,7 @@ step.util = {
         $(_.template(
 			'<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-videofile="' + videoFile + '" data-videotime="' + seconds + '">' +
 				'<div class="modal-dialog">' +
-					'<div class="modal-content stepFgBg">' +
+					'<div class="modal-content stepModalFgBg">' +
 						'<script>' +
 							'$(document).ready(function () {' +
 								'var file = $("#videoModal").data("videofile");' +
@@ -1901,7 +1902,7 @@ step.util = {
 							'})' +
 						'</script>' +
 						'<div class="modal-header">' +
-							'<button type="button" class="close stepFgBg" data-dismiss="modal" onclick=step.util.closeModal("videoModal")>X</button>' +
+							step.util.modalCloseBtn("videoModal") +
 						'</div>' +
 						'<div id="videomodalbody" class="modal-body" style="text-align:center;background-color:grey">' +
 							'<p id="pleasewait">Loading video, please wait...</p>' +
@@ -1934,7 +1935,8 @@ step.util = {
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary.book_description + '<br><br>' +
                     summary.book_overview + '</p>' +
-                    '<p style="margin:8px">' + summary.ESV_summary + '</p>' +
+					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
+                    '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>' +
                 '</span>';
             var chptSummary =
                 '<span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
@@ -1947,7 +1949,7 @@ step.util = {
             $(_.template(
                 '<div id="showBookOrChapterSummaryModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                     '<div class="modal-dialog">' +
-                        '<div class="modal-content" style="background:var(--stepBackground)">' +
+                        '<div class="modal-content stepModalFgBg"">' +
                             '<script>' +
                             '$(document).keydown(function(event) {' +
                               'if (event.keyCode == 27) {' +
@@ -1956,7 +1958,7 @@ step.util = {
                             '});' +
                             '</script>' +
                             '<div class="modal-header">' +
-                                '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" onclick=step.util.closeModal("showBookOrChapterSummaryModal")>X</button>' +
+								step.util.modalCloseBtn("showBookOrChapterSummaryModal") +
                             '</div>' +
                             '<div class="modal-body" style="text-align:left font-size:16px">' +
                                 '<div>' +
@@ -1984,10 +1986,14 @@ step.util = {
         if (darkModeEnabled) {
             rootVar.style.setProperty('--stepTextColor',"#5d5d5d");
             step.settings.save({"stepTextColor":"#5d5d5d"});
+			rootVar.style.setProperty('--strong_color',"#498090");
+			step.settings.save({"strong_color":"#498090"});
             rootVar.style.setProperty('--stepBackground',"#ffffff");
             step.settings.save({"stepBackground":"#ffffff"});
             rootVar.style.setProperty('--highlight_color',"#17758F");
             step.settings.save({"highlight_color":"#17758F"});
+			rootVar.style.setProperty('--highlight_bg_color',"#17758F");
+            step.settings.save({"highlight_bg_color":"#17758F"});
             rootVar.style.setProperty('--secondardHoverColor',"#d3d3d3");
             step.settings.save({"secondardHoverColor":"#d3d3d3"});
             $('body,html').css('color-scheme','normal');
@@ -1996,17 +2002,19 @@ step.util = {
         else {
             rootVar.style.setProperty('--stepTextColor',"#BCC0C3");
             step.settings.save({"stepTextColor":"#BCC0C3"});
+	        rootVar.style.setProperty('--strong_color',"#8ab4f8");
+			step.settings.save({"strong_color":"#8ab4f8"});
             rootVar.style.setProperty('--stepBackground',"#202124");
             step.settings.save({"stepBackground":"#202124"});
             rootVar.style.setProperty('--highlight_color',"#c58af9");
             step.settings.save({"highlight_color":"#c58af9"});
+			rootVar.style.setProperty('--highlight_bg_color',"#7d589f");
+            step.settings.save({"highlight_bg_color":"#7d589f"});
             rootVar.style.setProperty('--secondardHoverColor',"#5d5d5d");
             step.settings.save({"secondardHoverColor":"#5d5d5d"});
             $('body,html').css('color-scheme','dark');
             newBtnText = "Enabled";            
         }            
-        rootVar.style.setProperty('--strong_color',"#498090");
-        step.settings.save({"strong_color":"#498090"});
         rootVar.style.setProperty('--lexiconFocusColour',"#c8d8dc");
         step.settings.save({"lexiconFocusColour":"#c8d8dc"});
         rootVar.style.setProperty('--relatedWordBackground',"#b2e5f3");
@@ -2028,7 +2036,7 @@ step.util = {
 		console.log("step background value " + document.querySelector(':root').style.getPropertyValue("--stepBackground"));
 		var modalHTML = '<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog" style="width:350px">' +
-				'<div class="modal-content" style="background:var(--stepBackground)">';
+				'<div class="modal-content stepModalFgBg">';
 		if (notIE) modalHTML +=
 					'<link rel="stylesheet" href="css/spectrum.css">' +
 					'<script src="libs/spectrum.js"></script>' +
@@ -2107,6 +2115,9 @@ step.util = {
 							'var rootVar = document.querySelector(":root");' +
 							'rootVar.style.setProperty("--highlight_color",baseColor);' +
 							'step.settings.save({"highlight_color":baseColor});' +
+							'rootVar.style.setProperty("--highlight_bg_color",baseColor);' +
+							'step.settings.save({"highlight_bg_color":baseColor});' +
+
 							
 							'var desaturate = colorS - 40;' +
 							'var desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
@@ -2155,7 +2166,7 @@ step.util = {
 						'<span><b>' + 
                             ((typeof panelNumber === "number") ? __s.update_font_in_all_panels : __s.update_font_in_current_panels) +
                         '</b></span>' +
-						'<button style="background:var(--stepBackground);color:var(--stepTextColor)" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
+						'<button style="background:var(--stepBackground);color:var(--stepTextColor);opacity:0.8" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
 					'</div>' +
 					'<div class="modal-body" style="text-align:center">' +
 						'<table style="height:auto;width:95%">' +
@@ -2375,7 +2386,7 @@ step.util = {
 			$('#' + modalID).modal({
 				show: false
 			});
-			element.parentNode.removeChild(element);
+			if ((element.parentNode) && (modalID !== "raiseSupport")) element.parentNode.removeChild(element);
 		}
     },
 	addTagLine: function(){
@@ -2862,6 +2873,14 @@ step.util = {
         if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
         if ((typeof step.srchTxt[strongNum] === "undefined") || (step.srchTxt[strongNum].length < 7))
             step.srchTxt[strongNum] = details;
-    }
+    },
+	modalCloseBtn: function(modalElementID) {
+		// The dark mode color needs to be brighter for X.  The default opacity of 0.2 is too low.
+        var opacity = (document.querySelector(':root').style.getPropertyValue("--stepBackground") === '#202124') ?
+			"opacity:0.8" : "";
+		// the close button could not pickup the stepFgBg class so it has to be added in the style
+		return '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor);' + opacity + '" class="close" ' +
+			'data-dismiss="modal" onclick=step.util.closeModal("' + modalElementID + '")>X</button>';
+	}
 }
 ;

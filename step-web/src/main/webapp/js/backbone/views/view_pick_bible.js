@@ -38,11 +38,13 @@ var PickBibleView = Backbone.View.extend({
         '<% } %>' +
         '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
         '</span>' +
-		'&nbsp;&nbsp;&nbsp;<button type="button" class="close stepFgBg" data-dismiss="modal">X</button>' +
+		'&nbsp;&nbsp;&nbsp;' +
+		step.util.modalCloseBtn("bibleVersions") +
+//		'<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal">X</button>' +
         '</form>'),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
-        '<div class="modal-content stepFgBg">' +
+        '<div class="modal-content stepModalFgBg">' +
         '<div class="modal-body">' +
         '<span class="pull-right"><%= view.filtersTemplate({myLanguage: myLanguage}) %></span>' +
         '<ul class="nav nav-tabs">' +
@@ -215,7 +217,7 @@ var PickBibleView = Backbone.View.extend({
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
 		$('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
-				'<div class="modal-content stepFgBg">' +
+				'<div class="modal-content stepModalFgBg">' +
 					'<style>' +
 						'#nestedVersion div, .nested-1 {' +
 							'margin-top: 5px;' +
@@ -225,7 +227,8 @@ var PickBibleView = Backbone.View.extend({
 						'}' +
 					'</style>' +  
 					'<div class="modal-header">' +
-						'<button type="button" class="close stepFgBg" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button><br>' +
+						// the close button could not pickup the stepFgBg class so it has to be added in the style
+						'<button type="button"  style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button><br>' +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="sortVersionModal"></div>' +

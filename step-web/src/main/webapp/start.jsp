@@ -61,6 +61,7 @@
 	<style>
 	:root {
 		--highlight_color: #17758F;
+		--highlight_bg_color: #17758F;
 		--strong_color: #498090;
 		--lexiconFocusColour: #c8d8dc;
 		--relatedWordBackground: #b2e5f3;
@@ -120,7 +121,7 @@
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top">
         <div>
-            <div class="navbar-header search-form" style="background-color: var(--stepBackground)">
+            <div class="navbar-header search-form">
                 <div class="navbar-brand col-xs-12">
                         <span class="hidden-xs title">
                             <a href="/" id="logo">

@@ -591,6 +591,7 @@ var PassageDisplayView = DisplayView.extend({
 
         updateColor: function () {
             this.updateSpecificColor("highlight_color", "#17758F");
+			this.updateSpecificColor("highlight_bg_color", "#17758F");
             this.updateSpecificColor("stepTextColor", "#5d5d5d");
             this.updateSpecificColor("secondardHoverColor", "#d3d3d3");
             this.updateSpecificColor("strong_color", "#498090");

@@ -34,13 +34,13 @@
 
 .primaryLightBg {
   background-color: $highlight-color !important;  // This line is for IE browser
-  background-color: var(--highlight_color) !important;
+  background-color: var(--highlight_bg_color) !important;
   color: $quickLexiconFontColour;
   text-shadow: none !important;
 
   & > .secondaryBackground {
     background-color: $highlight-color !important;  // This line is for IE browser
-    background-color: var(--highlight_color) !important;
+    background-color: var(--highlight_bg_color) !important;
   }
 
   .segC0, .segC1 {

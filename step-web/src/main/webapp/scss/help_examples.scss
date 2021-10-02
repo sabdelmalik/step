@@ -55,11 +55,11 @@
       border-radius: 4px;
 	  background:#FFFFFF;
 	  border:1px solid $highlight-color;
-	  border:1px solid var(--highlight_color);
+	  border:1px solid var(--highlight_bg_color);
 
 	  button {
 		border:1px solid $highlight-color;
-		border:1px solid var(--highlight_color);
+		border:1px solid var(--highlight_bg_color);
 		&:after {
 		  content: '';
 		  font-style: normal;

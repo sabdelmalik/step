@@ -8,11 +8,11 @@ var ViewHelpMenuOptions = Backbone.View.extend({
     el: ".helpMenu",
     showAbout: function () {
         $(_.template(
-            '<div class="modal aboutModal" role="dialog" aria-labelledby="about" aria-hidden="true">' +
+            '<div id="aboutModal" class="modal aboutModal" role="dialog" aria-labelledby="about" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
-                '<div class="modal-content stepFgBg">' +
+                '<div class="modal-content stepModalFgBg">' +
                 '<div class="modal-header">' +
-                '<button type="button" class="close stepFgBg" data-dismiss="modal" aria-hidden="true">X</button>' +
+				step.util.modalCloseBtn("aboutModal") +
                 '<img id="aboutLogo" src="images/step-top-left-logo.png">' +
                 '<h4 class="modal-title">STEP : Scripture Tools for Every Person</h4>' +
                 '</div>' + //end header

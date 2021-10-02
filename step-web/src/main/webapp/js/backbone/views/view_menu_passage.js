@@ -294,7 +294,7 @@ var PassageMenuView = Backbone.View.extend({
 
     _initUI: function () {
         //create settings dropdown
-        var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right stepFgBg").attr("role", "menu").attr("dir", step.state.isLtR() ? "" : "rtl");
+        var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right stepModalFgBg").attr("role", "menu").attr("dir", step.state.isLtR() ? "" : "rtl");
         this.displayModeContainer = $("<div>");
         var displayMode = $("<h2>").append(__s.display_mode);
         this.displayModeContainer.append(displayMode);
@@ -503,7 +503,7 @@ var PassageMenuView = Backbone.View.extend({
         var selectedOptions = this.model.get("selectedOptions") || "";
         for (var i = 0; i < items.length; i++) {
             if (items[i].group) {
-                var panel = $('<div class="panel panel-default stepFgBg">');
+                var panel = $('<div class="panel panel-default stepModalFgBg">');
 
                 var collapseHeader =
                     '<a data-toggle="collapse" class="menuGroup" data-parent="#displayOptions-' + this.model.get("passageId") + '" ' +

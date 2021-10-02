@@ -308,9 +308,9 @@ step.passageSelect = {
             ((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
             '</button>' +
 			'</div>' +
-			'<h5 style="background:var(--stepBackground)">' + __s.old_testament + '</h5>' +
+			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.old_testament + '</b></span>' +
 			'<div id="ot_table"/>' +
-			'<h5 style="background:var(--stepBackground)">' + __s.new_testament + '</h5>' +
+			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.new_testament + '</b></span>' +
 			'<div id="nt_table"/>' +
 			'</div>';
 		return html;
