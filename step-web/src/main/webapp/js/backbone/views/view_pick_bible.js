@@ -6,7 +6,7 @@ var PickBibleView = Backbone.View.extend({
         '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replace(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
         '<ul class="list-group langUL ul_<%= key.replace(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
-        '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
+        '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>">' +
         '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
         '<a class="resource" href="javascript:void(0)">' +
         '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a></li>' +
@@ -21,7 +21,7 @@ var PickBibleView = Backbone.View.extend({
         '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
         '<ul class="list-group langUL ul_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
-        '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
+        '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>">' +
         '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
         '<a class="resource" href="javascript:void(0)">' +
         '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a></li>' +
