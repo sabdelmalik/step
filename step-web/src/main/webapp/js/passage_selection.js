@@ -300,7 +300,7 @@ step.passageSelect = {
 	},
 
 	_buildBookHeaderAndSkeleton: function(summaryMode) {
-		 var html = '<div class="header">' +
+		 var html = '<div class="header" style="overflow-y:auto">' +
 			'<h4>' + __s.please_select_book + '</h4>' +
             '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(' +
             ((summaryMode) ? 'false' : 'true') +
@@ -493,6 +493,7 @@ step.passageSelect = {
                 '</button>';
         html +=
             '</div>' +
+			'<div style="overflow-y:auto">' +
 			'<table>' +
 			'<colgroup>';
 		for (var c = 0; c < tableColumns; c++) {
@@ -552,7 +553,7 @@ step.passageSelect = {
 			return;
 		}
 		html +=
-			'</tr></table>' +
+			'</tr></table></div>' +
 			'</div>';
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append(html);
