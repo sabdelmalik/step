@@ -365,6 +365,7 @@
 			$("#examples-icon").css("color", "black");
 			$("#fonts-icon").css("color", "black");
 			$("#languages-icon").css("color", "black");
+			$(".icon-language").css("color", "black");
 			$("#raiseSupportTrigger").css("color", "black");
 			$("#more-icon").css("color", "black");
 		}
