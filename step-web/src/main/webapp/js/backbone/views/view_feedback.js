@@ -40,7 +40,6 @@ var FeedbackView = Backbone.View.extend({
         '<div class="modal-content stepModalFgBg">' +
         '<div class="modal-header">' +
 		step.util.modalCloseBtn("raiseSupport") +
-//        '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" aria-hidden="true">X</button>' +
         '<h4 class="modal-title" id="raiseSupportLabel"><%= __s.help_feedback %></h4>' +
         '</div>' + //end header
         '<div class="modal-body">' +

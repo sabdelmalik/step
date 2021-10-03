@@ -597,8 +597,8 @@ var PassageDisplayView = DisplayView.extend({
             this.updateSpecificColor("strong_color", "#498090");
             this.updateSpecificColor("lexiconFocusColour", "#c8d8dc");
             this.updateSpecificColor("relatedWordBackground", "#b2e5f3");
-            var backgroundColor = this.updateSpecificColor("stepBackground", "#ffffff");
-            if (backgroundColor === '#202124') $('body,html').css('color-scheme','dark');
+            this.updateSpecificColor("stepBackground", "#ffffff");
+            if (step.util.isDarkMode()) $('body,html').css('color-scheme','dark');
             else $('body,html').css('color-scheme','normal');
         },
 
@@ -607,7 +607,6 @@ var PassageDisplayView = DisplayView.extend({
             if (!(((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#"))))
                 color = defaultColor;
             document.querySelector(':root').style.setProperty('--' + colorName, color);
-            return color;
         },
 
         handleFontSizeChange: function () {

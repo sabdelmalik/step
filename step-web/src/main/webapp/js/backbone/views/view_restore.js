@@ -38,7 +38,6 @@ var RestorePassageView = Backbone.View.extend({
             '<div class="modal-content stepModalFgBg">' +
             '<div class="modal-header">' +
 			step.util.modalCloseBtn("restorePassages") +
-//          '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" aria-hidden="true">X</button>' +
             '<h4 class="modal-title" id="restoreSessionTitle"><%= __s.restore_previous_session %></h4>' +
             '</div>' + //end header
             '<div class="modal-body">' +

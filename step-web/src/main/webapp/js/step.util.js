@@ -1979,27 +1979,15 @@ step.util = {
         });
         $.ajaxSetup({async: true});
     },
-    darkMode: function() {
-        var darkModeEnabled = (document.querySelector(':root').style.getPropertyValue("--stepBackground") === '#202124');
+    setDefaultColor: function(option) {
         var newBtnText;
+		var setToDarkMode = false;
+		if (option === "flip") {
+			if (!step.util.isDarkMode()) setToDarkMode = true;
+		}
+		else setToDarkMode = step.util.isDarkMode();
    		var rootVar = document.querySelector(':root');
-        if (darkModeEnabled) {
-            rootVar.style.setProperty('--stepTextColor',"#5d5d5d");
-            step.settings.save({"stepTextColor":"#5d5d5d"});
-			rootVar.style.setProperty('--strong_color',"#498090");
-			step.settings.save({"strong_color":"#498090"});
-            rootVar.style.setProperty('--stepBackground',"#ffffff");
-            step.settings.save({"stepBackground":"#ffffff"});
-            rootVar.style.setProperty('--highlight_color',"#17758F");
-            step.settings.save({"highlight_color":"#17758F"});
-			rootVar.style.setProperty('--highlight_bg_color',"#17758F");
-            step.settings.save({"highlight_bg_color":"#17758F"});
-            rootVar.style.setProperty('--secondardHoverColor',"#d3d3d3");
-            step.settings.save({"secondardHoverColor":"#d3d3d3"});
-            $('body,html').css('color-scheme','normal');
-            newBtnText = "Disabled";
-        }
-        else {
+        if (setToDarkMode) {
             rootVar.style.setProperty('--stepTextColor',"#BCC0C3");
             step.settings.save({"stepTextColor":"#BCC0C3"});
 	        rootVar.style.setProperty('--strong_color',"#8ab4f8");
@@ -2014,6 +2002,22 @@ step.util = {
             step.settings.save({"secondardHoverColor":"#5d5d5d"});
             $('body,html').css('color-scheme','dark');
             newBtnText = "Enabled";            
+        }
+        else {
+            rootVar.style.setProperty('--stepTextColor',"#5d5d5d");
+            step.settings.save({"stepTextColor":"#5d5d5d"});
+			rootVar.style.setProperty('--strong_color',"#498090");
+			step.settings.save({"strong_color":"#498090"});
+            rootVar.style.setProperty('--stepBackground',"#ffffff");
+            step.settings.save({"stepBackground":"#ffffff"});
+            rootVar.style.setProperty('--highlight_color',"#17758F");
+            step.settings.save({"highlight_color":"#17758F"});
+			rootVar.style.setProperty('--highlight_bg_color',"#17758F");
+            step.settings.save({"highlight_bg_color":"#17758F"});
+            rootVar.style.setProperty('--secondardHoverColor',"#d3d3d3");
+            step.settings.save({"secondardHoverColor":"#d3d3d3"});
+            $('body,html').css('color-scheme','normal');
+            newBtnText = "Disabled";
         }            
         rootVar.style.setProperty('--lexiconFocusColour',"#c8d8dc");
         step.settings.save({"lexiconFocusColour":"#c8d8dc"});
@@ -2024,7 +2028,20 @@ step.util = {
     showFontSettings: function (panelNumber) {
         var element = document.getElementById('fontSettings');
         if (element) element.parentNode.removeChild(element);
-        var notIE = !(false || !!document.documentMode);
+        var colorReady = !(false || !!document.documentMode); // not Internet Explorer are not compatible with out color code
+		var darkModeReady = colorReady; // Internet Explorer is not ready for dark mode
+		var ua = navigator.userAgent.toLowerCase();
+		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
+		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) { // older versions of iOS are not compatible with out color code
+			colorReady = false;
+			darkModeReady = false;
+		}
+		if ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os 9_/) > -1)) { // older versions of iOS 9 can run in dark mode, but not the best with displaying updated colors in the font modal.
+			colorReady = false;
+		}
+		else if (ua.search(/android [1234]\./) > -1) { // older versions of Android are not compatible with out color code, but compatible with dark mode
+			colorReady = false;
+		}
 		var panelNumArg = "";
 		var styleForColorExamples = "";
 		if (typeof panelNumber === "number") {
@@ -2032,12 +2049,12 @@ step.util = {
 			styleForColorExamples = 'display:none';
 			singleOrAllPanel = "in current panel";
 		}
-        var darkModeEnabled = (document.querySelector(':root').style.getPropertyValue("--stepBackground") === '#202124');
-		console.log("step background value " + document.querySelector(':root').style.getPropertyValue("--stepBackground"));
+        var darkModeEnabled = step.util.isDarkMode();
+
 		var modalHTML = '<div id="fontSettings" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog" style="width:350px">' +
 				'<div class="modal-content stepModalFgBg">';
-		if (notIE) modalHTML +=
+		if (colorReady) modalHTML +=
 					'<link rel="stylesheet" href="css/spectrum.css">' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<script src="libs/tinycolor-min.js"></script>';
@@ -2055,7 +2072,7 @@ step.util = {
 							'showFontSizeBtns("khmerFont"' + panelNumArg + ');' +
 							'showFontSizeBtns("syriacFont"' + panelNumArg + ');';
 
-		if (notIE) modalHTML +=
+		if (colorReady) modalHTML +=
 							'var color = step.settings.get("highlight_color");' +
 							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 							'var closeButton = $("#fontSettings").find("button.close");' +
@@ -2090,10 +2107,10 @@ step.util = {
 							'}' +
 						'}';
 
-		if (notIE) modalHTML +=
+		if (colorReady) modalHTML +=
 						'function setColor(baseColor) {' +
 							'if (!((typeof baseColor === "string") && (baseColor.length == 7) && (baseColor.substr(0,1) === "#"))) baseColor = "#17758F";' +
-                            'var darkMode = (document.querySelector(":root").style.getPropertyValue("--stepBackground") === "#202124");' +
+                            'var darkMode = step.util.isDarkMode();' +
 							'if (darkMode) {' +
                                 'if (tinycolor(baseColor).getLuminance() < 0.14) {' +
                                     'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a brighter color.");' +
@@ -2156,7 +2173,10 @@ step.util = {
 						'}';
         
 		modalHTML +=	'function closeFontSetting(baseColor) {' +
-							'if ((typeof baseColor === "string") && (baseColor.length == 7)) setColor(baseColor);' +
+							'if ((typeof baseColor === "string") && (baseColor.length == 7)) {' +
+								'if ((baseColor === "#17758F") || (baseColor === "#c58af9")) step.util.setDefaultColor();' +
+								'else setColor(baseColor);' +
+							'}' +
 							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
 							'step.util.closeModal("fontSettings");' +
 							'$(".modal-backdrop.in").remove();' + // The color selection tool is not totally removed so manually remove it. 05/15/2021
@@ -2164,7 +2184,7 @@ step.util = {
 					'</script>' +
 					'<div class="modal-header">' +
 						'<span><b>' + 
-                            ((typeof panelNumber === "number") ? __s.update_font_in_all_panels : __s.update_font_in_current_panels) +
+                            ((typeof panelNumber === "number") ? __s.update_font_in_current_panels : __s.update_font_in_all_panels) +
                         '</b></span>' +
 						'<button style="background:var(--stepBackground);color:var(--stepTextColor);opacity:0.8" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
 					'</div>' +
@@ -2177,85 +2197,86 @@ step.util = {
                             '<tr id="defaultfontBtn">' +
 								'<td class="passageContent defaultfont">' + __s.default_font + ' <span id="defaultfontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="hbFontBtn" style="display:none">' +
 								'<td class="passageContent hbFont">' + __s.hebrew + ': חֶ֫סֶד <span id="hbFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'hbFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="unicodeFontBtn" style="display:none">' +
 								'<td class="passageContent unicodeFont">' + __s.greek + ': Ἀγαπητοί <span id="unicodeFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'unicodeFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="arabicFontBtn" style="display:none">' +
 								'<td class="passageContent arabicFont">Arabic: أَيُّهَا الأَحِبَّاءُ، <span id="arabicFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'arabicFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="burmeseFontBtn" style="display:none">' +
 								'<td class="passageContent burmeseFont">(ချစ်သူတို့၊) မြန်မာ <span id="burmeseFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'burmeseFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="chineseFontBtn" style="display:none">' +
 								'<td class="passageContent chineseFont">Chinese: 亲爱的弟兄 <span id="chineseFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'chineseFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="copticFontBtn" style="display:none">' +
 								'<td class="passageContent copticFont">Coptic: ϯⲡⲁⲣⲁⲕⲁⲗⲉⲓ <span id="copticFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'copticFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="farsiFontBtn" style="display:none">' +
 								'<td class="passageContent farsiFont">Farsi: برادران‌ عزيز <span id="farsiFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'farsiFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="khmerFontBtn" style="display:none">' +
 								'<td class="passageContent khmerFont">Khmer: ​ទី​ស្រលាញ់ <span id="khmerFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'khmerFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>' +
 							'<tr id="syriacFontBtn" style="display:none">' +
 								'<td class="passageContent syriacFont">Syriac: ܚܒܝܒܝ ܒܥܐ <span id="syriacFontSize"></span></td>' +
 								'<td class="pull-right">' +
-									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A</span></button>' +
-									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
+									'<button class="btn btn-default btn-sm" type="button" title="Increase font size" onclick="step.util.changeSpecificFontSize(\'syriacFont\', 1' + panelNumArg + ')" title="' + __s.passage_larger_fonts + '"><span style="font-size:10px;line-height:12px;font-weight:bold">A +</span></button>' +
 								'</td>' +
 							'</tr>';
 
-		if (notIE) modalHTML +=
+		if (darkModeReady) modalHTML +=
 							'<tr>' +
 								'<td class="passageContent defaultfont">' + __s.dark_mode + '</td>' +
 								'<td class="pull-right">' +
 									'<button id="darkModeBtn" class="btn btn-default btn-sm' +
                                         ((darkModeEnabled) ? ' stepPressedButton' : '') +
-                                        '" type="button" title="Dark mode" onclick="step.util.darkMode()"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
+                                        '" type="button" title="Dark mode" onclick="step.util.setDefaultColor(\'flip\')"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
                                         ((darkModeEnabled) ? 'Enabled' : 'Disabled') +
                                         '</span></button>' +
 								'</td>' +
-							'</tr>' +
+							'</tr>';
+		if (colorReady) modalHTML +=
 							'<tr style="' + styleForColorExamples + '">' +
 								'<td>' + __s.color + '</td>' +
 								'<td class="pull-right">' +
@@ -2266,7 +2287,7 @@ step.util = {
 						'</table>' +
 						'<br>';
 						
-		if (notIE) modalHTML +=
+		if (colorReady) modalHTML +=
 						'<span>' +
 							'<p style="text-align:left;font-size:18px;' + styleForColorExamples + '">' + __s.examples_for_the_selected_color + '</p>' +
 							'<p class="passageContent" style="color:var(--strong_color);' + styleForColorExamples + '">' + __s.text_with_color + '</p>' +
@@ -2278,8 +2299,8 @@ step.util = {
 		modalHTML +=
 						'<div class="footer">' +
 							'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>' + __s.ok + '</label></button>';
-		if (notIE) modalHTML +=
-							'<button class="stepButton pull-right" style="' + styleForColorExamples + '" onclick=setColor()><label>' + __s.original_color + '</label></button>';
+		if (colorReady) modalHTML +=
+							'<button class="stepButton pull-right" style="' + styleForColorExamples + '" onclick=step.util.setDefaultColor()><label>' + __s.original_color + '</label></button>';
 		modalHTML +=
 						'</div>' +
 						'<br>' +
@@ -2876,11 +2897,25 @@ step.util = {
     },
 	modalCloseBtn: function(modalElementID) {
 		// The dark mode color needs to be brighter for X.  The default opacity of 0.2 is too low.
-        var opacity = (document.querySelector(':root').style.getPropertyValue("--stepBackground") === '#202124') ?
+        var opacity = (step.util.isDarkMode()) ?
 			"opacity:0.8" : "";
 		// the close button could not pickup the stepFgBg class so it has to be added in the style
 		return '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor);' + opacity + '" class="close" ' +
 			'data-dismiss="modal" onclick=step.util.closeModal("' + modalElementID + '")>X</button>';
+	},
+	isDarkMode: function() {
+		var stepBgColor = document.querySelector(':root').style.getPropertyValue("--stepBackground");
+		// alert("1 " + stepBgColor );
+		if ((typeof stepBgColor !== "string") || ((stepBgColor.length !== 7) && (stepBgColor.length !== 15))) {
+			if ((typeof step.settings === "object") && (typeof step.settings.get === "function")) {
+				var color = step.settings.get("stepBackground");
+				// alert("2 " + color);
+				if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#")))
+					stepBgColor = color;
+			}
+		}
+		if ((stepBgColor === "#202124") || (stepBgColor === "rgb(32, 33, 36)")) return true; // old iPad would return the rgb value
+		return false;
 	}
 }
 ;

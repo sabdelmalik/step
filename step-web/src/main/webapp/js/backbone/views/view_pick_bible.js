@@ -40,7 +40,6 @@ var PickBibleView = Backbone.View.extend({
         '</span>' +
 		'&nbsp;&nbsp;&nbsp;' +
 		step.util.modalCloseBtn("bibleVersions") +
-//		'<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal">X</button>' +
         '</form>'),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
