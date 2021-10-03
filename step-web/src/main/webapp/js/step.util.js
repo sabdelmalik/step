@@ -2265,7 +2265,8 @@ step.util = {
 								'</td>' +
 							'</tr>';
 
-		if (darkModeReady) modalHTML +=
+		if ((darkModeReady) && ((typeof panelNumber !== "number")))
+			modalHTML +=
 							'<tr>' +
 								'<td class="passageContent defaultfont">' + __s.dark_mode + '</td>' +
 								'<td class="pull-right">' +
