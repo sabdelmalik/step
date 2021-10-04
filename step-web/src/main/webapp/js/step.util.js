@@ -2102,7 +2102,7 @@ step.util = {
             rootVar.style.setProperty('--secondardHoverColor',"#5d5d5d");
             step.settings.save({"secondardHoverColor":"#5d5d5d"});
             $('body,html').css('color-scheme','dark');
-            newBtnText = "Enabled";            
+            newBtnText = "Disable";            
         }
         else {
             rootVar.style.setProperty('--stepTextColor',"#5d5d5d");
@@ -2118,7 +2118,7 @@ step.util = {
             rootVar.style.setProperty('--secondardHoverColor',"#d3d3d3");
             step.settings.save({"secondardHoverColor":"#d3d3d3"});
             $('body,html').css('color-scheme','normal');
-            newBtnText = "Disabled";
+            newBtnText = "Enable";
         }            
         rootVar.style.setProperty('--lexiconFocusColour',"#c8d8dc");
         step.settings.save({"lexiconFocusColour":"#c8d8dc"});
@@ -2374,7 +2374,7 @@ step.util = {
 									'<button id="darkModeBtn" class="btn btn-default btn-sm' +
                                         ((darkModeEnabled) ? ' stepPressedButton' : '') +
                                         '" type="button" title="Dark mode" onclick="step.util.setDefaultColor(\'flip\')"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
-                                        ((darkModeEnabled) ? 'Enabled' : 'Disabled') +
+                                        ((darkModeEnabled) ? 'Disable' : 'Enable') +
                                         '</span></button>' +
 								'</td>' +
 							'</tr>';
