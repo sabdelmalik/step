@@ -136,7 +136,7 @@ var PassageDisplayView = DisplayView.extend({
             }
             if ((languages[0].indexOf("en") == 0) || ((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) {
                 var xgenObj = passageHtml.find('.xgen');
-                if (xgenObj.length >= 1)
+                if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
                         reference + '\')" title="Show summary information" class="select-version stepButton">Summary</button>');
                 // else if (passageHtml.find(".verseLink").length > 0)
