@@ -1912,12 +1912,10 @@ step.util = {
 			'</div>'
 		)()).modal("show");
     },
-    showSummary: function (reference, bookInsteadOfChapter) {
-        var element = document.getElementById('showSummaryModal');
-        if (element) element.parentNode.removeChild(element);
-        $(".modal-backdrop.in").remove();
+    showSummary: function (reference) {
         element = document.getElementById('showBookOrChapterSummaryModal');
         if (element) element.parentNode.removeChild(element);
+        $(".modal-backdrop.in").remove();
         var tmpArray = reference.split(".");
         var osisID = tmpArray[0]; // get the string before the "." character
         var longBookName = osisID;
@@ -1928,24 +1926,125 @@ step.util = {
 			longBookName = arrayOfTyplicalBooksChapters[posOfBook][0];
         var chapterNum = (tmpArray.length > 1) ? parseInt(tmpArray[1].split(":")[0].split("-")[0].split(";")[0]) : 1;
         if (typeof chapterNum !== "number") chapterNum = 1;
+        var bibleSummary = 
+            '<br><span class="stepFgBg" style="font-size:16px"><b>Old Testament</b></span>' +
+            '<div>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From Eden to wilderness</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Genesis - Beginnings</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Exodus - Escape from Egypt</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Leviticus - Ceremonial laws</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Numbers - Wilderness years</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Deuteronomy - Moses\' farewell</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From conquest to King Saul</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Joshua - Taking the land</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Judges - Living among enemies</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ruth - David\'s ancestors\' love story</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Samuel - Prophets versus Kings</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>From King David to exile</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Samuel - Uniting the Kingdom</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Kings - Dividing the kingdom</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Kings - End of Israel &amp; Judah</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Chronicles - Retelling 1 &amp; 2 Samuel</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Chronicles - Retelling Judah\'s Kings</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Return and faith on trial</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ezra - Return from exile</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Nehemiah - Rebuilding Jerusalem</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Esther - Surviving in exile</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Job - Understanding suffering</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Worship and wisdom</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Psalms - Songs of worship</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Proverbs - Understanding society</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ecclesiastes - Understanding life</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Song of Solomon - Understanding love</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Major Prophets</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Isaiah - Judgement brings hope</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Jeremiah - Warnings of Judgement</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Lamentations - Jerusalem\'s destruction</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ezekiel - Judgement brings new life</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Daniel - Witnessing in exile</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Minor (brief) Prophets</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Hosea - Acting out God\'s love</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Joel - Day of the Lord</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Amos - Judgement is inescapable</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Obadiah - Judgement on Edom</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Jonah - Anyone can repent</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Micah - Judgement\'s restoration</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Nahum - Judgement on Nineveh</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Habakkuk - Judgement on evil</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Zephaniah - Judgement\'s remnant</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Haggai - Rebuilding the temple</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Zechariah - Repentance after exile</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Malachi - God is coming</p>' +
+            '</div>' +
+            '<br><span class="stepFgBg" style="font-size:16px"><b>New Testament</b></span>' +
+            '<div>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Life of Jesus</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Matthew - Jesus the Messiah</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Mark - Jesus the Man</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Luke - Jesus the Saviour</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">John - Jesus is God</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Acts - Church growth</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Pauline letters to churches</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Romans - Paul\'s theology</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Corinthians - Church problems</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Corinthians - Leadership problems</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Galatians - Freedom from Law</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Ephesians - Church unity</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Philippians - Encouragement</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Colossians - Christian lifestyle</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Thessalonians - Expecting the End</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Thessalonians - The End delayed</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Pauline letters to individuals</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Timothy - False teachings</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Timothy - Paul\'s farewell</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Titus - A difficult ministry</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Philemon - Slaves as brothers</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Letters from others</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Hebrews - Jewish Christianity</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">James - Trials of faith</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 Peter - Life among unbelievers</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 Peter - Peter\'s farewell</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">1 John - God loves us</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">2 John - Love each other</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">3 John - Practical love</p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px">Jude - Deserters</p>' +
+            '<p style="margin-left:5%;font-size:14px;text-align:left;padding:0"><b>Prophecies for the future</b></p>' +
+            '<p style="margin-left:10%;height:14px;font-size:14px"">Revelation of John - Visions of the End</p>' +
+            '<tr></tr></tbody></table>' +
+            '</div>';
+        
         $.ajaxSetup({async: false});
         $.getJSON("/html/json/" + osisID.toLowerCase() + ".json", function(summary) {
             var bookSummary =
-                '<span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
+                '<br><span style="font-size:18px"><b>Book summary of ' + longBookName + '</b></span><br>' +
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary.book_description + '<br><br>' +
                     summary.book_overview + '</p>' +
 					'<p style="margin:8px">ESV Introduction:<br>' + summary.ESV_introduction + '</p>' +
                     '<p style="margin:8px">ESV Summary:<br>' + summary.ESV_summary + '</p>' +
-                '</span>';
+                '</span>' +
+                '<div class="copyrightInfo">' +
+                    'Copyright information for <a href="/version.jsp?version=ESV" target="_new">ESV</a>' +
+                '</div>';
             var chptSummary =
-                '<span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
+                '<br><span style="font-size:18px"><b>Chapter summary of ' + longBookName + ' ' + chapterNum + '</b></span><br>' +
                 '<span style="font-size:16px">' +
                     '<p style="border:2px solid grey;padding:5px">' + summary["chapter_" + chapterNum + "_description"] + '<br><br>' +
                     summary["chapter_" + chapterNum + "_overview"] + '</p>' +
                     '<p style="margin:8px">' + summary["chapter_" + chapterNum + "_summary"] + '</p>' +
+                '</span><br><br><br>' +
+                '<span class="nextPreviousChapterGroup">';
+            if (chapterNum > 1) chptSummary +=
+                    '<a class="previousChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum - 1) + '\')">' +
+                        '<i class="glyphicon glyphicon-arrow-left"></i>' +
+                    '</a>';
+            if (chapterNum < step.passageSelect.osisChapterJsword[posOfBook][1]) chptSummary +=
+                    '<a class="nextChapter" href="javascript:step.util.showSummary(\'' + osisID + '.' + (chapterNum + 1) + '\')">' +
+                        '<i class="glyphicon glyphicon-arrow-right"></i>' +
+                    '</a>';
+            chptSummary += 
                 '</span>';
-                
+
             $(_.template(
                 '<div id="showBookOrChapterSummaryModal" class="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                     '<div class="modal-dialog">' +
@@ -1958,17 +2057,19 @@ step.util = {
                             '});' +
                             '</script>' +
                             '<div class="modal-header">' +
-								step.util.modalCloseBtn("showBookOrChapterSummaryModal") +
+								step.util.modalCloseBtn("showBookOrChapterSummaryModal") + '<br>' +
                             '</div>' +
                             '<div class="modal-body" style="text-align:left font-size:16px">' +
                                 '<div>' +
                                     '<ul class="nav nav-tabs">' +
                                         '<li class="active"><a href="#chptSummary" data-toggle="tab">Chapter summary</a></li>' +
                                         '<li><a href="#bookSummary" data-toggle="tab">Book summary</a></li>' +
+                                        '<li><a href="#bibleSummary" data-toggle="tab">Bible summary</a></li>' +
                                     '</ul>' +
                                     '<div class="tab-content">' +
                                         '<div class="tab-pane fade in active" id="chptSummary">' + chptSummary + '</div>' +
                                         '<div class="tab-pane fade" id="bookSummary">' + bookSummary + '</div>' +
+                                        '<div class="tab-pane fade" id="bibleSummary">' + bibleSummary + '</div>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
@@ -1996,8 +2097,8 @@ step.util = {
             step.settings.save({"stepBackground":"#202124"});
             rootVar.style.setProperty('--highlight_color',"#c58af9");
             step.settings.save({"highlight_color":"#c58af9"});
-			rootVar.style.setProperty('--highlight_bg_color',"#7d589f");
-            step.settings.save({"highlight_bg_color":"#7d589f"});
+			rootVar.style.setProperty('--highlight_bg_color',"#490784");
+            step.settings.save({"highlight_bg_color":"#490784"});
             rootVar.style.setProperty('--secondardHoverColor',"#5d5d5d");
             step.settings.save({"secondardHoverColor":"#5d5d5d"});
             $('body,html').css('color-scheme','dark');

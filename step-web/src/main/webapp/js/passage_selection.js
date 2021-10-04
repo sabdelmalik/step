@@ -1,4 +1,3 @@
-// window.step = window.step || {};
 step.passageSelect = {
 	version: "ESV_th",
 	userLang: "en",
