@@ -25,7 +25,8 @@
 
 .lexiconFocus {
   background-color: $lexiconFocusColour;  // This line is for IE browser
-  background-color: var(--lexiconFocusColour);
+  background-color: var(--lexiconFocusColour); // This is a light color
+  color: black; // This will give it enough contrast
 }
 
 .lexiconRelatedFocus {

@@ -2097,8 +2097,8 @@ step.util = {
             step.settings.save({"stepBackground":"#202124"});
             rootVar.style.setProperty('--highlight_color',"#c58af9");
             step.settings.save({"highlight_color":"#c58af9"});
-			rootVar.style.setProperty('--highlight_bg_color',"#490784");
-            step.settings.save({"highlight_bg_color":"#490784"});
+			rootVar.style.setProperty('--highlight_bg_color',"#800080");
+            step.settings.save({"highlight_bg_color":"#800080"});
             rootVar.style.setProperty('--secondardHoverColor',"#5d5d5d");
             step.settings.save({"secondardHoverColor":"#5d5d5d"});
             $('body,html').css('color-scheme','dark');
