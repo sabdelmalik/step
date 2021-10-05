@@ -416,13 +416,19 @@ var SidebarView = Backbone.View.extend({
                     if ((currentUserLang == "es") && (mainWord.relatedNos[i]._es_Gloss != undefined)) userLangGloss = mainWord.relatedNos[i]._es_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (mainWord.relatedNos[i]._zh_Gloss != undefined)) userLangGloss =  mainWord.relatedNos[i]._zh_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) userLangGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
+					var fontClass = "";
+                    var firstChar = mainWord.relatedNos[i].strongNumber.substr(0, 1).toLowerCase();
+                    if (firstChar === "h") fontClass = "hbFont";
+                    else if (firstChar === "g") fontClass = "unicodeFont";
                     var li = $("<li></li>").append($('<a sbstrong href="javascript:void(0)">')
                         .append(userLangGloss)
                         .append(mainWord.relatedNos[i].gloss)
                         .append(" (")
                         .append("<span class='transliteration'>" + mainWord.relatedNos[i].stepTransliteration + "</span>")
                         .append(" - ")
-                        .append(mainWord.relatedNos[i].matchingForm)
+                        .append("<span class='" + fontClass + "'>" +
+                            mainWord.relatedNos[i].matchingForm +
+                            '</span>')
                         .append(")")
                         .data("strongNumber", mainWord.relatedNos[i].strongNumber));
                     ul.append(li);
