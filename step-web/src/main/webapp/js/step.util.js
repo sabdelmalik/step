@@ -2310,7 +2310,6 @@ step.util = {
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrRelatedWordBg");' +
 								'}' +							
 							'});' +
-							'debugger;' +
 							'if (step.colorUpdateMode) $(".adClr").show();' +
 							'else $(".adClr").hide();';
 
