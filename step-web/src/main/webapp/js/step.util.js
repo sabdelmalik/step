@@ -2099,8 +2099,8 @@ step.util = {
             step.settings.save({"clrHighlight":"#c58af9"});
 			rootVar.style.setProperty('--clrHighlightBg',"#800080");
             step.settings.save({"clrHighlightBg":"#800080"});
-            rootVar.style.setProperty('--clr2ndHover',"#5d5d5d");
-            step.settings.save({"clr2ndHover":"#5d5d5d"});
+            rootVar.style.setProperty('--clr2ndHover',"#c5d0fb");
+            step.settings.save({"clr2ndHover":"#c5d0fb"});
             $('body,html').css('color-scheme','dark');
             newBtnText = "Disable";            
         }

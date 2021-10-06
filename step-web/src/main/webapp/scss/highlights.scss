@@ -36,7 +36,7 @@
 .primaryLightBg {
   background-color: $highlight-color !important;  // This line is for IE browser
   background-color: var(--clrHighlightBg) !important;
-  color: $quickLexiconFontColour;
+  color: $quickLexiconFontColour !important;
   text-shadow: none !important;
 
   & > .secondaryBackground {
