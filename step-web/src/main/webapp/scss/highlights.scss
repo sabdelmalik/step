@@ -54,6 +54,12 @@
   color: black; // This will give it enough contrast
 }
 
+.highlightBorder {
+  border: #d3d3d3; // for IE
+  border: var(--clr2ndHover);
+  border-stype: inset;
+}
+
 // hebrew highlights
 .segC0 {
   color: #33339F;

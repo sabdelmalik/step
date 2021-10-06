@@ -52,7 +52,7 @@ $headingColour: #111;
 
 $hoverColor: $highlight-color;
 $hoverColor: var(--clrHighlight);
-$secondaryHoverColour: #d3d3d3;
+$secondaryHoverColour: #d3d3d3; // for IE
 $secondaryHoverColour: var(--clr2ndHover);
 $hoverColorText: white;
 $verseNumberBackground: #eee;

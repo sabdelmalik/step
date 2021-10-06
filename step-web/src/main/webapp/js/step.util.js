@@ -2091,13 +2091,13 @@ step.util = {
         if (setToDarkMode) {
             rootVar.style.setProperty('--clrTextColor',"#BCC0C3");
             step.settings.save({"clrTextColor":"#BCC0C3"});
-	        rootVar.style.setProperty('--clrStrongText',"#8ab4f8");
-			step.settings.save({"clrStrongText":"#8ab4f8"});
+            rootVar.style.setProperty('--clrStrongText',"#8ab4f8");
+            step.settings.save({"clrStrongText":"#8ab4f8"});
             rootVar.style.setProperty('--clrBackground',"#202124");
             step.settings.save({"clrBackground":"#202124"});
             rootVar.style.setProperty('--clrHighlight',"#c58af9");
             step.settings.save({"clrHighlight":"#c58af9"});
-			rootVar.style.setProperty('--clrHighlightBg',"#800080");
+            rootVar.style.setProperty('--clrHighlightBg',"#800080");
             step.settings.save({"clrHighlightBg":"#800080"});
             rootVar.style.setProperty('--clr2ndHover',"#c5d0fb");
             step.settings.save({"clr2ndHover":"#c5d0fb"});
@@ -2107,13 +2107,13 @@ step.util = {
         else {
             rootVar.style.setProperty('--clrTextColor',"#5d5d5d");
             step.settings.save({"clrTextColor":"#5d5d5d"});
-			rootVar.style.setProperty('--clrStrongText',"#498090");
-			step.settings.save({"clrStrongText":"#498090"});
+            rootVar.style.setProperty('--clrStrongText',"#498090");
+            step.settings.save({"clrStrongText":"#498090"});
             rootVar.style.setProperty('--clrBackground',"#ffffff");
             step.settings.save({"clrBackground":"#ffffff"});
             rootVar.style.setProperty('--clrHighlight',"#17758F");
             step.settings.save({"clrHighlight":"#17758F"});
-			rootVar.style.setProperty('--clrHighlightBg',"#17758F");
+            rootVar.style.setProperty('--clrHighlightBg',"#17758F");
             step.settings.save({"clrHighlightBg":"#17758F"});
             rootVar.style.setProperty('--clr2ndHover',"#d3d3d3");
             step.settings.save({"clr2ndHover":"#d3d3d3"});

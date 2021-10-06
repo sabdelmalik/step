@@ -170,7 +170,7 @@ var PassageDisplayView = DisplayView.extend({
         _scrollPassageToTarget: function (passageContainer) {
             //get current column target data
             var column = passageContainer.closest(".column");
-            passageContainer.find(".secondaryBackground").removeClass("secondaryBackground");
+            passageContainer.find(".highlightBorder").removeClass("highlightBorder");
 
             var currentTarget = this.model.get("targetLocation");
             if (currentTarget) {
@@ -183,10 +183,10 @@ var PassageDisplayView = DisplayView.extend({
                     scrollTop: originalScrollTop + scroll
                 }, 500);
 
-                $(link).closest(".verse").addClass("secondaryBackground");
+                $(link).closest(".verse").addClass("highlightBorder");
 
                 //also do so if we are looking at an interlinear-ed version
-                $(link).closest(".interlinear").find("*").addClass("secondaryBackground");
+                $(link).closest(".interlinear").find("*").addClass("highlightBorder");
 
                 //reset the data attribute
                 this.model.save({targetLocation: null}, {silent: true});
