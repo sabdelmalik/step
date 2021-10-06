@@ -2506,12 +2506,12 @@ step.util = {
 							'</tr>';
 		if (colorReady) modalHTML +=
 							'<tr>' +
-								'<td class="passageContent defaultfont">Color update mode:</td>' +
+								'<td class="passageContent defaultfont">Advanced color update:</td>' +
 								'<td class="pull-right">' +
 									'<button id="colorUpdateMode" class="btn btn-default btn-sm' +
                                         ((step.colorUpdateMode) ? ' stepPressedButton' : '') +
                                         '" type="button" title="Color mode" onclick="step.util.switchColorMode()"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
-                                        ((step.colorUpdateMode) ? 'Advanced' : 'Basic') +
+                                        ((step.colorUpdateMode) ? 'Disable' : 'Enable') +
                                         '</span></button>' +
 								'</td>' +
 							'</tr>' +
