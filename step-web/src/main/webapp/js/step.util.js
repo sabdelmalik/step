@@ -2516,49 +2516,49 @@ step.util = {
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>Text</td>' +
+								'<td>' + __s.text_with_no_highlight + '</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrTextColor" type="color" value="#5D5D5D"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>Background</td>' +
+								'<td>' + __s.background_color + '</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrBackground" type="color" value="#ffffff"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>Highlighted text 1</td>' +
+								'<td>' + __s.highlighted_text + ' 1</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrStrongText" type="color" value="#17758f"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>Highlighted text 2</td>' +
+								'<td>' + __s.highlighted_text + ' 2</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrHighlight" type="color" value="#498090"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr style="' + styleForColorExamples + '">' +
-								'<td>Highlighted background 1</td>' +
+								'<td>' + __s.highlighted_background + ' 1</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrHighlightBg" type="color" value="#498090"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>Highlighted background 2</td>' +
+								'<td>' + __s.highlighted_background + ' 2</td>' +
 								'<td class="pull-right">' +
 									'<input id="clr2ndHover" type="color" value="#d3d3d3"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>Lexicon focus background</td>' +
+								'<td>' + __s.highlighted_for_lexicon + '</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrLexiconFocusBG" type="color" value="#C8D8DC"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>Related word background</td>' +
+								'<td>' + __s.highlighted_for_related_text + '</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrRelatedWordBg" type="color" value="#B2E5F3"/>' +
 								'</td>' +
@@ -2571,12 +2571,13 @@ step.util = {
 		if (colorReady) modalHTML +=
 						'<span>' +
 							'<p style="text-align:left;font-size:18px;' + styleForColorExamples + '">' + __s.examples_for_the_selected_color + '</p>' +
-							'<p class="passageContent" style="' + styleForColorExamples + '">Text with no highlight</p>' +
-							'<p class="passageContent" style="color:var(--clrStrongText);' + styleForColorExamples + '">' + __s.text_with_color + '</p>' +
-							'<p class="passageContent primaryLightBg" style="' + styleForColorExamples + '">' + __s.highlighted_text + '</p>' +
+							'<p class="passageContent" style="' + styleForColorExamples + '">' + __s.text_with_no_highlight + '</p>' +
+							'<p class="passageContent" style="color:var(--clrStrongText);' + styleForColorExamples + '">' + __s.highlighted_text + ' 1</p>' +
+							'<p class="passageContent" style="color:var(--clrHighlight);' + styleForColorExamples + '">' + __s.highlighted_text + ' 2</p>' +
+							'<p class="passageContent primaryLightBg" style="' + styleForColorExamples + '">' + __s.highlighted_background + ' 1</p>' +
+							'<p class="passageContent secondaryBackground" style="' + styleForColorExamples + '">' + __s.highlighted_background + ' 2</p>' +							
 							'<p class="passageContent lexiconFocus" style="' + styleForColorExamples + '">' + __s.highlighted_for_lexicon + '</p>' +
 							'<p class="passageContent relatedWordEmphasisHover" style="' + styleForColorExamples + '">' + __s.highlighted_for_related_text + '</p>' +
-							'<p class="passageContent secondaryBackground" style="' + styleForColorExamples + '">Highlighted background 2</p>' +							
 						'</span>';
 						
 		modalHTML +=
