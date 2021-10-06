@@ -418,7 +418,7 @@ var SidebarView = Backbone.View.extend({
                     else if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) userLangGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
 					var fontClass = "";
                     var firstChar = mainWord.relatedNos[i].strongNumber.substr(0, 1).toLowerCase();
-                    if (firstChar === "h") fontClass = "hbFont";
+                    if (firstChar === "h") fontClass = "hbFontSmall";
                     else if (firstChar === "g") fontClass = "unicodeFont";
                     var li = $("<li></li>").append($('<a sbstrong href="javascript:void(0)">')
                         .append(userLangGloss)
