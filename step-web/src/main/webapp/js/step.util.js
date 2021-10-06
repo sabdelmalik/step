@@ -2516,49 +2516,49 @@ step.util = {
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + ' (text)</td>' +
+								'<td>Text</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrTextColor" type="color" value="#5D5D5D"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + ' (background)</td>' +
+								'<td>Background</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrBackground" type="color" value="#ffffff"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + ' (highlighted text 1)</td>' +
+								'<td>Highlighted text 1</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrStrongText" type="color" value="#17758f"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + ' (highlighted text 2)</td>' +
+								'<td>Highlighted text 2</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrHighlight" type="color" value="#498090"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + ' (highlighted background)</td>' +
+								'<td>Highlighted background 1</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrHighlightBg" type="color" value="#498090"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + ' (secondary hover)</td>' +
+								'<td>Highlighted background 2</td>' +
 								'<td class="pull-right">' +
 									'<input id="clr2ndHover" type="color" value="#d3d3d3"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + ' (lexicon focus background)</td>' +
+								'<td>Lexicon focus background</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrLexiconFocusBG" type="color" value="#C8D8DC"/>' +
 								'</td>' +
 							'</tr>' +
 							'<tr class="adClr" style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + ' (related word background)</td>' +
+								'<td>Related word background</td>' +
 								'<td class="pull-right">' +
 									'<input id="clrRelatedWordBg" type="color" value="#B2E5F3"/>' +
 								'</td>' +
@@ -2576,6 +2576,7 @@ step.util = {
 							'<p class="passageContent primaryLightBg" style="' + styleForColorExamples + '">' + __s.highlighted_text + '</p>' +
 							'<p class="passageContent lexiconFocus" style="' + styleForColorExamples + '">' + __s.highlighted_for_lexicon + '</p>' +
 							'<p class="passageContent relatedWordEmphasisHover" style="' + styleForColorExamples + '">' + __s.highlighted_for_related_text + '</p>' +
+							'<p class="passageContent secondaryBackground" style="' + styleForColorExamples + '">Highlighted background 2</p>' +							
 						'</span>';
 						
 		modalHTML +=
