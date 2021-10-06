@@ -77,11 +77,11 @@
       }
       .copyrightInfo {
         background-color: #fff;
-        background-color: var(--stepBackground);
+        background-color: var(--clrBackground);
         position: absolute;
         font-size: 11px;
         color: darkgrey;
-		color: var(--stepTextColor);
+		color: var(--clrTextColor);
         bottom: $border-width;
         left: $border-width + $page-padding;
         right: $border-width + $page-padding;

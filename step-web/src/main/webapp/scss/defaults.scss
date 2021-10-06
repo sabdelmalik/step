@@ -102,14 +102,14 @@ ul .glyphicon-ok {
 	white-space:normal!important;
 	padding:6px 7px 5px 7px;
 	color: $strong-color; // This line is for IE browsers
-	color:var(--strong_color);
+	color:var(--clrStrongText);
 	font-size:14px;
 	line-height:13px;
 	border-radius:4px;
 	background:#FFFFFF!important;
-   	background:var(--stepBackground)!important;
+   	background:var(--clrBackground)!important;
 	border:1px solid $highlight-color;
-	border:1px solid var(--highlight_color);
+	border:1px solid var(--clrHighlight);
 	font-style: normal;
 	margin-left: 5px;
     text-shadow:none;
@@ -119,14 +119,14 @@ ul .glyphicon-ok {
 	white-space:normal!important;
 	padding:6px 7px 5px 7px;
 	color: $strong-color; // This line is for IE browsers
-	color:var(--strong_color);
+	color:var(--clrStrongText);
 	font-size:14px;
 	line-height:13px;
 	border-radius:4px;
 	background:#FFFFFF!important;
-    background:var(--stepBackground)!important;
+    background:var(--clrBackground)!important;
 	border:1px solid $highlight-color;
-	border:1px solid var(--highlight_color);
+	border:1px solid var(--clrHighlight);
 	font-style: normal;
 	margin-left: 5px;
 
@@ -139,22 +139,22 @@ ul .glyphicon-ok {
 
 .stepPressedButton {
 	background-color: $highlight-color !important;
-	background-color: var(--highlight_bg_color) !important;
+	background-color: var(--clrHighlightBg) !important;
 	color: white !important;
 	border: 1px solid black;
 }
 
 .stepFgBg .stepModalFgBg {
 	background-color: #ffffff;
-	background-color: var(--stepBackground);
+	background-color: var(--clrBackground);
 	color: #5d5d5d;
-    color: var(--stepTextColor);
+    color: var(--clrTextColor);
 }
 
 .stepModalFgBg {
 	background-color: #ffffff;
-	background-color: var(--stepBackground);
+	background-color: var(--clrBackground);
 	color: #5d5d5d;
-    color: var(--stepTextColor);
+    color: var(--clrTextColor);
 	border: 1px solid grey;
 }

@@ -591,14 +591,14 @@ var PassageDisplayView = DisplayView.extend({
         },
 
         updateColor: function () {
-            this.updateSpecificColor("highlight_color", "#17758F");
-			this.updateSpecificColor("highlight_bg_color", "#17758F");
-            this.updateSpecificColor("stepTextColor", "#5d5d5d");
-            this.updateSpecificColor("secondardHoverColor", "#d3d3d3");
-            this.updateSpecificColor("strong_color", "#498090");
-            this.updateSpecificColor("lexiconFocusColour", "#c8d8dc");
-            this.updateSpecificColor("relatedWordBackground", "#b2e5f3");
-            this.updateSpecificColor("stepBackground", "#ffffff");
+            this.updateSpecificColor("clrHighlight", "#17758F");
+			this.updateSpecificColor("clrHighlightBg", "#17758F");
+            this.updateSpecificColor("clrTextColor", "#5d5d5d");
+            this.updateSpecificColor("clr2ndHover", "#d3d3d3");
+            this.updateSpecificColor("clrStrongText", "#498090");
+            this.updateSpecificColor("clrLexiconFocusBG", "#c8d8dc");
+            this.updateSpecificColor("clrRelatedWordBg", "#b2e5f3");
+            this.updateSpecificColor("clrBackground", "#ffffff");
             if (step.util.isDarkMode()) $('body,html').css('color-scheme','dark');
             else $('body,html').css('color-scheme','normal');
         },

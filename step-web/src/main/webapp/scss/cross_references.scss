@@ -65,7 +65,7 @@
 .qtip-default {
   .qtip-titlebar {
     background-color: $highlight-color;
-    background-color: var(--highlight_bg_color);
+    background-color: var(--clrHighlightBg);
     color: #fff;
     cursor: move;
   }
@@ -114,7 +114,7 @@
 }
 
 .qtip-content {
-  background-color: var(--stepBackground);
+  background-color: var(--clrBackground);
   padding: 15px;
 }
 

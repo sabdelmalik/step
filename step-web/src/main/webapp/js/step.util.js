@@ -190,7 +190,7 @@ step.util = {
     getErrorPopup: function (message, level) {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
 			// the close button could not pickup the stepFgBg class so it has to be added in the style
-            '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="alert" aria-hidden="true">X</button>' +
+            '<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor)" class="close" data-dismiss="alert" aria-hidden="true">X</button>' +
             '<%= message %></div>')({ message: message, level: level}));
         return errorPopup;
     },
@@ -824,7 +824,7 @@ step.util = {
     },
     ui: {
         selectMark: function (classes) {
-            return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--stepTextColor);background:var(--stepBackground)"></span>';
+            return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--clrTextColor);background:var(--clrBackground)"></span>';
         },
         shortenDisplayText: function (text, maxLength) {
 			if (text.length <= maxLength) return text;
@@ -1695,7 +1695,7 @@ step.util = {
 					'<script src="js/color_code_config.' + jsVersion + 'js"></script>' +
 					'<script src="libs/spectrum.js"></script>' +
 					'<div class="modal-header">' +
-						'<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor)" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
+						'<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor)" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>' +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="colortabs">' +
@@ -2089,46 +2089,53 @@ step.util = {
 		else setToDarkMode = step.util.isDarkMode();
    		var rootVar = document.querySelector(':root');
         if (setToDarkMode) {
-            rootVar.style.setProperty('--stepTextColor',"#BCC0C3");
-            step.settings.save({"stepTextColor":"#BCC0C3"});
-	        rootVar.style.setProperty('--strong_color',"#8ab4f8");
-			step.settings.save({"strong_color":"#8ab4f8"});
-            rootVar.style.setProperty('--stepBackground',"#202124");
-            step.settings.save({"stepBackground":"#202124"});
-            rootVar.style.setProperty('--highlight_color',"#c58af9");
-            step.settings.save({"highlight_color":"#c58af9"});
-			rootVar.style.setProperty('--highlight_bg_color',"#800080");
-            step.settings.save({"highlight_bg_color":"#800080"});
-            rootVar.style.setProperty('--secondardHoverColor',"#5d5d5d");
-            step.settings.save({"secondardHoverColor":"#5d5d5d"});
+            rootVar.style.setProperty('--clrTextColor',"#BCC0C3");
+            step.settings.save({"clrTextColor":"#BCC0C3"});
+	        rootVar.style.setProperty('--clrStrongText',"#8ab4f8");
+			step.settings.save({"clrStrongText":"#8ab4f8"});
+            rootVar.style.setProperty('--clrBackground',"#202124");
+            step.settings.save({"clrBackground":"#202124"});
+            rootVar.style.setProperty('--clrHighlight',"#c58af9");
+            step.settings.save({"clrHighlight":"#c58af9"});
+			rootVar.style.setProperty('--clrHighlightBg',"#800080");
+            step.settings.save({"clrHighlightBg":"#800080"});
+            rootVar.style.setProperty('--clr2ndHover',"#5d5d5d");
+            step.settings.save({"clr2ndHover":"#5d5d5d"});
             $('body,html').css('color-scheme','dark');
             newBtnText = "Disable";            
         }
         else {
-            rootVar.style.setProperty('--stepTextColor',"#5d5d5d");
-            step.settings.save({"stepTextColor":"#5d5d5d"});
-			rootVar.style.setProperty('--strong_color',"#498090");
-			step.settings.save({"strong_color":"#498090"});
-            rootVar.style.setProperty('--stepBackground',"#ffffff");
-            step.settings.save({"stepBackground":"#ffffff"});
-            rootVar.style.setProperty('--highlight_color',"#17758F");
-            step.settings.save({"highlight_color":"#17758F"});
-			rootVar.style.setProperty('--highlight_bg_color',"#17758F");
-            step.settings.save({"highlight_bg_color":"#17758F"});
-            rootVar.style.setProperty('--secondardHoverColor',"#d3d3d3");
-            step.settings.save({"secondardHoverColor":"#d3d3d3"});
+            rootVar.style.setProperty('--clrTextColor',"#5d5d5d");
+            step.settings.save({"clrTextColor":"#5d5d5d"});
+			rootVar.style.setProperty('--clrStrongText',"#498090");
+			step.settings.save({"clrStrongText":"#498090"});
+            rootVar.style.setProperty('--clrBackground',"#ffffff");
+            step.settings.save({"clrBackground":"#ffffff"});
+            rootVar.style.setProperty('--clrHighlight',"#17758F");
+            step.settings.save({"clrHighlight":"#17758F"});
+			rootVar.style.setProperty('--clrHighlightBg',"#17758F");
+            step.settings.save({"clrHighlightBg":"#17758F"});
+            rootVar.style.setProperty('--clr2ndHover',"#d3d3d3");
+            step.settings.save({"clr2ndHover":"#d3d3d3"});
             $('body,html').css('color-scheme','normal');
             newBtnText = "Enable";
         }            
-        rootVar.style.setProperty('--lexiconFocusColour',"#c8d8dc");
-        step.settings.save({"lexiconFocusColour":"#c8d8dc"});
-        rootVar.style.setProperty('--relatedWordBackground',"#b2e5f3");
-        step.settings.save({"relatedWordBackground":"#b2e5f3"});
+        rootVar.style.setProperty('--clrLexiconFocusBG',"#c8d8dc");
+        step.settings.save({"clrLexiconFocusBG":"#c8d8dc"});
+        rootVar.style.setProperty('--clrRelatedWordBg',"#b2e5f3");
+        step.settings.save({"clrRelatedWordBg":"#b2e5f3"});
         $('#darkModeBtn').text(newBtnText);
+		if (option !== "close") step.util.showFontSettings();
     },
+	switchColorMode: function () {
+		if (step.colorUpdateMode) step.colorUpdateMode = false;
+		else step.colorUpdateMode = true;
+		step.util.showFontSettings();
+	},
     showFontSettings: function (panelNumber) {
         var element = document.getElementById('fontSettings');
         if (element) element.parentNode.removeChild(element);
+		$(".modal-backdrop.in").remove();
         var colorReady = !(false || !!document.documentMode); // not Internet Explorer are not compatible with out color code
 		var darkModeReady = colorReady; // Internet Explorer is not ready for dark mode
 		var ua = navigator.userAgent.toLowerCase();
@@ -2174,11 +2181,57 @@ step.util = {
 							'showFontSizeBtns("syriacFont"' + panelNumArg + ');';
 
 		if (colorReady) modalHTML +=
-							'var color = step.settings.get("highlight_color");' +
+							'var color = step.settings.get("clrHighlight");' +
 							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 							'var closeButton = $("#fontSettings").find("button.close");' +
 							'if (closeButton.length == 1) $(closeButton[0]).attr("onclick", "closeFontSetting(\'" + color + "\')");' +
-							'$("#inClrStrongFont").spectrum({' +
+							'color = step.settings.get("clrTextColor");' +								
+							'$("#clrTextColor").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrTextColor").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrTextColor");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrTextColor").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrTextColor");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#5D5D5D";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrTextColor");' +
+								'}' +							
+							'});' +
+							'color = step.settings.get("clrBackground");' +								
+							'$("#clrBackground").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrBackground").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrBackground");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrBackground").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrBackground");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#ffffff";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrBackground");' +
+								'}' +							
+							'});' +
+							'color = step.settings.get("clrStrongText");' +
+							'$("#clrStrongText").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrStrongText").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrStrongText");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrStrongText").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrStrongText");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrStrongText");' +
+								'}' +							
+							'});' +
+							'color = step.settings.get("clrHighlight");' +
+							'$("#clrHighlight").spectrum({' +
 								'color: color,' +
 								'clickoutFiresChange: false,' +
 								'showPalette: true,' +
@@ -2187,16 +2240,80 @@ step.util = {
 									'["rgb(172, 9, 35);", "rgb(110, 11, 116);"]' +
 								'],' +
 								'change: function(color) {' +
-									'var currentClrPicker = $("#inClrStrongFont").spectrum("get").toHexString();' +
-									'setColor(currentClrPicker);' +
+									'var currentClrPicker = $("#clrHighlight").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrHighlight");' +
 								'},' +
 								'show: function(color) {' +
-									'var currentClrPicker = $("#inClrStrongFont").spectrum("get").toHexString();' +
-									'var color = step.settings.get("highlight_color");' +
+									'var currentClrPicker = $("#clrHighlight").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrHighlight");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
-									'if (color != currentClrPicker) setColor(currentClrPicker);' +
-								'}' +
-							'});';
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrHighlight");' +
+								'}' +							
+							'});' +
+							'color = step.settings.get("clrHighlightBg");' +
+							'$("#clrHighlightBg").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrHighlightBg").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrHighlightBg");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrHighlightBg").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrHighlightBg");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrHighlightBg");' +
+								'}' +							
+							'});' +
+							'color = step.settings.get("clr2ndHover");' +
+							'$("#clr2ndHover").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clr2ndHover").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clr2ndHover");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clr2ndHover").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clr2ndHover");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#d3d3d3";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clr2ndHover");' +
+								'}' +							
+							'});' +
+							'color = step.settings.get("clrLexiconFocusBG");' +
+							'$("#clrLexiconFocusBG").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrLexiconFocusBG").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrLexiconFocusBG");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrLexiconFocusBG").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrLexiconFocusBG");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrLexiconFocusBG");' +
+								'}' +							
+							'});' +
+							'color = step.settings.get("clrRelatedWordBg");' +
+							'$("#clrRelatedWordBg").spectrum({' +
+								'color: color,' +
+								'clickoutFiresChange: false,' +
+								'change: function(color) {' +
+									'var currentClrPicker = $("#clrRelatedWordBg").spectrum("get").toHexString();' +
+									'setColor(currentClrPicker, "clrRelatedWordBg");' +
+								'},' +
+								'show: function(color) {' +
+									'var currentClrPicker = $("#clrRelatedWordBg").spectrum("get").toHexString();' +
+									'var color = step.settings.get("clrRelatedWordBg");' +
+									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
+									'if (color != currentClrPicker) setColor(currentClrPicker, "clrRelatedWordBg");' +
+								'}' +							
+							'});' +
+							'debugger;' +
+							'if (step.colorUpdateMode) $(".adClr").show();' +
+							'else $(".adClr").hide();';
+
 		modalHTML +=	'}); ' +
 						'function showFontSizeBtns(fontName, panelNumber) {' +
 							'var currentFontSize = step.util.getFontSize(fontName, panelNumber);' +
@@ -2209,73 +2326,83 @@ step.util = {
 						'}';
 
 		if (colorReady) modalHTML +=
-						'function setColor(baseColor) {' +
+						'function setColor(baseColor, colorName) {' +
 							'if (!((typeof baseColor === "string") && (baseColor.length == 7) && (baseColor.substr(0,1) === "#"))) baseColor = "#17758F";' +
                             'var darkMode = step.util.isDarkMode();' +
-							'if (darkMode) {' +
-                                'if (tinycolor(baseColor).getLuminance() < 0.14) {' +
-                                    'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a brighter color.");' +
-                                    'return;' +
-                                '}' +
-							'}' +
-                            'else {' +
-                                'if (tinycolor(baseColor).getLuminance() > 0.3) {' +
-                                    'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a darker color.");' +
-                                    'return;' +
-                                '}' +
-							'}' +
-
-							'var t = tinycolor(baseColor);' +
-							'var hsl = t.toHsl();' +
-							'var colorH = hsl["h"];' +
-							'var colorS = hsl["s"] * 100;' +
-							'var colorL = hsl["l"] * 100;' +
+							'colorVarName = colorName;' +
+							// 'if (step.colorUpdateMode) {' +
+								// 'if (darkMode) {' +
+									// 'if (tinycolor(baseColor).getLuminance() < 0.14) {' +
+										// 'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a brighter color.");' +
+										// 'return;' +
+									// '}' +
+								// '}' +
+								// 'else {' +
+									// 'if (tinycolor(baseColor).getLuminance() > 0.3) {' +
+										// 'alert("Color selected does not provide enough contrast and can be difficult to read.  Please select a darker color.");' +
+										// 'return;' +
+									// '}' +
+								// '}' +
+							// '}' +
+							
 							'var rootVar = document.querySelector(":root");' +
-							'rootVar.style.setProperty("--highlight_color",baseColor);' +
-							'step.settings.save({"highlight_color":baseColor});' +
-							'rootVar.style.setProperty("--highlight_bg_color",baseColor);' +
-							'step.settings.save({"highlight_bg_color":baseColor});' +
+							'rootVar.style.setProperty("--" + colorVarName, baseColor);' +
+				            'var obj = {};' +
+							'obj[colorVarName] = baseColor;' +
+							'step.settings.save(obj);' +
 
-							
-							'var desaturate = colorS - 40;' +
-							'var desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
-							'var desHsl = desColor.toHsl();' +
-							'var desColorH = desHsl["h"];' +
-							'var desColorS = desHsl["s"] * 100;' +
-							'var desColorL = desHsl["l"] * 100;' +
+							'if ((colorVarName === "clrHighlightBg") && (!step.colorUpdateMode)) {' +
+								'rootVar.style.setProperty("--clrHighlightBg",baseColor);' +
+								'step.settings.save({"clrHighlightBg":baseColor});' +
+								
+								'var t = tinycolor(baseColor);' +
+								'var hsl = t.toHsl();' +
+								'var colorH = hsl["h"];' +
+								'var colorS = hsl["s"] * 100;' +
+								'var colorL = hsl["l"] * 100;' +
 
-                            'var lightHex = baseColor;' +
-                            'if (!darkMode) {' +
-                                'var lighten = desColorL + 10;' +
-                                'var lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
-                                'var lightHex = lightColor.toHexString();' +
-                            '}' +
-							'rootVar.style.setProperty("--strong_color",lightHex);' +
-							'step.settings.save({"strong_color":lightHex});' +
+								
+								'var desaturate = colorS - 40;' +
+								'var desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
+								'var desHsl = desColor.toHsl();' +
+								'var desColorH = desHsl["h"];' +
+								'var desColorS = desHsl["s"] * 100;' +
+								'var desColorL = desHsl["l"] * 100;' +
 
-							'desaturate = colorS - 50;' +
-							'desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
-							'desHsl = desColor.toHsl();' +
-							'desColorH = desHsl["h"];' +
-							'desColorS = desHsl["s"] * 100;' +
-							'desColorL = desHsl["l"] * 100;' +
+								'var lightHex = baseColor;' +
+								'if (!darkMode) {' +
+									'var lighten = desColorL + 10;' +
+									'var lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
+									'var lightHex = lightColor.toHexString();' +
+								'}' +
+								'rootVar.style.setProperty("--clrStrongText",lightHex);' +
+								'step.settings.save({"clrStrongText":lightHex});' +
 
-							'lighten = desColorL + 50;' +
-							'lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
-							'lightHex = lightColor.toHexString();' +
-							'rootVar.style.setProperty("--lexiconFocusColour",lightHex);' +
-							'step.settings.save({"lexiconFocusColour":lightHex});' +
-							
-							'lighten = colorL + 55;' +
-							'lightColor = tinycolor("hsl(" + colorH + ", " + colorS + "%, " + lighten + "%)");' +
-							'lightHex = lightColor.toHexString();' +
-							'rootVar.style.setProperty("--relatedWordBackground",lightHex);' +
-							'step.settings.save({"relatedWordBackground":lightHex});' +
+								'desaturate = colorS - 50;' +
+								'desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
+								'desHsl = desColor.toHsl();' +
+								'desColorH = desHsl["h"];' +
+								'desColorS = desHsl["s"] * 100;' +
+								'desColorL = desHsl["l"] * 100;' +
+
+								'lighten = desColorL + 50;' +
+								'lightColor = tinycolor("hsl(" + desColorH + ", " + desColorS + "%, " + lighten + "%)");' +
+								'lightHex = lightColor.toHexString();' +
+								'rootVar.style.setProperty("--clrLexiconFocusBG",lightHex);' +
+								'step.settings.save({"clrLexiconFocusBG":lightHex});' +
+								
+								'lighten = colorL + 55;' +
+								'lightColor = tinycolor("hsl(" + colorH + ", " + colorS + "%, " + lighten + "%)");' +
+								'lightHex = lightColor.toHexString();' +
+								'rootVar.style.setProperty("--clrRelatedWordBg",lightHex);' +
+								'step.settings.save({"clrRelatedWordBg":lightHex});' +
+							'}' +
+							'step.util.showFontSettings();' +
 						'}';
         
 		modalHTML +=	'function closeFontSetting(baseColor) {' +
 							'if ((typeof baseColor === "string") && (baseColor.length == 7)) {' +
-								'if ((baseColor === "#17758F") || (baseColor === "#c58af9")) step.util.setDefaultColor();' +
+								'if ((baseColor === "#17758F") || (baseColor === "#c58af9")) step.util.setDefaultColor("close");' +
 								'else setColor(baseColor);' +
 							'}' +
 							'$(".sp-container").remove();' + // The color selection tool is not totally removed so manually remove it. 08/19/2019
@@ -2287,7 +2414,7 @@ step.util = {
 						'<span><b>' + 
                             ((typeof panelNumber === "number") ? __s.update_font_in_current_panels : __s.update_font_in_all_panels) +
                         '</b></span>' +
-						'<button style="background:var(--stepBackground);color:var(--stepTextColor);opacity:0.8" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
+						'<button style="background:var(--clrBackground);color:var(--clrTextColor);opacity:0.8" type="button" class="close" data-dismiss="modal" onclick=closeFontSetting()>X</button>' +
 					'</div>' +
 					'<div class="modal-body" style="text-align:center">' +
 						'<table style="height:auto;width:95%">' +
@@ -2379,12 +2506,65 @@ step.util = {
 								'</td>' +
 							'</tr>';
 		if (colorReady) modalHTML +=
-							'<tr style="' + styleForColorExamples + '">' +
-								'<td>' + __s.color + '</td>' +
+							'<tr>' +
+								'<td class="passageContent defaultfont">Color update mode:</td>' +
 								'<td class="pull-right">' +
-									'<input id="inClrStrongFont" type="color" class="nInptC" value="#17758F"/>' +
+									'<button id="colorUpdateMode" class="btn btn-default btn-sm' +
+                                        ((step.colorUpdateMode) ? ' stepPressedButton' : '') +
+                                        '" type="button" title="Color mode" onclick="step.util.switchColorMode()"><span style="font-size:10px;line-height:12px;font-weight:bold">' +
+                                        ((step.colorUpdateMode) ? 'Advanced' : 'Basic') +
+                                        '</span></button>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.color + ' (text)</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrTextColor" type="color" value="#5D5D5D"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.color + ' (background)</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrBackground" type="color" value="#ffffff"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.color + ' (highlighted text 1)</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrStrongText" type="color" value="#17758f"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.color + ' (highlighted text 2)</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrHighlight" type="color" value="#498090"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr style="' + styleForColorExamples + '">' +
+								'<td>' + __s.color + ' (highlighted background)</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrHighlightBg" type="color" value="#498090"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.color + ' (secondary hover)</td>' +
+								'<td class="pull-right">' +
+									'<input id="clr2ndHover" type="color" value="#d3d3d3"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.color + ' (lexicon focus background)</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrLexiconFocusBG" type="color" value="#C8D8DC"/>' +
+								'</td>' +
+							'</tr>' +
+							'<tr class="adClr" style="' + styleForColorExamples + '">' +
+								'<td>' + __s.color + ' (related word background)</td>' +
+								'<td class="pull-right">' +
+									'<input id="clrRelatedWordBg" type="color" value="#B2E5F3"/>' +
 								'</td>' +
 							'</tr>';
+
 		modalHTML +=
 						'</table>' +
 						'<br>';
@@ -2392,7 +2572,8 @@ step.util = {
 		if (colorReady) modalHTML +=
 						'<span>' +
 							'<p style="text-align:left;font-size:18px;' + styleForColorExamples + '">' + __s.examples_for_the_selected_color + '</p>' +
-							'<p class="passageContent" style="color:var(--strong_color);' + styleForColorExamples + '">' + __s.text_with_color + '</p>' +
+							'<p class="passageContent" style="' + styleForColorExamples + '">Text with no highlight</p>' +
+							'<p class="passageContent" style="color:var(--clrStrongText);' + styleForColorExamples + '">' + __s.text_with_color + '</p>' +
 							'<p class="passageContent primaryLightBg" style="' + styleForColorExamples + '">' + __s.highlighted_text + '</p>' +
 							'<p class="passageContent lexiconFocus" style="' + styleForColorExamples + '">' + __s.highlighted_for_lexicon + '</p>' +
 							'<p class="passageContent relatedWordEmphasisHover" style="' + styleForColorExamples + '">' + __s.highlighted_for_related_text + '</p>' +
@@ -3002,15 +3183,15 @@ step.util = {
         var opacity = (step.util.isDarkMode()) ?
 			"opacity:0.8" : "";
 		// the close button could not pickup the stepFgBg class so it has to be added in the style
-		return '<button type="button" style="background:var(--stepBackground);color:var(--stepTextColor);' + opacity + '" class="close" ' +
+		return '<button type="button" style="background:var(--clrBackground);color:var(--clrTextColor);' + opacity + '" class="close" ' +
 			'data-dismiss="modal" onclick=step.util.closeModal("' + modalElementID + '")>X</button>';
 	},
 	isDarkMode: function() {
-		var stepBgColor = document.querySelector(':root').style.getPropertyValue("--stepBackground");
+		var stepBgColor = document.querySelector(':root').style.getPropertyValue("--clrBackground");
 		// alert("1 " + stepBgColor );
 		if ((typeof stepBgColor !== "string") || ((stepBgColor.length !== 7) && (stepBgColor.length !== 15))) {
 			if ((typeof step.settings === "object") && (typeof step.settings.get === "function")) {
-				var color = step.settings.get("stepBackground");
+				var color = step.settings.get("clrBackground");
 				// alert("2 " + color);
 				if (((typeof color === "string") && (color.length == 7) && (color.substr(0,1) === "#")))
 					stepBgColor = color;

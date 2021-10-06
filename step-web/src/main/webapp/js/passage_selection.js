@@ -101,7 +101,7 @@ step.passageSelect = {
 		var returnKey = (input.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak");
 		input = input.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
 		input = input.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
-		$("td").css("background-color", "var(--stepBackground)");
+		$("td").css("background-color", "var(--clrBackground)");
 		var lastPassageEntered  = input.replace(/\s+$/g, '').split(/,|;/);
 		lastPassageEntered  = lastPassageEntered[lastPassageEntered.length -1].replace(/^\s+/g, '').replace(/\s+$/g, '');
 		var firstWord = lastPassageEntered.split(/\.|:|\s/)[0].toLowerCase();
