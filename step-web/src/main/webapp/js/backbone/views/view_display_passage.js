@@ -309,7 +309,6 @@ var PassageDisplayView = DisplayView.extend({
         },
 
         isBookinOTNT: function (reference) {
-			debugger;
 	        var tmpArray = reference.split(".");
 			var bookID = tmpArray[0]; // get the string before the "." character
 			for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {

@@ -188,6 +188,7 @@ step.passageSelect = {
 		var browserWidth = $(window).width();
 		var columns = 7;
 		var maxLength = 5;
+		var bookDescription = {};
         if (!summaryMode) {
             if (browserWidth < 1100) {
                 columns = 6;
@@ -202,7 +203,7 @@ step.passageSelect = {
 		}
         else {
             columns = 1;
-            bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
+			bookDescription = {gen:"", exod:"", lev:"", num:"", deut:"", josh:"", judg:"", ruth:"", "1sam":"", "2sam":"", "1kgs":"", "2kgs":"", "1chr":"", "2chr":"", ezra:"", neh:"", esth:"", job:"", ps:"", prov:"", eccl:"", song:"", isa:"", jer:"", lam:"", ezek:"", dan:"", hos:"", joel:"", amos:"", obad:"", jonah:"", mic:"", nah:"", hab:"", zeph:"", hag:"", zech:"", mal:"", matt:"", mark:"", luke:"", john:"", acts:"", rom:"", "1cor":"", "2cor":"", gal:"", eph:"", phil:"", col:"", "1thess":"", "2thess":"", "1tim":"", "2tim":"", titus:"", phlm:"", heb:"", jas:"", "1pet":"", "2pet":"", "1john":"", "2john":"", "3jo":"", jude:"", rev:""};
             $.ajaxSetup({async: false});
             $.getJSON("/html/json/book_description.json", function(desc) {
                 for (key in desc) {
@@ -281,7 +282,7 @@ step.passageSelect = {
                 '</b></td></tr><tr>';
             }
 			var curBookDescription = ""
-			if (typeof bookDescription[currentOsisID.toLowerCase()] === "string")
+			if ((summaryMode) && typeof bookDescription[currentOsisID.toLowerCase()] === "string")
 				curBookDescription = " - " + bookDescription[currentOsisID.toLowerCase()];
 			tableHTML += '<td title="' + longNameToDisplay + '">' +
 				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');"' +
