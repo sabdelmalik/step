@@ -294,6 +294,8 @@ var PassageMenuView = Backbone.View.extend({
 
     _initUI: function () {
         //create settings dropdown
+		var oldMenu = this.$el.find(".dropdown-menu.pull-right.stepModalFgBg"); // When a panel is added, it was probably copied so it copied over the old menu
+		if (oldMenu.length == 1) this.$el.find(".dropdown-menu.pull-right.stepModalFgBg")[0].remove();
         var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right stepModalFgBg").attr("role", "menu").attr("dir", step.state.isLtR() ? "" : "rtl");
         this.displayModeContainer = $("<div>");
         var displayMode = $("<h2>").append(__s.display_mode);
