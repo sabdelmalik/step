@@ -1,6 +1,7 @@
 step.passageSelect = {
 	version: "ESV_th",
 	userLang: "en",
+	isEnglishBible: false,
 	addVerseSelection: false,
 	modalMode: 'book',
 	lastOsisID: '',
@@ -133,17 +134,17 @@ step.passageSelect = {
 
 	_displayListOfBooks: function(summaryMode) {
         $('#bookchaptermodalbody').empty();
+		translationType = this._getTranslationType();
 		var html = this._buildBookHeaderAndSkeleton(summaryMode);
 		$('#bookchaptermodalbody').append(html);
 		$('#keyboardEntry').show();
-		this._buildBookTable(summaryMode);
+		this._buildBookTable(summaryMode, translationType);
 		$('#pssgModalBackButton').hide();
 	},
 
-	_buildBookTable: function(summaryMode) {
+	_buildBookTable: function(summaryMode, translationType) {
 		$('#enterYourPassage').show();
 		$('#keyboard_icon').show();
-		var translationType = this._getTranslationType();
 		if (((this.userLang.toLowerCase().indexOf("en") == 0) || (this.userLang.toLowerCase().indexOf("es") == 0) || (this.userLang.toLowerCase().indexOf("zh") == 0)) &&
 			(translationType !== "")) {
 			this._buildBookHTMLTable(translationType, summaryMode);
@@ -160,12 +161,19 @@ step.passageSelect = {
 
 	_getTranslationType: function() {
 		var versionAltName = '';
+		var atLeastOneEnglishBible = false;
 		var data = step.util.activePassage().get("searchTokens") || [];
+		var foundFirstVersion = false;
 		for (var i = 0; i < data.length; i++) {
 			if (data[i].itemType == VERSION) {
-				this.version = data[i].item.initials;
-				versionAltName = data[i].item.shortInitials;
-				break;
+				if (!foundFirstVersion) {
+					this.version = data[i].item.initials;
+					versionAltName = data[i].item.shortInitials;
+					foundFirstVersion = true;
+				}
+				if (!atLeastOneEnglishBible)
+					atLeastOneEnglishBible = ((typeof step.keyedVersions[data[i].item.initials] === "object") &&
+									  (step.keyedVersions[data[i].item.initials].languageCode === "en"));
 			}
 		}
 		var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
@@ -177,7 +185,8 @@ step.passageSelect = {
 		if ((translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
 		else if ((translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
 		else if ((translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
-		return translationType;		
+		this.isEnglishBible = atLeastOneEnglishBible;
+		return translationType;
 	},
 
 	_buildBookHTMLTable: function(data, summaryMode) {
@@ -301,13 +310,16 @@ step.passageSelect = {
 	},
 
 	_buildBookHeaderAndSkeleton: function(summaryMode) {
-		 var html = '<div class="header" style="overflow-y:auto">' +
-			'<h4>' + __s.please_select_book + '</h4>' +
-            '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(' +
-            ((summaryMode) ? 'false' : 'true') +
-            ')" title="Show summary information" class="select-version stepButton' +
-            ((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
-            '</button>' +
+		var html = '<div class="header" style="overflow-y:auto">' +
+			'<h4>' + __s.please_select_book + '</h4>';
+		if ((this.userLang.toLowerCase().indexOf("en") == 0) || (this.isEnglishBible))
+			html +=
+				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(' +
+				((summaryMode) ? 'false' : 'true') +
+				')" title="Show summary information" class="select-version stepButton' +
+				((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
+				'</button>';
+		html +=
 			'</div>' +
 			'<span class="stepFgBg" style="font-size:18px"><b>' + __s.old_testament + '</b></span>' +
 			'<div id="ot_table"/>' +
@@ -485,7 +497,7 @@ step.passageSelect = {
         
 		var html = '<div class="header">' +
             '<h4>' + headerMsg + '</h4>';
-        if (isChapter) html +=
+        if ((isChapter) && ((userLang.toLowerCase().indexOf("en") == 0) || (this.isEnglishBible))) html +=
             '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
                 bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
                 ((summaryMode) ? 'false' : 'true') +
