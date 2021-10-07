@@ -537,10 +537,13 @@ step.passageSelect = {
 				if (data[i].suggestion.sectionType == "PASSAGE") {
 					chptrOrVrsNum++;
 					osisIDLink = data[i].suggestion.osisID;
+					var curChptrDesc = "";
+					if (typeof chapterDescription[chptrOrVrsNum] === "string")
+						curChptrDesc = " - " + chapterDescription[chptrOrVrsNum];
 					html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
                         ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") +
                         '>' + chptrOrVrsNum +
-                        ((summaryMode) ? " - " + chapterDescription[chptrOrVrsNum] : "") +
+                        ((summaryMode) ? curChptrDesc : "") +
                         '</a></td>'
 					if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
 						html += '</tr><tr>';
