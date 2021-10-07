@@ -134,10 +134,11 @@ var PassageDisplayView = DisplayView.extend({
                     if (cv[C_handleOfRequestedAnimation] == -1) cf.goAnimate();
                 }
             }
-            if ((languages[0].indexOf("en") == 0) || ((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) {
+            if (((languages[0].indexOf("en") == 0) ||
+				((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) &&
+				(this.bookIsOTorNT(reference))){
                 var xgenObj = passageHtml.find('.xgen');
-                if (((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === ""))) &&
-					(this.isBookinOTNT(reference)))
+                if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
                         reference + '\')" title="Show summary information" class="select-version stepButton">Summary</button>');
                 // else if (passageHtml.find(".verseLink").length > 0)
@@ -308,7 +309,7 @@ var PassageDisplayView = DisplayView.extend({
             return true;
         },
 
-        isBookinOTNT: function (reference) {
+        bookIsOTorNT: function (reference) {
 	        var tmpArray = reference.split(".");
 			var bookID = tmpArray[0]; // get the string before the "." character
 			for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {

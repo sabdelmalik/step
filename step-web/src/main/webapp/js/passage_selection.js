@@ -1,7 +1,7 @@
 step.passageSelect = {
 	version: "ESV_th",
 	userLang: "en",
-	isEnglishBible: false,
+	hasEnglishBible: false,
 	addVerseSelection: false,
 	modalMode: 'book',
 	lastOsisID: '',
@@ -185,7 +185,7 @@ step.passageSelect = {
 		if ((translationsWithPopularBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularBooksChapters.indexOf(versionAltName) > -1)) translationType = "OTNT";
 		else if ((translationsWithPopularNTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularNTBooksChapters.indexOf(versionAltName) > -1)) translationType = "NT";
 		else if ((translationsWithPopularOTBooksChapters.indexOf(lowerCaseVersion) > -1) || (translationsWithPopularOTBooksChapters.indexOf(versionAltName) > -1)) translationType = "OT";
-		this.isEnglishBible = atLeastOneEnglishBible;
+		this.hasEnglishBible = atLeastOneEnglishBible;
 		return translationType;
 	},
 
@@ -291,8 +291,11 @@ step.passageSelect = {
                 '</b></td></tr><tr>';
             }
 			var curBookDescription = ""
-			if ((summaryMode) && typeof bookDescription[currentOsisID.toLowerCase()] === "string")
-				curBookDescription = " - " + bookDescription[currentOsisID.toLowerCase()];
+			if (summaryMode) {
+				if (!newTestament && !oldTestament) curBookDescription = '<span style="color:brown">*</span>';
+				if (typeof bookDescription[currentOsisID.toLowerCase()] === "string")
+					curBookDescription += " - " + bookDescription[currentOsisID.toLowerCase()];
+			}
 			tableHTML += '<td title="' + longNameToDisplay + '">' +
 				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');"' +
                 ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") + '>' +
@@ -312,7 +315,7 @@ step.passageSelect = {
 	_buildBookHeaderAndSkeleton: function(summaryMode) {
 		var html = '<div class="header" style="overflow-y:auto">' +
 			'<h4>' + __s.please_select_book + '</h4>';
-		if ((this.userLang.toLowerCase().indexOf("en") == 0) || (this.isEnglishBible))
+		if ((this.userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible))
 			html +=
 				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.initPassageSelect(' +
 				((summaryMode) ? 'false' : 'true') +
@@ -497,13 +500,16 @@ step.passageSelect = {
         
 		var html = '<div class="header">' +
             '<h4>' + headerMsg + '</h4>';
-        if ((isChapter) && ((userLang.toLowerCase().indexOf("en") == 0) || (this.isEnglishBible))) html +=
-            '<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
-                bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
-                ((summaryMode) ? 'false' : 'true') +
-                ')" title="Show summary information" class="select-version stepButton' +
-                ((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
-                '</button>';
+        if ((isChapter) && 
+			 ((userLang.toLowerCase().indexOf("en") == 0) || (this.hasEnglishBible)) &&
+			 (PassageDisplayView.prototype.bookIsOTorNT(bookOsisID)) )
+			html +=
+				'<button style="font-size:10px;line-height:10px;" type="button" onclick="step.passageSelect.getChapters(\'' +
+					bookOsisID + '\',\'' + version + '\',\'' + userLang + '\',' + numOfChptrsOrVrs + ',' +
+					((summaryMode) ? 'false' : 'true') +
+					')" title="Show summary information" class="select-version stepButton' +
+					((summaryMode) ? ' stepPressedButton">Summary -' : '">Summary +') +
+					'</button>';
         html +=
             '</div>' +
 			'<div style="overflow-y:auto">' +
