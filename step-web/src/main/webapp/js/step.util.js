@@ -139,7 +139,6 @@
                 if (hash[1]) {
                     vars[hash[0]] = hash.slice(1).join("=").split('#')[0];
                 }
-
             }
             return vars;
         },
@@ -671,22 +670,16 @@ step.util = {
 		}
 		else elements = $(".passageContentHolder", step.util.getPassageContainer(".passageOptionsGroup"));
 
-		currentFontSize = step.util.getFontSize(fontName, panelNumber, elements);
 		var fontArray = ["hbFont", "unicodeFont", "arabicFont", "burmeseFont", "chineseFont", "copticFont", "farsiFont", "khmerFont", "syriacFont"];
+		currentFontSize = step.util.getFontSize(fontName, panelNumber, elements);
 		if (currentFontSize > 0) {
 			for (var i = 0; i < elements.length; i++) {
 				var fontNeedToRestoreSize = {};
 				if (fontName === "defaultfont") {
 					for (var j = 0; j < fontArray.length; j++) {
-						if ($(elements[i]).hasClass(fontArray[j])) {
-							console.log("unexpected base font " + fontArray[j]);
-							alert("unexpected base font " + fontArray[j]);
-							currentFontSize = 0; // Should not change font because the base font is not defaultfont
-							break;
-						}
-						var fontInElements = $(elements[i]).find("." + fontArray[j]);
-						if (fontInElements.length > 0)
-							fontNeedToRestoreSize[fontArray[j]] = parseInt(fontInElements.css("font-size"));
+						var tmpFontSize = step.util.getFontSizeByName(fontArray[j], elements[i]);
+						if (tmpFontSize > 0)
+							fontNeedToRestoreSize[fontArray[j]] = tmpFontSize;
 					}
 				}
 				if (currentFontSize > 0) {
@@ -730,20 +723,32 @@ step.util = {
 		}
 		else console.log("cannot find current font size so cannot change the font size");
     },
+	getFontSizeByName: function(fontName, element) {
+		if (fontName === "defaultfont") {
+			var classes = $(element).attr('class').split(' '); // verify that there is no other font (e.g. hbFont, unicodeFont, ... classes 
+			for (var j = 0; j < classes.length; j++) {
+				var pos = classes[j].indexOf("Font");
+				if ((pos >= 2) && ((pos + 4) == classes[j].length)) // Font is at the end of the class name
+					return 0;
+			}
+			return parseInt($(element).css("font-size"));
+		}
+		else {
+			var fontInElements = $(element).find("." + fontName);
+			if (fontInElements.length > 0)
+				return parseInt(fontInElements.css("font-size"));
+			else if ($(element).hasClass(fontName))
+				return parseInt($(element).css("font-size"));
+		}
+		return 0;
+	},
     getFontSize: function (fontName, panelNumber, elements) {
 		var currentFontSize = 0;
 		if (typeof elements === "undefined")
 			elements = (typeof panelNumber === "number") ? $(".passageContentHolder", step.util.getPassageContainer(panelNumber)) : 
 														   $(".passageContentHolder", step.util.getPassageContainer(".passageOptionsGroup"));
 		if (typeof panelNumber === "number") {
-			if (fontName === "defaultfont") {
-				currentFontSize = parseInt($(elements[0]).css("font-size"));
-			}
-			else {
-				var fontInElements = $(elements[0]).find("." + fontName);
-				if (fontInElements.length > 0)
-					currentFontSize = parseInt(fontInElements.css("font-size"));
-			}
+			currentFontSize = step.util.getFontSizeByName(fontName, elements[0]);
 		}
 		else {
 			var allPanelsWithSpecificFontChange = [];
@@ -761,23 +766,14 @@ step.util = {
 			for (var i = 0; i < elements.length; i++) {
 				var panelId = step.passages.findWhere({ passageId: step.passage.getPassageId(elements[i]) }).attributes.id;
 				var panelHasSpecificFontChange = (allPanelsWithSpecificFontChange.indexOf(panelId) > -1);
-				if (fontName === "defaultfont") {
-					if (panelHasSpecificFontChange) sizeAffectedByPanelFontChange = parseInt($(elements[i]).css("font-size"));
+				var fontSize = step.util.getFontSizeByName(fontName, elements[i]);
+				if (fontSize > 0) {
+					if (panelHasSpecificFontChange) sizeAffectedByPanelFontChange = fontSize;
 					else {
-						currentFontSize = parseInt($(elements[i]).css("font-size"));
+						currentFontSize = fontSize;
 						break; // Got the answer, leave loop
 					}
 				}
-				else {
-					var fontInElements = $(elements[i]).find("." + fontName);
-					if (fontInElements.length > 0) {
-						if (panelHasSpecificFontChange) sizeAffectedByPanelFontChange = parseInt(fontInElements.css("font-size"));
-						else {
-							currentFontSize = parseInt(fontInElements.css("font-size"));
-							break; // Got the answer, leave loop
-						}
-					}
-				}	
 			}
 			if (currentFontSize == 0) currentFontSize = sizeAffectedByPanelFontChange;
 		}
@@ -914,7 +910,7 @@ step.util = {
 					}
                 }
             }
-			
+
 			var widthAvailable = $(".passageContainer.active").width();
 			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
 			if (widthAvailable < 400) $("#thumbsup").hide(); // Not enough space to show the thumbs up icon (Facebook or Tweeter)
@@ -956,7 +952,7 @@ step.util = {
 			}
 			if (allSelectedReferences.length == 0) allSelectedReferences = __s.short_title_for_ref + ":";
 			charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
-			
+
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
@@ -1843,7 +1839,7 @@ step.util = {
 							'}' +
 						'}' +
 					'</script>' +
-				
+
 					'<div class="modal-header">' +
 						'<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=step.searchSelect.goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>' +
 						'<span class="pull-right">' +
@@ -2012,7 +2008,7 @@ step.util = {
             '<p style="margin-left:10%;height:14px;font-size:14px"">Revelation of John - Visions of the End</p>' +
             '<tr></tr></tbody></table>' +
             '</div>';
-        
+
         $.ajaxSetup({async: false});
         $.getJSON("/html/json/" + osisID.toLowerCase() + ".json", function(summary) {
             var bookSummary =
@@ -2102,7 +2098,7 @@ step.util = {
             rootVar.style.setProperty('--clr2ndHover',"#c5d0fb");
             step.settings.save({"clr2ndHover":"#c5d0fb"});
             $('body,html').css('color-scheme','dark');
-            newBtnText = "Disable";            
+            newBtnText = "Disable";
         }
         else {
             rootVar.style.setProperty('--clrTextColor',"#5d5d5d");
@@ -2119,7 +2115,7 @@ step.util = {
             step.settings.save({"clr2ndHover":"#d3d3d3"});
             $('body,html').css('color-scheme','normal');
             newBtnText = "Enable";
-        }            
+        }
         rootVar.style.setProperty('--clrLexiconFocusBG',"#c8d8dc");
         step.settings.save({"clrLexiconFocusBG":"#c8d8dc"});
         rootVar.style.setProperty('--clrRelatedWordBg',"#b2e5f3");
@@ -2185,7 +2181,7 @@ step.util = {
 							'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 							'var closeButton = $("#fontSettings").find("button.close");' +
 							'if (closeButton.length == 1) $(closeButton[0]).attr("onclick", "closeFontSetting(\'" + color + "\')");' +
-							'color = step.settings.get("clrTextColor");' +								
+							'color = step.settings.get("clrTextColor");' +
 							'$("#clrTextColor").spectrum({' +
 								'color: color,' +
 								'clickoutFiresChange: false,' +
@@ -2198,9 +2194,9 @@ step.util = {
 									'var color = step.settings.get("clrTextColor");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#5D5D5D";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrTextColor");' +
-								'}' +							
+								'}' +
 							'});' +
-							'color = step.settings.get("clrBackground");' +								
+							'color = step.settings.get("clrBackground");' +
 							'$("#clrBackground").spectrum({' +
 								'color: color,' +
 								'clickoutFiresChange: false,' +
@@ -2213,7 +2209,7 @@ step.util = {
 									'var color = step.settings.get("clrBackground");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#ffffff";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrBackground");' +
-								'}' +							
+								'}' +
 							'});' +
 							'color = step.settings.get("clrStrongText");' +
 							'$("#clrStrongText").spectrum({' +
@@ -2228,7 +2224,7 @@ step.util = {
 									'var color = step.settings.get("clrStrongText");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrStrongText");' +
-								'}' +							
+								'}' +
 							'});' +
 							'color = step.settings.get("clrHighlight");' +
 							'$("#clrHighlight").spectrum({' +
@@ -2248,7 +2244,7 @@ step.util = {
 									'var color = step.settings.get("clrHighlight");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrHighlight");' +
-								'}' +							
+								'}' +
 							'});' +
 							'color = step.settings.get("clrHighlightBg");' +
 							'$("#clrHighlightBg").spectrum({' +
@@ -2263,7 +2259,7 @@ step.util = {
 									'var color = step.settings.get("clrHighlightBg");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrHighlightBg");' +
-								'}' +							
+								'}' +
 							'});' +
 							'color = step.settings.get("clr2ndHover");' +
 							'$("#clr2ndHover").spectrum({' +
@@ -2278,7 +2274,7 @@ step.util = {
 									'var color = step.settings.get("clr2ndHover");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#d3d3d3";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clr2ndHover");' +
-								'}' +							
+								'}' +
 							'});' +
 							'color = step.settings.get("clrLexiconFocusBG");' +
 							'$("#clrLexiconFocusBG").spectrum({' +
@@ -2293,7 +2289,7 @@ step.util = {
 									'var color = step.settings.get("clrLexiconFocusBG");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrLexiconFocusBG");' +
-								'}' +							
+								'}' +
 							'});' +
 							'color = step.settings.get("clrRelatedWordBg");' +
 							'$("#clrRelatedWordBg").spectrum({' +
@@ -2308,7 +2304,7 @@ step.util = {
 									'var color = step.settings.get("clrRelatedWordBg");' +
 									'if (!((typeof color === "string") && (color.length == 7))) color = "#17758F";' +
 									'if (color != currentClrPicker) setColor(currentClrPicker, "clrRelatedWordBg");' +
-								'}' +							
+								'}' +
 							'});' +
 							'if (step.colorUpdateMode) $(".adClr").show();' +
 							'else $(".adClr").hide();';
@@ -2316,7 +2312,7 @@ step.util = {
 		modalHTML +=	'}); ' +
 						'function showFontSizeBtns(fontName, panelNumber) {' +
 							'var currentFontSize = step.util.getFontSize(fontName, panelNumber);' +
-							'if (fontName === "defaultfont") $("#" + fontName + "Btn").show();' +
+							// 'if (fontName === "defaultfont") $("#" + fontName + "Btn").show();' +
 							'if (currentFontSize > 0) {' +
 								'$("#" + fontName + "Btn").find("." + fontName).css("font-size", currentFontSize);' +
 								'$("#" + fontName + "Size").text("(" + currentFontSize + "px)");' +
@@ -2343,7 +2339,7 @@ step.util = {
 									// '}' +
 								// '}' +
 							// '}' +
-							
+
 							'var rootVar = document.querySelector(":root");' +
 							'rootVar.style.setProperty("--" + colorVarName, baseColor);' +
 				            'var obj = {};' +
@@ -2353,14 +2349,13 @@ step.util = {
 							'if ((colorVarName === "clrHighlightBg") && (!step.colorUpdateMode)) {' +
 								'rootVar.style.setProperty("--clrHighlightBg",baseColor);' +
 								'step.settings.save({"clrHighlightBg":baseColor});' +
-								
+
 								'var t = tinycolor(baseColor);' +
 								'var hsl = t.toHsl();' +
 								'var colorH = hsl["h"];' +
 								'var colorS = hsl["s"] * 100;' +
 								'var colorL = hsl["l"] * 100;' +
 
-								
 								'var desaturate = colorS - 40;' +
 								'var desColor = tinycolor("hsl(" + colorH + ", " + desaturate + "%, " + colorL + "%)");' +
 								'var desHsl = desColor.toHsl();' +
@@ -2389,7 +2384,7 @@ step.util = {
 								'lightHex = lightColor.toHexString();' +
 								'rootVar.style.setProperty("--clrLexiconFocusBG",lightHex);' +
 								'step.settings.save({"clrLexiconFocusBG":lightHex});' +
-								
+
 								'lighten = colorL + 55;' +
 								'lightColor = tinycolor("hsl(" + colorH + ", " + colorS + "%, " + lighten + "%)");' +
 								'lightHex = lightColor.toHexString();' +
@@ -2398,7 +2393,7 @@ step.util = {
 							'}' +
 							'step.util.showFontSettings();' +
 						'}';
-        
+
 		modalHTML +=	'function closeFontSetting(baseColor) {' +
 							'if ((typeof baseColor === "string") && (baseColor.length == 7)) {' +
 								'if ((baseColor === "#17758F") || (baseColor === "#c58af9")) step.util.setDefaultColor("close");' +
@@ -2421,7 +2416,7 @@ step.util = {
 								'<th style="width:70%">' +
 								'<th style="width:30%">' +
 							'</tr>' +
-                            '<tr id="defaultfontBtn">' +
+                            '<tr id="defaultfontBtn" style="display:none">' +
 								'<td class="passageContent defaultfont">' + __s.default_font + ' <span id="defaultfontSize"></span></td>' +
 								'<td class="pull-right">' +
 									'<button class="btn btn-default btn-sm" type="button" title="Decrease font size" onclick="step.util.changeSpecificFontSize(\'defaultfont\', -1' + panelNumArg + ')" title="' + __s.passage_smaller_fonts + '"><span style="font-size:8px;line-height:12px">A -</span></button>' +
@@ -2504,7 +2499,8 @@ step.util = {
                                         '</span></button>' +
 								'</td>' +
 							'</tr>';
-		if (colorReady) modalHTML +=
+		if ((colorReady) && ((typeof panelNumber !== "number")))
+			modalHTML +=
 							'<tr>' +
 								'<td class="passageContent defaultfont">Advanced color update:</td>' +
 								'<td class="pull-right">' +
@@ -2567,7 +2563,7 @@ step.util = {
 		modalHTML +=
 						'</table>' +
 						'<br>';
-						
+
 		if (colorReady) modalHTML +=
 						'<span>' +
 							'<p style="text-align:left;font-size:18px;' + styleForColorExamples + '">' + __s.examples_for_the_selected_color + '</p>' +
@@ -2575,11 +2571,11 @@ step.util = {
 							'<p class="passageContent" style="color:var(--clrStrongText);' + styleForColorExamples + '">' + __s.highlighted_text + ' 1</p>' +
 							'<p class="passageContent" style="color:var(--clrHighlight);' + styleForColorExamples + '">' + __s.highlighted_text + ' 2</p>' +
 							'<p class="passageContent primaryLightBg" style="' + styleForColorExamples + '">' + __s.highlighted_background + ' 1</p>' +
-							'<p class="passageContent secondaryBackground" style="' + styleForColorExamples + '">' + __s.highlighted_background + ' 2</p>' +							
+							'<p class="passageContent secondaryBackground" style="' + styleForColorExamples + '">' + __s.highlighted_background + ' 2</p>' +
 							'<p class="passageContent lexiconFocus" style="' + styleForColorExamples + '">' + __s.highlighted_for_lexicon + '</p>' +
 							'<p class="passageContent relatedWordEmphasisHover" style="' + styleForColorExamples + '">' + __s.highlighted_for_related_text + '</p>' +
 						'</span>';
-						
+
 		modalHTML +=
 						'<div class="footer">' +
 							'<button class="stepButton pull-right" data-dismiss="modal" onclick=closeFontSetting()><label>' + __s.ok + '</label></button>';
