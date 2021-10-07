@@ -280,16 +280,17 @@ step.passageSelect = {
                     bookDescription[currentOsisID.toLowerCase() + "_header"] +
                 '</b></td></tr><tr>';
             }
+			var curBookDescription = ""
+			if (typeof bookDescription[currentOsisID.toLowerCase()] === "string")
+				curBookDescription = " - " + bookDescription[currentOsisID.toLowerCase()];
 			tableHTML += '<td title="' + longNameToDisplay + '">' +
 				'<a href="javascript:step.passageSelect.getChapters(\'' + currentOsisID + '\', \'' + this.version + '\', \'' + this.userLang + '\', ' + numOfChapters + ');"' +
                 ((summaryMode) ? ' style="text-align:left;padding:0" ' : "") + '>' +
-                ((summaryMode) ? longNameToDisplay + " - " + bookDescription[currentOsisID.toLowerCase()] : shortNameToDisplay) +
+                ((summaryMode) ? longNameToDisplay + curBookDescription : shortNameToDisplay) +
                 '</a></td>';
 			counter++;
 			if ((counter % columns) == 0) {
-				tableHTML += '</tr><tr>'; // style="height:' +
-                    // ((summaryMode) ? '20' : '30') +
-                    // 'px">';
+				tableHTML += '</tr><tr>';
 			}
 		}
 		tableHTML += '</tr></table>';
@@ -517,10 +518,13 @@ step.passageSelect = {
                         chapterDescription["chapter_" + chptrOrVrsNum + "_header"] +
                     '</b></td></tr><tr>';
                 }
+				var curChptrDesc = "";
+				if (typeof chapterDescription[chptrOrVrsNum] === "string")
+					curChptrDesc = " - " + chapterDescription[chptrOrVrsNum];
 				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
                     ((summaryMode) ? ' style="text-align:left;padding:0px 0px 0px 22px;text-indent: -22px;" ' : "") +
                     '>' + chptrOrVrsNum + 
-                    ((summaryMode) ? " - " + chapterDescription[chptrOrVrsNum] : "") +
+                    ((summaryMode) ? curChptrDesc : "") +
                     '</a></td>'
 				if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
 					html += '</tr><tr>';

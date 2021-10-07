@@ -136,7 +136,8 @@ var PassageDisplayView = DisplayView.extend({
             }
             if ((languages[0].indexOf("en") == 0) || ((typeof step.keyedVersions[version] === "object") && (step.keyedVersions[version].languageCode == "en"))) {
                 var xgenObj = passageHtml.find('.xgen');
-                if ((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === "")))
+                if (((xgenObj.length == 1) || ((xgenObj.length == 2) && ($(xgenObj[0]).text() === ""))) &&
+					(this.isBookinOTNT(reference)))
                     $(xgenObj[xgenObj.length - 1]).append('<button style="font-size:10px;line-height:10px;" type="button" onclick="step.util.showSummary(\'' +
                         reference + '\')" title="Show summary information" class="select-version stepButton">Summary</button>');
                 // else if (passageHtml.find(".verseLink").length > 0)
@@ -307,6 +308,17 @@ var PassageDisplayView = DisplayView.extend({
             return true;
         },
 
+        isBookinOTNT: function (reference) {
+			debugger;
+	        var tmpArray = reference.split(".");
+			var bookID = tmpArray[0]; // get the string before the "." character
+			for (var i = 0; i < step.passageSelect.osisChapterJsword.length; i++) {
+				var currentOsisID = (step.passageSelect.osisChapterJsword[i].length === 4) ? step.passageSelect.osisChapterJsword[i][3] : step.passageSelect.osisChapterJsword[i][0];
+				if (bookID === currentOsisID) return true;
+			}
+            return false;
+        },
+		
         /**
          *
          * @param passageContent the content that we are processing
