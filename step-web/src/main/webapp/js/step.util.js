@@ -2151,7 +2151,6 @@ step.util = {
 		if (typeof panelNumber === "number") {
 			panelNumArg =  ", " + panelNumber;
 			styleForColorExamples = 'display:none';
-			singleOrAllPanel = "in current panel";
 		}
         var darkModeEnabled = step.util.isDarkMode();
 
@@ -2312,7 +2311,6 @@ step.util = {
 		modalHTML +=	'}); ' +
 						'function showFontSizeBtns(fontName, panelNumber) {' +
 							'var currentFontSize = step.util.getFontSize(fontName, panelNumber);' +
-							// 'if (fontName === "defaultfont") $("#" + fontName + "Btn").show();' +
 							'if (currentFontSize > 0) {' +
 								'$("#" + fontName + "Btn").find("." + fontName).css("font-size", currentFontSize);' +
 								'$("#" + fontName + "Size").text("(" + currentFontSize + "px)");' +
