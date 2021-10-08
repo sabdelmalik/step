@@ -53,9 +53,11 @@
 }
 
 .argSumSpan {
-	color:#498090;
+	color: $strong-color; // This line is for IE browsers
+	color:var(--clrStrongText);
 	font-size:14px;
 	line-height:19px;
 	background:#FFFFFF!important;
+    background:var(--clrBackground)!important;
 	border:none;
 }

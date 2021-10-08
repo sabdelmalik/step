@@ -6,7 +6,7 @@ var PickBibleView = Backbone.View.extend({
         '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replace(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
         '<ul class="list-group langUL ul_<%= key.replace(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
-        '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
+        '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>">' +
         '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
         '<a class="resource" href="javascript:void(0)">' +
         '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a></li>' +
@@ -21,7 +21,7 @@ var PickBibleView = Backbone.View.extend({
         '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
         '<ul class="list-group langUL ul_<%= languageBibles[0].languageCode.replace(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
-        '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
+        '<li class="list-group-item stepModalFgBg" data-initials="<%= languageBible.shortInitials %>">' +
         '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
         '<a class="resource" href="javascript:void(0)">' +
         '<%= languageBible.shortInitials %> - <%= languageBible.name %> <span class="pull-right"><%= step.util.ui.getFeaturesLabel(languageBible) %></span></a></li>' +
@@ -38,11 +38,12 @@ var PickBibleView = Backbone.View.extend({
         '<% } %>' +
         '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
         '</span>' +
-		'&nbsp;&nbsp;&nbsp;<button type="button" class="close" data-dismiss="modal">X</button>' +
+		'&nbsp;&nbsp;&nbsp;' +
+		step.util.modalCloseBtn("bibleVersions") +
         '</form>'),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
-        '<div class="modal-content">' +
+        '<div class="modal-content stepModalFgBg">' +
         '<div class="modal-body">' +
         '<span class="pull-right"><%= view.filtersTemplate({myLanguage: myLanguage}) %></span>' +
         '<ul class="nav nav-tabs">' +
@@ -62,7 +63,8 @@ var PickBibleView = Backbone.View.extend({
 		  '<option value="south_asia">South Asia</option>' +
 		  '<option value="western_asia">Western Asia</option>' +
 		'</select>' +
-        '<p>Features: N=Notes G=Grammar V=Vocab I=Interlinear S=Septuagint interlinear A=Alt verse numbers</p>' +
+        '<p><%= __s.bible_version_features %></p>' +
+		((step.touchDevice) ? "" : '<textarea id="enterYourTranslation" rows="1" style="font-size:13px;width:95%;resize=none;height:24px" placeholder="<%= __s.pick_bible_input_placeholder %>"></textarea><br><br>') +
         '<div class="tab-content">' +
         '<div class="tab-pane" id="bibleList">' +
         '</div>' +
@@ -70,9 +72,8 @@ var PickBibleView = Backbone.View.extend({
         '</div>' +
         '</div>' + //end body
         '<div class="modal-footer">' +
-			'<img id="keyboard_icon" class="pull-left" src="/images/keyboard.jpg" alt="Keyboard entry">' +
-			'<textarea id="enterYourTranslation" class="pull-left" rows="1" style="font-size:16px; width: 18%;"></textarea>' +
-			'<span class="tagLine"></span>' +
+			((step.touchDevice) ? '<textarea id="enterYourTranslation" rows="1" style="font-size:16px;width:90%;resize=none;height:24px" placeholder="<%= __s.pick_bible_input_short_placeholder %>"></textarea>' : "") +
+			'<br><br><span class="tagLine"></span>' +
 			'<button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.update_display_order %></label></button>' +
             '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
@@ -160,7 +161,7 @@ var PickBibleView = Backbone.View.extend({
         $('#bibleVersions').on('hidden.bs.modal', function (ev) {
             $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
         });
-        this._filter();
+        this._filter(false, true); // 1st param not called for Keyboard, 2nd param call from initialize()
 	    $("textarea#enterYourTranslation").keyup(function(e) {
 			var code = (e.keyCode ? e.keyCode : e.which);
 			self._handleEnteredTranslation(code, self._filter);
@@ -215,7 +216,7 @@ var PickBibleView = Backbone.View.extend({
 		var jsVersion = ($.getUrlVars().indexOf("debug") > -1) ? "" : step.state.getCurrentVersion() + ".min.";
 		$('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
 			'<div class="modal-dialog">' +
-				'<div class="modal-content">' +
+				'<div class="modal-content stepModalFgBg">' +
 					'<style>' +
 						'#nestedVersion div, .nested-1 {' +
 							'margin-top: 5px;' +
@@ -225,7 +226,8 @@ var PickBibleView = Backbone.View.extend({
 						'}' +
 					'</style>' +  
 					'<div class="modal-header">' +
-						'<button type="button" class="close" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button>' +
+						// the close button could not pickup the stepFgBg class so it has to be added in the style
+						'<button type="button"  style="background:var(--clrBackground);color:var(--clrTextColor)" class="close" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button><br>' +
 					'</div>' +
 					'<div class="modal-body">' +
 						'<div id="sortVersionModal"></div>' +
@@ -281,7 +283,7 @@ var PickBibleView = Backbone.View.extend({
         }
         return selectedLanguage;
     },
-    _filter: function (keyboard) {
+    _filter: function (keyboard, calledFromInitialize) {
         var self = this;
         var selectedTab = this._getSelectedTab();
         var selectedLanguage = (keyboard) ? "_all" : this._getLanguage();
@@ -298,11 +300,24 @@ var PickBibleView = Backbone.View.extend({
         var versionsSelected = (typeof self.searchView._getCurrentInitials === "undefined") ?
 			window.searchView._getCurrentInitials() : self.searchView._getCurrentInitials();
         numberOfVersionsSelected = 0;
+		var currentBiblesOpened = [];
+		if (calledFromInitialize) {
+			var currentTokens = step.util.activePassage().get("searchTokens") || [];
+			for (var i = 0; i < currentTokens.length; i++) {
+				if (currentTokens[i].itemType == VERSION)
+					currentBiblesOpened.push(currentTokens[i].item.shortInitials);
+			}
+		}
         for (i = 0; i < versionsSelected.length; i ++) {
-            if (versionsSelected[i] !== undefined) {
+            if ((versionsSelected[i] !== undefined) && 
+				((!calledFromInitialize) || (currentBiblesOpened.indexOf(versionsSelected[i]) > -1))) {
 				numberOfVersionsSelected ++;
 			}
-			else {
+			else { // Not a Bible which is open. Maybe user selected a Bible without clicking OK and then left the modal (e.g.: without clicking on the close button).
+				if ((versionsSelected[i] !== undefined) && (calledFromInitialize)) {
+					console.log("Remove " + versionsSelected[i] + " because it is not open");
+					Backbone.Events.trigger("search:remove", { value: step.keyedVersions[versionsSelected[i]], itemType: VERSION});
+				}
 				versionsSelected.splice(i, 1);
 				i --;
 			}
@@ -313,12 +328,12 @@ var PickBibleView = Backbone.View.extend({
                 var version = step.keyedVersions[v];
                 var i = versionsSelected.indexOf(version.shortInitials);
                 if (version.category == 'BIBLE' && (i > -1) && addedToSelectedGroup.indexOf(version.shortInitials) == -1) {
-                    if (!bibleList["Selected"]) {
-                        bibleList["Selected"] = [];
+                    if (!bibleList[__s.selected_bibles]) {
+                        bibleList[__s.selected_bibles] = [];
                     }
 					var copiedVersion = JSON.parse(JSON.stringify(version)); // Don't want to update the original step.keyedVersions object
-                    copiedVersion.languageCode = "selected";
-                    bibleList["Selected"].push(copiedVersion);
+                    copiedVersion.languageCode = __s.selected_bibles;
+                    bibleList[__s.selected_bibles].push(copiedVersion);
                     addedToSelectedGroup.push(version.shortInitials);
                 }
             }

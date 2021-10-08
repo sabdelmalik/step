@@ -113,6 +113,7 @@ h4.lexicalGrouping {
 
   [strong]:hover {
     color: $strong-color;
+	color: var(--clrStrongText);
   }
 
   ul {

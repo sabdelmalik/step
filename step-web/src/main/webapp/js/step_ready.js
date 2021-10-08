@@ -64,25 +64,84 @@
 		if (!step.touchDevice) {
 			var timer;
 			$(document).keyup(function(e) {
-				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0)) {
+				if (($('#s2id_masterSearch:visible').length == 0) && ($("textarea:visible").length == 0) &&
+					(!e.altKey) && (!e.ctrlKey)) {
 					var code = (e.keyCode ? e.keyCode : e.which);
-					console.log("key " + code);
-					if ((code == 186) || (code == 13)) {
-						if (step.tempKeyInput === "t") step.util.startPickBible();
-						else if (step.tempKeyInput === "s") step.util.searchSelectionModal();
-						step.tempKeyInput = "";
-					}
+					console.log("key " + code + " shift key: " + e.shiftKey);
+                    if ((code == 188) || (code == 190)) {
+                        var pC = $(".passageContainer");
+                        if (pC.length > 1) {
+                            var curActiveId = $(".passageContainer.active")[0].getAttribute("passage-id");
+                            var panelToMakeActive = 0;
+                            for (var i = 0; i < pC.length; i ++) {
+                                if ($(".passageContainer")[i].getAttribute("passage-id") == curActiveId) {
+                                    if (code == 188) {
+                                        if (i > 0) panelToMakeActive = i - 1;
+                                        else panelToMakeActive = pC.length - 1;
+                                    }
+                                    else {
+                                        if (i < (pC.length - 1)) panelToMakeActive = i + 1;
+                                        else panelToMakeActive = 0;
+                                    }
+                                    step.util.activePassageId(panelToMakeActive);
+                                    break;
+                                }
+                            }
+                        }
+                        step.tempKeyInput = "";
+                    }
+                    else if (code == 37) {
+                        if (e.shiftKey) $("a.previousChapter").click();
+                        else $(".passageContainer.active").find("a.previousChapter").click();
+                        step.tempKeyInput = "";
+                    }
+                    else if (code == 39) {
+                        if (e.shiftKey) $("a.nextChapter").click();
+                        else $(".passageContainer.active").find("a.nextChapter").click();
+                        step.tempKeyInput = "";
+                    }
+                    else if (code == 187) {
+                    	step.util.createNewColumn();
+                    	step.tempKeyInput = "";
+                    }
+                    else if (code == 191) {
+                    	step.util.ui.showTutorial();
+                    	step.tempKeyInput = "";
+                    }
 					else if (((code > 48) && (code < 52)) || ((code > 64) && (code < 91))) { // 49 = 1, 51 = 3, 65 = A, 90 = Z
-						timer && clearTimeout(timer);
-						step.tempKeyInput += String.fromCharCode(code).toLowerCase();
-						if (step.tempKeyInput.length >= 2) {
-							step.util.passageSelectionModal();
-						}
-						else {
-							timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
-								step.tempKeyInput = "";
-							}, 1500);
-						}
+                        var curChar = String.fromCharCode(code).toLowerCase();
+                        if (e.shiftKey) {
+                            step.tempKeyInput = "";
+                            if ((curChar === "t") || (curChar === "b")) step.util.startPickBible();
+                            else if (curChar === "s") step.util.searchSelectionModal();
+                            else if (curChar === "h") step.util.ui.initSidebar('history');
+                            else if ((curChar === "p") || (curChar === "r")) step.util.passageSelectionModal();
+                            else if ((curChar === "a") || (curChar === "v")) step.util.ui.initSidebar('analysis');
+                            else if (curChar === "c") {
+                                $(".sidebar-offcanvas").find("a.glyphicon-remove").click();
+                                $("#welcomeExamples").find(".closeColumn").click();
+                            }
+                        }
+                        else {
+                            timer && clearTimeout(timer);
+                            step.tempKeyInput += curChar;
+                            timer = setTimeout( function( ) { // If input is less than 2 characters within 1.5 seconds, clear the input
+                                    step.tempKeyInput = "";
+                            }, 1500);
+                            if (step.tempKeyInput.length >= 2) {
+                                var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
+                                for (var i = 0; i < arrayOfTyplicalBooksChapters.length; i++) {
+                                    var tempVar = arrayOfTyplicalBooksChapters[i][0];
+                                    if (!(false || !!document.documentMode)) tempVar = tempVar.normalize("NFD"); // For characters with accent.  For example, Spanish
+                                    if (tempVar.replace(/[\u0300-\u036f\s]/g,"").toLowerCase().indexOf(step.tempKeyInput) == 0) {
+                                        step.util.passageSelectionModal();
+                                        step.tempKeyInput = "";
+                                        return;
+                                    }
+                                }
+                                step.tempKeyInput = step.tempKeyInput.substr(1); // does not match any of 66 books, remove the first character
+                            }
+                        }
 					}
 				}
 			});
@@ -203,11 +262,12 @@
 	    var stepUsageCountStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
 		if (isNaN(stepUsageCount)) stepUsageCount = 0;
-		if ((stepUsageCount > 12) && (window.innerWidth > 767)) {
-			// step.util.showOrHideTutorial(true);
-			step.util.ui.showTutorial();
+		if ($.getUrlVars().indexOf("skipwelcome") > -1) step.util.showOrHideTutorial('true'); // URL has skipwelcome
+		else {
+			if ((stepUsageCount > 12) && (window.innerWidth > 767)) step.util.ui.showTutorial();
+			else new ExamplesView({ el: $(".examplesColumn") });
 		}
-		else new ExamplesView({ el: $(".examplesColumn") });
+		
 		stepUsageCount ++;
 		if (window.localStorage) window.localStorage.setItem("step.usageCount", stepUsageCount);
 		else $.cookie('step.usageCount', stepUsageCount);
@@ -294,7 +354,21 @@
                 window.open(window.location);
             });
         }
-		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
+		var ua = navigator.userAgent.toLowerCase();
+		if (ua.indexOf('firefox') > -1) $("#panel-icon").hide(); // Firefox has some issues with this.
+		var pos = Math.max(ua.indexOf("ipad"), ua.indexOf("iphone"));
+		if ( ((pos > -1) && (ua.substr(pos + 4).search(/ cpu os [345678]_/) > -1)) || // older versions of iOS shows a light grey color.  Probably similiar issue as Internet Explorer
+			(false || !!document.documentMode) ) { // Internet Explorer use the wrong css based on the <a> tag, so change it to black
+			$("#panel-icon").css("color", "black");
+			$("#stats-icon").css("color", "black");
+			$("#bookmark-icon").css("color", "black");
+			$("#examples-icon").css("color", "black");
+			$("#fonts-icon").css("color", "black");
+			$("#languages-icon").css("color", "black");
+			$(".icon-language").css("color", "black");
+			$("#raiseSupportTrigger").css("color", "black");
+			$("#more-icon").css("color", "black");
+		}
 		step.util.showIntro();
     });
 	$( window ).resize(function() {
