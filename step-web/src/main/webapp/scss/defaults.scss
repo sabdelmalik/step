@@ -14,7 +14,10 @@ h1, h2, h3, h4, h5, h6, .panel-title {
 
 body {
   overflow: hidden;
-
+  background-color: #ffffff;
+  background-color: var(--clrBackground);
+  color: #5d5d5d;
+  color: var(--clrText);
 }
 
 body, .dropdown-menu, #quickLexicon h1 {
@@ -46,6 +49,15 @@ ul .glyphicon-ok {
   }
 }
 
+li .glyphicon-ok {
+  margin-right: 8px;
+  color: $headingColour;
+  color: var(--clrText);
+  visibility: hidden;
+  &.active {
+    visibility: visible;
+  }
+}
 .panel-heading {
   padding: 2px 5px;
   h4 {
@@ -113,6 +125,7 @@ ul .glyphicon-ok {
 	font-style: normal;
 	margin-left: 5px;
     text-shadow:none;
+	display:inline-block;
 }
 
 .stepButtonTriangle {
@@ -129,6 +142,7 @@ ul .glyphicon-ok {
 	border:1px solid var(--clrHighlight)!important;
 	font-style: normal;
 	margin-left: 5px;
+	display:inline-block;
 
     &:after {
       content: "\25BE"; // upside down triangle
@@ -142,19 +156,24 @@ ul .glyphicon-ok {
 	background-color: var(--clrHighlightBg) !important;
 	color: white !important;
 	border: 1px solid black;
+
 }
 
-.stepFgBg .stepModalFgBg {
+.stepFgBg {
 	background-color: #ffffff;
 	background-color: var(--clrBackground);
 	color: #5d5d5d;
-    color: var(--clrTextColor);
+    color: var(--clrText);
+	& input, select, textarea {
+		background-color: var(--clrBackground) !important;
+		color: var(--clrText) !important;
+	}
 }
 
 .stepModalFgBg {
 	background-color: #ffffff;
 	background-color: var(--clrBackground);
 	color: #5d5d5d;
-    color: var(--clrTextColor);
+    color: var(--clrText);
 	border: 1px solid grey;
 }
