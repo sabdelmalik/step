@@ -32,17 +32,19 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import java.awt.image.LookupOp;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
-import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.impl.IndividualSearch;
+import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import org.apache.lucene.search.IndexSearcher;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookException;
@@ -60,17 +62,11 @@ import org.crosswire.jsword.versification.VersificationsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.search.SearchEntry;
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
-import com.tyndalehouse.step.core.service.impl.IndividualSearch;
-import com.tyndalehouse.step.core.service.impl.SearchQuery;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 /**
  * API to search across the data
@@ -249,7 +245,28 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * @param options    the options to retrieve the passage with
      * @return the search result passages
      */
-    @Override
+
+    public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total, final Key newResults, final String optionsInString) {
+
+        LookupOption[] lookupArray = new LookupOption[optionsInString.length()];
+        int numOfOptions = 0;
+        for (int ii = 0; ii < optionsInString.length(); ii++) {
+            if ((optionsInString.charAt(ii) != LookupOption.CHAPTER_BOOK_VERSE_NUMBER.getUiName()) &&
+                (optionsInString.charAt(ii) != LookupOption.HEBREW_VOWELS.getUiName()) &&
+                (optionsInString.charAt(ii) != LookupOption.GREEK_ACCENTS.getUiName()) &&
+                (optionsInString.charAt(ii) != LookupOption.HEBREW_ACCENTS.getUiName()) ) {
+                lookupArray[ii] = LookupOption.fromUiOption(optionsInString.charAt(ii));
+                numOfOptions ++;
+            }
+        }
+        LookupOption[] smallerArray = new LookupOption[numOfOptions];
+        //copy array into smaller version
+        System.arraycopy(lookupArray, 0, smallerArray, 0, numOfOptions);
+
+        //final SearchResult resultsForKeys = this.jswordSearch.getResultsFromTrimmedKeys(sq, currentSearch.getVersions(), total, pagedKeys, options);
+        return getResultsFromTrimmedKeys(sq, versions, total, newResults, smallerArray);
+    }
+
     public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total, final Key newResults, final LookupOption... options) {
         final long startRefRetrieval = System.currentTimeMillis();
 
