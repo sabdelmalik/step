@@ -247,12 +247,27 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      */
 
     public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total, final Key newResults, final String optionsInString) {
-        LookupOption[] lookupArray = new LookupOption[0];
+        boolean colorCode = false;
+        boolean hebrewAccents = false;
+        int numOfOptions = 0;
         for (int ii = 0; ii < optionsInString.length(); ii++) {
             if (optionsInString.charAt(ii) == LookupOption.COLOUR_CODE.getUiName()) {
-                lookupArray = new LookupOption[1];
-                lookupArray[0] = LookupOption.fromUiOption(optionsInString.charAt(ii));
+                colorCode = true;
+                numOfOptions ++;
             }
+            else if (optionsInString.charAt(ii) == LookupOption.HEBREW_ACCENTS.getUiName()) {
+                hebrewAccents = true;
+                numOfOptions ++;
+            }
+        }
+        LookupOption[] lookupArray = new LookupOption[numOfOptions];
+        int j = 0;
+        if (colorCode) {
+            lookupArray[j] = LookupOption.fromUiOption(LookupOption.COLOUR_CODE.getUiName());
+            j ++;
+        }
+        if (hebrewAccents) {
+            lookupArray[j] = LookupOption.fromUiOption(LookupOption.HEBREW_ACCENTS.getUiName());
         }
         return getResultsFromTrimmedKeys(sq, versions, total, newResults, lookupArray);
     }
@@ -266,7 +281,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         lookupOptions.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
         lookupOptions.add(LookupOption.HEBREW_VOWELS);
         lookupOptions.add(LookupOption.GREEK_ACCENTS);
-        lookupOptions.add(LookupOption.HEBREW_ACCENTS);
+        // lookupOptions.add(LookupOption.HEBREW_ACCENTS); Removed because we want to show Hebrew accents only if the user has selected this option.
 
         final SearchResult r = new SearchResult();
         getPassagesForResults(r, versions, newResults, sq.getContext(), lookupOptions, sq.getInterlinearMode());
