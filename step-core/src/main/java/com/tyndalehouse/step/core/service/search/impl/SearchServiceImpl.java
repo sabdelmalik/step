@@ -540,13 +540,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResult search(final SearchQuery sq) {
-        try {
-            return doSearch(sq, "");
-            // CHECKSTYLE:OFF
-        } catch (final LuceneSearchException ex) {
-            // CHECKSTYLE:ON
-            throw new TranslatedException(ex, "search_invalid");
-        }
+    	return search(sq, "");
     }
 
     public SearchResult search(final SearchQuery sq, final String options) {
