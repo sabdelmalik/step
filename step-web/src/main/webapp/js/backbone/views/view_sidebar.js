@@ -64,6 +64,13 @@ var SidebarView = Backbone.View.extend({
             if ((this.model.get("morph") != undefined) && (this.model.get("morph").indexOf('TOS:') == 0)) {
                 lastMorphCode = this.model.get("morph");
             }
+			if ((typeof this.model.get("version") === "undefined") &&
+				(typeof this.model.get("ref") === "undefined") &&
+				(typeof this.model.get("morph") === "undefined") &&
+				(this.model.get("strong") === "H0001")) {
+				console.log("MODULE_GET_INFO undefined H0001");
+				return;
+			}
             $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));

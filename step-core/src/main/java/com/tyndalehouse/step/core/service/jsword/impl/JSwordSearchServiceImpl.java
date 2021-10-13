@@ -247,24 +247,14 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      */
 
     public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total, final Key newResults, final String optionsInString) {
-
-        LookupOption[] lookupArray = new LookupOption[optionsInString.length()];
-        int numOfOptions = 0;
+        LookupOption[] lookupArray = new LookupOption[0];
         for (int ii = 0; ii < optionsInString.length(); ii++) {
-            if ((optionsInString.charAt(ii) != LookupOption.CHAPTER_BOOK_VERSE_NUMBER.getUiName()) &&
-                (optionsInString.charAt(ii) != LookupOption.HEBREW_VOWELS.getUiName()) &&
-                (optionsInString.charAt(ii) != LookupOption.GREEK_ACCENTS.getUiName()) &&
-                (optionsInString.charAt(ii) != LookupOption.HEBREW_ACCENTS.getUiName()) ) {
-                lookupArray[ii] = LookupOption.fromUiOption(optionsInString.charAt(ii));
-                numOfOptions ++;
+            if (optionsInString.charAt(ii) == LookupOption.COLOUR_CODE.getUiName()) {
+                lookupArray = new LookupOption[1];
+                lookupArray[0] = LookupOption.fromUiOption(optionsInString.charAt(ii));
             }
         }
-        LookupOption[] smallerArray = new LookupOption[numOfOptions];
-        //copy array into smaller version
-        System.arraycopy(lookupArray, 0, smallerArray, 0, numOfOptions);
-
-        //final SearchResult resultsForKeys = this.jswordSearch.getResultsFromTrimmedKeys(sq, currentSearch.getVersions(), total, pagedKeys, options);
-        return getResultsFromTrimmedKeys(sq, versions, total, newResults, smallerArray);
+        return getResultsFromTrimmedKeys(sq, versions, total, newResults, lookupArray);
     }
 
     public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String[] versions, final int total, final Key newResults, final LookupOption... options) {
