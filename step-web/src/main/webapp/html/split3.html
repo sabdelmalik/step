@@ -86,11 +86,13 @@ src="https://www.google.com/maps/embed/v1/view?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdp
     console.log(firstURL);
     console.log(secondURL);
 	var fullHeight = $(document).height();
+	var fullWidth = $(document).width();
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;
 	var halfHeight = Math.floor(remainingHeight / 2);
 	$("#f1").css("height", halfHeight + "vh");
 	$("#f2").css("height", halfHeight + "vh");
 	$("#f3").css("height", halfHeight + "vh");
+	$("#f3").css("width", fullWidth + "px");
     if (firstURL.length > 13) document.getElementById("f1").src = firstURL;
     if (secondURL.length > 13) document.getElementById("f2").src = secondURL;
 	if ((width >= 30) && (width <= 70)) {
