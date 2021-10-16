@@ -1711,7 +1711,7 @@ function handleKeyboardInput(e) {
 			$("tr").show();
 		}
 		else {
-			$('textarea#userTextInput').val("");
+			$('textarea#userTextInput2').val("");
 			$("tr").hide();
 			var re = new RegExp(userInput, "i");
 			$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
