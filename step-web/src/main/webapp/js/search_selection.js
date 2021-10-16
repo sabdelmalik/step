@@ -284,7 +284,7 @@ step.searchSelect = {
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
 		showPreviousSearch(); // The function will determine if it need to show previous search
-		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
+		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) $('#srchModalBackButton').hide();

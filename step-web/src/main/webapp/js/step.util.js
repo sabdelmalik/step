@@ -2623,7 +2623,7 @@ step.util = {
 		// }
 	// },
 	showIntro: function (showAnyway) {
-		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
+		if (($.getUrlVars().indexOf("skipwelcome") > -1) || (step.state.isLocal())) return;
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
