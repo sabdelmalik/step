@@ -54,17 +54,19 @@
 	<span class="tooltiptext" id="myTooltip">Copy to clipboard</span>Copy URL</button>
   </div>
 </div>
-<iframe id="f1" src="https://www.stepbible.org/?skipwelcome"
+<iframe id="f1" src="https://www.stepbible.org/?q=reference=2Ki.5.12&skipwelcome"
     frameborder="1" scrolling="yes"                           
-    style="display:block;background: #000;border: none;height: 96vh;width: 49vw;"
+    style="display:block;background: #000;border: none;height: 48vh;width: 49vw;"
     align="left">
 </iframe>  
 <iframe id="f2" src="https://docs.google.com/document/d/0BwZi_iH0jiVPYmFJaHF5cW5qZGI4SzdqVWk0X3puNWF2LTZj/edit?resourcekey=0--q7VMimwQ9ohi78YEDzBog"
     frameborder="1" scrolling="yes"  
-    style="display:block;background: #000;border: none;height: 96vh;width: 48vw;"
+    style="display:block;background: #000;border: none;height: 48vh;width: 48vw;"
     align="right">
 </iframe>
-
+<br>
+<iframe id="f3" width="900" height="550" style="border:0" loading="lazy" allowfullscreen
+src="https://www.google.com/maps/embed/v1/view?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&zoom=11&center=33.545097,36.224661"></iframe>
 <script>
 
 (function() {
@@ -85,8 +87,10 @@
     console.log(secondURL);
 	var fullHeight = $(document).height();
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;
-	$("#f1").css("height", remainingHeight + "vh");
-	$("#f2").css("height", remainingHeight + "vh");
+	var halfHeight = Math.floor(remainingHeight / 2);
+	$("#f1").css("height", halfHeight + "vh");
+	$("#f2").css("height", halfHeight + "vh");
+	$("#f3").css("height", halfHeight + "vh");
     if (firstURL.length > 13) document.getElementById("f1").src = firstURL;
     if (secondURL.length > 13) document.getElementById("f2").src = secondURL;
 	if ((width >= 30) && (width <= 70)) {
@@ -134,11 +138,18 @@ window.onmessage = function(e) {
             var left = RegExp.leftContext;
             var right = RegExp.rightContext;
             var lastChar = RegExp.$1;
-            var newURL = left + "reference=" + e.data + lastChar + right;
-			if (newURL.indexOf("skipwelecome") == -1) newURL += "&skipwelcome";
-            document.getElementById("f1").src = newURL;
-            console.log("old: " + curURL);
-            console.log("new: " + newURL);
+			var pos = e.data.indexOf("@@");
+			if (pos > -1) {
+				var refInfo = e.data.substr(0, pos);
+				var gpsInfo = e.data.substr(pos + 2);
+				var newURL = left + "reference=" + refInfo + lastChar + right;
+				if (newURL.indexOf("skipwelcome") == -1) newURL += "&skipwelcome";
+				document.getElementById("f1").src = newURL;
+				console.log("old: " + curURL);
+				console.log("new: " + newURL);
+				var googleURL = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&zoom=14&center=" + gpsInfo;
+				document.getElementById("f3").src = googleURL;
+			}
         }
     }
 };

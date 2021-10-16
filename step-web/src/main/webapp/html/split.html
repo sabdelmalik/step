@@ -135,7 +135,7 @@ window.onmessage = function(e) {
             var right = RegExp.rightContext;
             var lastChar = RegExp.$1;
             var newURL = left + "reference=" + e.data + lastChar + right;
-			if (newURL.indexOf("skipwelecome") == -1) newURL += "&skipwelcome";
+			if (newURL.indexOf("skipwelcome") == -1) newURL += "&skipwelcome";
             document.getElementById("f1").src = newURL;
             console.log("old: " + curURL);
             console.log("new: " + newURL);
