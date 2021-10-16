@@ -43,7 +43,7 @@
 	</colgroup>
 
   <thead>
-    <tr>
+    <tr class="tb_head">
       <th>Event</td>
       <th>Passage 1</th>
       <th>Passage 2</th>
@@ -1713,6 +1713,7 @@ function handleKeyboardInput(e) {
 		else {
 			$('textarea#userTextInput2').val("");
 			$("tr").hide();
+			$(".tb_head").show();
 			var re = new RegExp(userInput, "i");
 			$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
 		}
@@ -1731,6 +1732,7 @@ function handleKeyboardInput2(e) {
 	else {
 		$('textarea#userTextInput').val("");
 		$("tr").hide();
+		$(".tb_head").show();
 		var re = new RegExp(userInput, "i");
 		$("tr").filter(function () { return re.test($(this).find(".tb_col2").text());}).show();
 		$("tr").filter(function () { return re.test($(this).find(".tb_col3").text());}).show();
