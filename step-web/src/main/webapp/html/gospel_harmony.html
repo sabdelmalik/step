@@ -32,6 +32,7 @@
 </head>
 <body style="margin:0;background-color:white"">
 <h2 id="header">Harmony of the Gospels</h2>
+<span>Location:</span><textarea id="userTextInput" rows="1" style="font-size:16px;width:50%;margin-left:5;resize=none;height:24px" placeholder="Optionally enter your search word"></textarea>
 <div class="fixTableHead">
 <table>
 	<colgroup>
@@ -43,7 +44,7 @@
 	</colgroup>
 
   <thead>
-    <tr>
+    <tr class="tb_head">
       <th>Event</td>
       <th>Matthew</td>
       <th>Mark</td>
@@ -1302,25 +1303,50 @@
 	var fullHeight = $(window).height();
 	var remainingHeight = Math.floor((fullHeight - $("#header").height()) * 0.95);
 	$(".fixTableHead").css("height", remainingHeight + "px");
-    var queryString = window.location.search;
-    if (queryString.substr(0,11) === "?highlight=") {
-		queryString = queryString.substr(11);
-		var elmnt = document.getElementById(queryString);
-		elmnt.style.backgroundColor = "cyan";
-		var anchorNum = parseInt(queryString.substr(6));
-		if (anchorNum > 10) {
-			anchorNum -= 2;
-			elmnt = document.getElementById("anchor" + anchorNum);
-			elmnt.scrollIntoView();
-		}
-	}
+//    var queryString = window.location.search;
+//    if (queryString.substr(0,11) === "?highlight=") {
+//		queryString = queryString.substr(11);
+//		var elmnt = document.getElementById(queryString);
+//		elmnt.style.backgroundColor = "cyan";
+//		var anchorNum = parseInt(queryString.substr(6));
+//		if (anchorNum > 10) {
+//			anchorNum -= 2;
+//			elmnt = document.getElementById("anchor" + anchorNum);
+//			elmnt.scrollIntoView();
+//		}
+//	}
+	$(function(){
+		$('textarea#userTextInput').on('input', function(e){
+			this.timer && clearTimeout(this.timer);
+			this.timer = setTimeout(handleKeyboardInput, 300, e);
+		});
+	});
 })();
 
 function goToNewSelection (passage, anchorID) {
     $(".tb_col1").css("background-color", "white");
 	var elmnt = document.getElementById(anchorID);
 	elmnt.style.backgroundColor = "cyan";
-    window.top.postMessage(passage, '*'); // + "*" + anchorID, '*')   
+    window.top.postMessage(passage, '*');
+}
+
+function handleKeyboardInput(e) {
+		var userInput =  $('textarea#userTextInput').val();
+		if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
+			userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
+			$('textarea#userTextInput').val(userInput);
+		}
+		console.log(userInput);
+		if ((typeof userInput !== "string") || (userInput.length = 0)) {
+			$("tr").show();
+		}
+		else {
+			$('textarea#userTextInput2').val("");
+			$("tr").hide();
+			$(".tb_head").show();
+			var re = new RegExp(userInput, "i");
+			$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+		}
 }
 
 </script>

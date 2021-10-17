@@ -1706,7 +1706,7 @@ function goToNewSection(passage, anchorID, gps) {
     $(".tb_col1").css("background-color", "white");
 	var elmnt = document.getElementById(anchorID);
 	elmnt.style.backgroundColor = "cyan";
-    window.top.postMessage(passage + "@@" + gps, '*'); // + "*" + anchorID, '*')   
+    window.top.postMessage(passage + "@@" + gps, '*');
 }
 
 function handleKeyboardInput(e) {
