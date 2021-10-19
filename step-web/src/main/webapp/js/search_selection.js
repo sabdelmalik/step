@@ -104,12 +104,8 @@ step.searchSelect = {
 	idx2BookOrder: {},
 
 	initSearchSelection: function() {
-		try {
-			this.userLang = step.state.language() || "en-US";
-		}
-		catch {
-			this.userLange = "en-US";
-		}
+		if ((typeof step.state === "undefined") || (typeof step.state.language === "undefined")) this.userLang = "en-US";
+		else this.userLang = step.state.language() || "en-US";
         this.version = "ESV_th";
         this.searchOnSpecificType = "";
         this.searchModalCurrentPage = 1;
