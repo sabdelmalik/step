@@ -1,3 +1,4 @@
+window.step = window.step || {};
 step.searchSelect = {
 	version: "ESV_th",
 	userLang: "en",
@@ -103,7 +104,12 @@ step.searchSelect = {
 	idx2BookOrder: {},
 
 	initSearchSelection: function() {
-		this.userLang = step.state.language() || "en-US";
+		try {
+			this.userLang = step.state.language() || "en-US";
+		}
+		catch {
+			this.userLange = "en-US";
+		}
         this.version = "ESV_th";
         this.searchOnSpecificType = "";
         this.searchModalCurrentPage = 1;
@@ -368,7 +374,7 @@ step.searchSelect = {
 		return html;
 	},
 
-	_buildRangeHeaderAndTable: function() {
+	_buildRangeHeaderAndTable: function(booksToDisplay) {
 		$('#searchSelectError').text("");
 		$('#updateFeedback').text("");
 		var html = this._buildRangeHeaderAndSkeleton();
@@ -442,6 +448,19 @@ step.searchSelect = {
 		$('#updateRangeButton').hide();
 		$('#updateRangeButton').text(__s.update_search_range);
 		$('#updateButton').hide();
+		console.log(booksToDisplay);
+		if ((typeof booksToDisplay === "object") &&	(Array.isArray(booksToDisplay)) && 
+			(booksToDisplay.length > 0)) {
+			for (var k = 0; k < step.passageSelect.osisChapterJsword.length; k ++ ) {
+				var curBook = (step.passageSelect.osisChapterJsword[k].length == 4) ?
+					step.passageSelect.osisChapterJsword[k][3] : step.passageSelect.osisChapterJsword[k][0];
+				if (booksToDisplay.indexOf(curBook) == -1) {
+					if (curBook === "1Kgs") curBook = "1Kngs";
+					else if (curBook === "2Kgs") curBook = "2Kngs";
+					$("#search_range_table").find("button:contains(" + curBook + ")").prop("disabled",true).css('opacity',0.5);
+				}
+			}
+		}
 	},
 
 	_buildRangeHeaderAndSkeleton: function() {
@@ -467,6 +486,7 @@ step.searchSelect = {
 
 	_updateRange: function() {
 		$('#searchSelectError').text("");
+		var allSelectedBooks = "";
 		for (var i = 0; i < 3; i++) {
 			var curGroup;
 			var idPrefix;
@@ -486,8 +506,10 @@ step.searchSelect = {
 				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
 					if (curGroup[j].bookOrderPos[k] > -1) {
 						if ( ($(idPrefix + j + 'b' + k).hasClass('stepPressedButton')) &&
-							 (curGroup[j].bookOrderPos[k] > -1) )
+							 (curGroup[j].bookOrderPos[k] > -1) ) {
 							this.bookOrder[curGroup[j].bookOrderPos[k]][1] = true;
+							allSelectedBooks += "," + this.bookOrder[curGroup[j].bookOrderPos[k]][0];
+						}
 						else this.bookOrder[curGroup[j].bookOrderPos[k]][1] = false;
 					}
 				}
@@ -511,6 +533,17 @@ step.searchSelect = {
 		if (result.length > 0) this.searchRange = result.replace(/,$/, '');
 		else this.searchRange = "Gen-Rev";
 		this.rangeWasUpdated = true;
+		if (typeof step.util === "undefined") {
+	        var element = document.getElementById("rangeModal");
+			if (element) {	
+				$('#rangeModal').modal('hide');
+				$('#rangeModal').modal({
+					show: false
+				});
+				if (element.parentNode) element.parentNode.removeChild(element);
+			}
+			filterByRange(allSelectedBooks);
+		}
 		this.goBackToPreviousPage();
 	},
 
@@ -546,6 +579,7 @@ step.searchSelect = {
 	},
 
 	_getTranslationType: function() {
+		if (typeof step.util === "undefined") return "OTNT"; // probably called from the split.html or related doc
 		var versionAltName = '';
 		var data = step.util.activePassage().get("searchTokens") || [];
 		for (var i = 0; i < data.length; i++) {
