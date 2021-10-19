@@ -138,22 +138,19 @@ function goToNewSection(item) {
 }
 
 function handleKeyboardInput(e) {
-		var userInput =  $('textarea#userTextInput').val();
-		if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
-			userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
-			$('textarea#userTextInput').val(userInput);
-		}
-		console.log(userInput);
-		if ((typeof userInput !== "string") || (userInput.length = 0)) {
-			$("tr").show();
-		}
-		else {
-			$('textarea#userTextInput2').val("");
-			$("tr").hide();
-			$(".tb_head").show();
-			var re = new RegExp(userInput, "i");
-			$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
-		}
+	var userInput =  $('textarea#userTextInput').val();
+	if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
+		userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
+		$('textarea#userTextInput').val(userInput);
+	}
+	if ((typeof userInput !== "string") || (userInput.length = 0)) {
+		$("tr").show();
+	}
+	else {
+		$("#tb_body").find("tr").hide();
+		var re = new RegExp(userInput, "i");
+		$("tr").filter(function () { return re.test($(this).find(".tb_col1").text());}).show();
+	}
 }
 
 </script>

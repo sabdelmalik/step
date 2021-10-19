@@ -375,6 +375,7 @@ step.searchSelect = {
 	},
 
 	_buildRangeHeaderAndTable: function(booksToDisplay) {
+		var onlyDisplaySpecifiedBooks = ((typeof booksToDisplay === "object") &&	(Array.isArray(booksToDisplay)) && (booksToDisplay.length > 0));
 		$('#searchSelectError').text("");
 		$('#updateFeedback').text("");
 		var html = this._buildRangeHeaderAndSkeleton();
@@ -433,14 +434,34 @@ step.searchSelect = {
 			   curGroup = this.groupsOther;
 			   idPrefix = 'ob_tableg';
 			}
+			var allGroupsDisabled = true;
 			for (var j = 0; j < curGroup.length; j++) {
+				var allBooksInGroupDisabled = true;
 				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
 					if ( (curGroup[j].bookOrderPos[k] > -1) &&
 						(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
 					   this._userClickedBook(idPrefix + j + 'b' + k);
 					}
+					if (onlyDisplaySpecifiedBooks) {
+						curBook = this.bookOrder[curGroup[j].bookOrderPos[k]][0];
+						if (booksToDisplay.indexOf(curBook) == -1)
+							$("#" + idPrefix + j + 'b' + k).prop("disabled",true).css('opacity',0.5);
+						else {
+							allBooksInGroupDisabled = false;
+							allGroupsDisabled = false;
+						}
+					}
+				}
+				if ((onlyDisplaySpecifiedBooks) && (allBooksInGroupDisabled)) {
+					for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
+						$("#" + idPrefix + j + 'b' + k).hide(); // hide the button
+						$("#" + idPrefix + j + 'b' + k).parent().parent().hide(); // hide the tr
+					}
+					$("#" + idPrefix + j).hide(); // hide the group button (e.g.: book of Moses)
 				}
 			}
+			if ((onlyDisplaySpecifiedBooks) && (allGroupsDisabled))
+				$("#" + idPrefix.substr(0, 3) + "hdr").hide(); // hide the New Testament or Old Testament button
 		}
 		if (this.searchRange === 'Gen-Rev') $('#updateFeedback').text(__s.all_books_not_selected);
 		else $('#updateFeedback').text(__s.search_range_button_color_desc);
@@ -448,19 +469,6 @@ step.searchSelect = {
 		$('#updateRangeButton').hide();
 		$('#updateRangeButton').text(__s.update_search_range);
 		$('#updateButton').hide();
-		console.log(booksToDisplay);
-		if ((typeof booksToDisplay === "object") &&	(Array.isArray(booksToDisplay)) && 
-			(booksToDisplay.length > 0)) {
-			for (var k = 0; k < step.passageSelect.osisChapterJsword.length; k ++ ) {
-				var curBook = (step.passageSelect.osisChapterJsword[k].length == 4) ?
-					step.passageSelect.osisChapterJsword[k][3] : step.passageSelect.osisChapterJsword[k][0];
-				if (booksToDisplay.indexOf(curBook) == -1) {
-					if (curBook === "1Kgs") curBook = "1Kngs";
-					else if (curBook === "2Kgs") curBook = "2Kngs";
-					$("#search_range_table").find("button:contains(" + curBook + ")").prop("disabled",true).css('opacity',0.5);
-				}
-			}
-		}
 	},
 
 	_buildRangeHeaderAndSkeleton: function() {
