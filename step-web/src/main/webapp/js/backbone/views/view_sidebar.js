@@ -413,6 +413,15 @@ var SidebarView = Backbone.View.extend({
                 panel.append('<span class="unicodefont">' + mainWord.lsjDefs + '</span>');
             }
         }
+		panel.append('<div id="possibleMap"></div>');
+        $.getJSON("/html/json/strong_geo.json", function(location) {
+			var geo = location[mainWord.strongNumber];
+			if (typeof geo === "string") {
+				$("#possibleMap").html("<br><a href='https://www.google.com/maps/@" + geo + ",14z/data=!5m1!1e4' target='_new'>" +
+								"<button type='button' class='stepButton' ><b>Map</b></button>" +
+								"</a>");
+			}
+		});
         if (mainWord.relatedNos) {
             panel.append($("<h2>").append(__s.lexicon_related_words));
             var ul = $('<ul>');
