@@ -544,7 +544,7 @@ step.searchSelect = {
 			}
 			filterByRange(allSelectedBooks);
 		}
-		this.goBackToPreviousPage();
+		else this.goBackToPreviousPage();
 	},
 
 	_createSingleRange: function(start, end) {

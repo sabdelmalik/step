@@ -39,23 +39,19 @@
 	.tb_col1 {
 		font-size: 14px;
 		border: 2px solid #17758f;
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
 	}
 	.tb_col2 {
 		font-size: 14px;
 		border: 2px solid #17758f;
 	    word-break: break-all;
-        color: blue;
-        text-decoration: underline;
-        cursor: pointer;
 	}
 	.tb_col3 {
 		font-size: 14px;
 		border: 2px solid #17758f;
-		font-size: 70%;
 	    word-break: break-all;
-        color: blue;
-        text-decoration: underline;
-        cursor: pointer;
 	}
 	
 	:root {
@@ -153,6 +149,7 @@
 })();
 
 function goToNewSection(item, cellNum) {
+debugger;
     var row = item.parentNode;
     var col2 = row.cells[1].innerText;
     var col3 = row.cells[2].innerText;
@@ -225,15 +222,13 @@ function searchSelectionModal() {
 					'<br>' +
 					'<span id="searchSelectError"></span>' +
 					'<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"' +
-					'onclick=step.searchSelect._updateRange()></button>' +
-//					'<button id="updateButton" style="display:none;float:right" type="button" class="stepButton"' +
-//					'onclick=step.searchSelect.goSearch()>Ok</button><br><br><br>' +
+					'onclick=step.searchSelect._updateRange()></button><br><br><br>' +
 				'</div>' +
 			'</div>' +
 		'</div>' +
 	'</div>';
 	$(_.template(htmlString)()).modal("show");
-
+}
 </script>
 </body>
 </html>
