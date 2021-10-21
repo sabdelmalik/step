@@ -371,6 +371,17 @@ var SidebarView = Backbone.View.extend({
         this._appendLexiconSearch(panel, mainWord);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
+		panel.append('<div id="possibleMap"></div>');
+        $.getJSON("/html/json/strong_geo.json", function(location) {
+			var geo = location[mainWord.strongNumber];
+			if (typeof geo === "string") {
+				$("#possibleMap").html("<br><a href='/html/multimap.html?coord=" + geo + 
+					"' target='_new'>" +
+					"<button type='button' class='stepButton' ><b>Map</b></button>" +
+					"</a>");
+			}
+		});
+
         if (currentUserLang.indexOf("es") == 0) {
             // displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon") ||
 									// false;
@@ -413,15 +424,6 @@ var SidebarView = Backbone.View.extend({
                 panel.append('<span class="unicodefont">' + mainWord.lsjDefs + '</span>');
             }
         }
-		panel.append('<div id="possibleMap"></div>');
-        $.getJSON("/html/json/strong_geo.json", function(location) {
-			var geo = location[mainWord.strongNumber];
-			if (typeof geo === "string") {
-				$("#possibleMap").html("<br><a href='https://www.google.com/maps/@" + geo + ",14z/data=!5m1!1e4' target='_new'>" +
-								"<button type='button' class='stepButton' ><b>Map</b></button>" +
-								"</a>");
-			}
-		});
         if (mainWord.relatedNos) {
             panel.append($("<h2>").append(__s.lexicon_related_words));
             var ul = $('<ul>');

@@ -39,7 +39,7 @@ div {
 }
 </style>
 <div>
-  <img src="MinistryOfJesus.jpg" />
+  <img src="timeofjesus.jpg" />
   <img src="dot_small.png" id="dot" />
 </div>
 <script>
@@ -55,9 +55,10 @@ div {
 	var tmpAry = coord.split(",");
 	var lat = tmpAry[0];
 	var long = tmpAry[1];
-	if ((lat < 31.55298) || (lat > 33.558304) || (long < 34.45395) || (long > 36.08254)) alert ("Latitude or Longitude out of range for this map");
-	var topPixel = Math.floor(3 + ((33.58304 - lat) * 406.885));
-	var leftPixel = Math.floor((long - 34.45395) * 337.7148);
+	console.log("lat: " + lat + " long: " + long);
+	if ((lat < 30.94721591) || (lat > 33.67247516) || (long < 34.20822846) || (long > 36.4003447)) alert ("Latitude or Longitude out of range for this map");
+	var topPixel = Math.floor((33.67247516 - lat) * 313.3646821);
+	var leftPixel = Math.floor(10 + ((long - 34.20822846) * 253.1800045));
 	document.getElementById("dot").style.top = topPixel + "px";
 	document.getElementById("dot").style.left = leftPixel + "px";
 })();
