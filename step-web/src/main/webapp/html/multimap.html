@@ -164,8 +164,9 @@ function initMap() {
   var positionProvided = { lat: latArg, lng: longArg };
   // The map, centered at positionProvided
   var map = new google.maps.Map(document.getElementById("googlemap"), {
-    zoom: 4,
+    zoom: 9,
     center: positionProvided,
+	mapTypeId: 'terrain'
   });
   // The marker, positioned at positionProvided
   const marker = new google.maps.Marker({
