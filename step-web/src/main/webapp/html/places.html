@@ -86,7 +86,7 @@
     <tr class="tb_head">
       <th>Location</td>
       <th>Passage</th>
-      <th>Coordinates</th>
+      <th>Maps</th>
     </tr>
   </thead>
   <tbody id="tb_body">
@@ -126,13 +126,10 @@
 		for (var i = 0; i < array.length; i ++ ) {
 			var geoAbbr = "";
 			geoNum = array[i][2].split(',');
-			if (geoNum.length == 2)
-				geoAbbr = parseFloat(geoNum[0]).toFixed(2) + "," + parseFloat(geoNum[1]).toFixed(2);
 			tblRowHTML += 
 				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
 				    '<td class="tb_col2">' + array[i][1] + '</td>' +
-					'<td class="tb_col3">' + geoAbbr + '<span style="display:none">' +
-						array[i][2] + '</span></td></tr>';
+					'<td class="tb_col3">Maps<span style="display:none">' + array[i][2] + '</span></td></tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
     });
