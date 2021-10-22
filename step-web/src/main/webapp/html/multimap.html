@@ -69,9 +69,12 @@
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#googlemap" data-toggle="tab">Google</a></li>
 				<li id="patriarchs_li"><a href="#patriarchs" data-toggle="tab">Patriarchs</a></li>
-				<li id="jesusministry_li"><a href="#jesusministry" data-toggle="tab">Jesus Ministry</a></li>
-				<li id="timeofjesus_li"><a href="#timeofjesus" data-toggle="tab">Time of Jesus</a></li>
-				<li id="rome_earlychurch_li"><a href="#rome_earlychurch" data-toggle="tab">Early church</a></li>
+				<li id="exodus_li"><a href="#exodus" data-toggle="tab">Exodus & Conquest</a></li>
+				<li id="tribes_li"><a href="#tribes" data-toggle="tab">Tribes of Israel</a></li>
+				<li id="prophets_li"><a href="#prophets" data-toggle="tab">Judah & Israel</a></li>
+				<li id="jesusministry_li"><a href="#jesusministry" data-toggle="tab">Time of Jesus</a></li>
+				<li id="jerusalem_li"><a href="#jerusalem" data-toggle="tab">Jerusalem</a></li>
+				<li id="earlychurch_li"><a href="#earlychurch" data-toggle="tab">Early Church</a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="googlemap">
@@ -82,20 +85,32 @@
 					></script>
 				</div>
 				<div class="tab-pane fade" id="patriarchs">
-					<img class="biblemap" src="patriarchs.jpg" />
-					<img class="redcircle" src="dot_small.png" />
+					<img class="biblemap" src="patriarchs2.png" />
+					<img class="redcircle" src="circle.png" />
+				</div>
+				<div class="tab-pane fade" id="exodus">
+					<img class="biblemap" src="exodus.png" />
+					<img class="redcircle" src="circle.png" />
+				</div>
+				<div class="tab-pane fade" id="tribes">
+					<img class="biblemap" src="tribes.png" />
+					<img class="redcircle" src="circle.png" />
+				</div>
+				<div class="tab-pane fade" id="prophets">
+					<img class="biblemap" src="prophets.png" />
+					<img class="redcircle" src="circle.png" />
 				</div>
 				<div class="tab-pane fade" id="jesusministry">
-					<img class="biblemap" src="jesusministry.jpg" />
-					<img class="redcircle" src="dot_small.png" />
+					<img class="biblemap" src="jesusministry2.png" />
+					<img class="redcircle" src="circle.png" />
 				</div>
-				<div class="tab-pane fade" id="timeofjesus">
-					<img class="biblemap" src="timeofjesus.jpg" />
-					<img class="redcircle" src="dot_small.png" />
+				<div class="tab-pane fade" id="jerusalem">
+					<img class="biblemap" src="jerusalem.png" />
+					<img class="redcircle" src="circle.png" />
 				</div>
-				<div class="tab-pane fade" id="rome_earlychurch">
-					<img class="biblemap" src="rome_earlychurch.jpg" />
-					<img class="redcircle" src="dot_small.png" />
+				<div class="tab-pane fade" id="earlychurch">
+					<img class="biblemap" src="earlychurch.png" />
+					<img class="redcircle" src="circle.png" />
 				</div>
 			</div>
 		</div>
@@ -118,10 +133,13 @@
 	latArg = parseFloat(tmpAry[0]);
 	longArg = parseFloat(tmpAry[1]);
 	console.log("lat: " + latArg + " long: " + longArg);
-	updateRedCircle(latArg, longArg, 38.80243881, 26.08081316, 51.77773962, 27.90504559, 67.12978538, 53.45018867, 0, 10, "patriarchs");
-	updateRedCircle(latArg, longArg, 33.558304, 31.55298, 36.08254, 34.45395, 406.885, 337.7148, 0, 40, "jesusministry");
-	updateRedCircle(latArg, longArg, 33.67247516, 30.94721591, 36.4003447, 34.20822846, 313.3646821, 253.1800045, 0, 40, "timeofjesus");
-	updateRedCircle(latArg, longArg, 43.27807074, 29.39713999, 39.12166695, 12.26213721, 39.91086836, 31.64612367, 0, 45, "rome_earlychurch");
+	updateRedCircle(latArg, longArg, 38.80243881, 26.08081316, 51.77773962, 27.90504559, 67.12978538, 53.45018867, -32, 40, "patriarchs");
+	updateRedCircle(latArg, longArg, 33.87260675, 27.92266184, 36.15821374, 31.05296391, 130, 99.50541443, -20, 35, "exodus");
+	updateRedCircle(latArg, longArg, 33.54061064, 30.16910923, 36.45772513, 34.16735745, 270, 221.7984493, 0, 55, "tribes");
+	updateRedCircle(latArg, longArg, 33.59676172, 30.76139605, 36.47822025, 34.2658493, 297.6688358, 251.7660976, -25, 45, "prophets");
+	updateRedCircle(latArg, longArg, 33.564, 31.55298, 36.08254, 34.45395, 420, 337.7148, -30, 40, "jesusministry");
+	updateRedCircle(latArg, longArg, 31.77745, 31.77743, 35.23494, 35.23492, 0, 0, 0, 0, "jerusalem");
+	updateRedCircle(latArg, longArg, 43.27807074, 29.39713999, 39.12166695, 12.26213721, 59.86630254, 46.4189061, 0, 25, "earlychurch");
 })();
 
 function updateRedCircle(latArg, longArg, latMax, latMin, longMax, longMin, latRatio, longRatio, xAdd, yAdd, mapID) {
@@ -129,10 +147,15 @@ function updateRedCircle(latArg, longArg, latMax, latMin, longMax, longMin, latR
 		$("#" + mapID + "_li").hide();
 	}
 	else {
-		var topPixel = Math.floor((latMax - latArg) * latRatio) + yAdd;
-		var leftPixel = Math.floor((longArg - longMin) * longRatio) + xAdd;
-		$("#" + mapID).find(".redcircle").css("top",topPixel + "px")
-			.css("left",leftPixel + "px");
+		if ((latRatio == 0) || (longRatio == 0)) {
+			$("#" + mapID).find(".redcircle").hide();
+		}
+		else {
+			var topPixel = Math.floor((latMax - latArg) * latRatio) + yAdd;
+			var leftPixel = Math.floor((longArg - longMin) * longRatio) + xAdd;
+			$("#" + mapID).find(".redcircle").css("top",topPixel + "px")
+				.css("left",leftPixel + "px");
+		}
 	}
 }
 
