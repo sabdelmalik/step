@@ -67,51 +67,74 @@
 	<div style="text-align:left font-size:16px">
 		<div>
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#googlemap" data-toggle="tab">Google</a></li>
-				<li id="patriarchs_li"><a href="#patriarchs" data-toggle="tab">Patriarchs</a></li>
+				<li id="googlemap_li"><a href="#googlemap" data-toggle="tab">Google</a></li>
+				<li id="patriarchs_li"><a href="#patriarchs" data-toggle="tab">Middle East</a></li>
 				<li id="exodus_li"><a href="#exodus" data-toggle="tab">Exodus & Conquest</a></li>
 				<li id="tribes_li"><a href="#tribes" data-toggle="tab">Tribes of Israel</a></li>
 				<li id="prophets_li"><a href="#prophets" data-toggle="tab">Judah & Israel</a></li>
 				<li id="jesusministry_li"><a href="#jesusministry" data-toggle="tab">Time of Jesus</a></li>
 				<li id="jerusalem_li"><a href="#jerusalem" data-toggle="tab">Jerusalem</a></li>
 				<li id="earlychurch_li"><a href="#earlychurch" data-toggle="tab">Early Church</a></li>
-				<li id="palopenmaps_li"><a href="#palopenmaps" data-toggle="tab">Palestine Open Maps</a></li>
+				<li id="palopenmaps_li"><a href="#palopenmaps" data-toggle="tab">Pre-modern maps</a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane fade" id="googlemap">
-					<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-					<script
-					  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly"
-					  async
-					></script>
 				</div>
 				<div class="tab-pane fade" id="patriarchs">
 					<img class="biblemap" src="/images/patriarchs.png" />
 					<img class="redcircle" src="/images/circle.png" />
+					<div class="copyrightInfo">
+						Copyright information for
+						<a href="/html/biblica_maps.html" target="_new">Biblica Open Color Maps</a>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="exodus">
 					<img class="biblemap" src="/images/exodus.png" />
 					<img class="redcircle" src="/images/circle.png" />
+					<div class="copyrightInfo">
+						Copyright information for
+						<a href="/html/biblica_maps.html" target="_new">Biblica Open Color Maps</a>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="tribes">
 					<img class="biblemap" src="/images/tribes.png" />
 					<img class="redcircle" src="/images/circle.png" />
+					<div class="copyrightInfo">
+						Copyright information for
+						<a href="/html/biblica_maps.html" target="_new">Biblica Open Color Maps</a>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="prophets">
 					<img class="biblemap" src="/images/prophets.png" />
 					<img class="redcircle" src="/images/circle.png" />
+					<div class="copyrightInfo">
+						Copyright information for
+						<a href="/html/biblica_maps.html" target="_new">Biblica Open Color Maps</a>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="jesusministry">
 					<img class="biblemap" src="/images/jesusministry.png" />
 					<img class="redcircle" src="/images/circle.png" />
+					<div class="copyrightInfo">
+						Copyright information for
+						<a href="/html/biblica_maps.html" target="_new">Biblica Open Color Maps</a>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="jerusalem">
 					<img class="biblemap" src="/images/jerusalem.png" />
 					<img class="redcircle" src="/images/circle.png" />
+					<div class="copyrightInfo">
+						Copyright information for
+						<a href="/html/biblica_maps.html" target="_new">Biblica Open Color Maps</a>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="earlychurch">
 					<img class="biblemap" src="/images/earlychurch.png" />
 					<img class="redcircle" src="/images/circle.png" />
+					<div class="copyrightInfo">
+						Copyright information for
+						<a href="/html/biblica_maps.html" target="_new">Biblica Open Color Maps</a>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="palopenmaps">
 					<iframe id="palopenmapsiframe" src="" width="100%" height="800px" scrolling="yes"></iframe>
@@ -152,25 +175,45 @@
 	updateRedCircle(latArg, longArg, 33.564, 31.55298, 36.08254, 34.45395, 420, 337.7148, -30, 40, "jesusministry");
 	updateRedCircle(latArg, longArg, 31.77745, 31.77743, 35.23494, 35.23492, 0, 0, 0, 0, "jerusalem");
 	updateRedCircle(latArg, longArg, 43.27807074, 29.39713999, 39.12166695, 12.26213721, 59.86630254, 46.4189061, 0, 25, "earlychurch");
-	$("#palopenmapsiframe").attr('src',"https://palopenmaps.org/view/9999/@" + latArg + ',' + longArg);
 	
-	if (bookName === "Gen") {
-		if ($("#patriarchs_li").is(":visible"))
-			$('.nav-tabs a[href="#patriarchs"]').tab('show');
+	var mapFirstChoice = "";
+	var mapSecondChoice = "";
+	if ("Gen Job".indexOf(bookName) > -1) {
+		mapFirstChoice = "patriarchs";
+		mapSecondChoice = "earlychurch";
 	}
 	else if ("Exod Lev Num Deut Josh".indexOf(bookName) > -1) {
-		if ($("#exodus_li").is(":visible"))
-			$('.nav-tabs a[href="#exodus"]').tab('show');
+		mapFirstChoice = "exodus";
+		mapSecondChoice = "patriarchs";
+	}
+	else if ("Judg Ruth 1Sam 2Sam 1Kgs 1Chr Ps Prov Eccl Song".indexOf(bookName) > -1) {
+		mapFirstChoice = "tribes";
+		mapSecondChoice = "patriarchs";
 	}
 	else if ("Matt Mark Luke John".indexOf(bookName) > -1) {
-		if ($("#jesusministry_li").is(":visible"))
-			$('.nav-tabs a[href="#jesusministry"]').tab('show');
+		mapFirstChoice = "jesusministry";
+		mapSecondChoice = "earlychurch";
 	}
 	else if ("Acts Rom 1Cor 2Cor Gal Eph Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev".indexOf(bookName) > -1) {
-		if ($("#earlychurch_li").is(":visible"))
-			$('.nav-tabs a[href="#earlychurch"]').tab('show');
+		mapFirstChoice = "earlychurch";
+		mapSecondChoice = "earlychurch";
 	}
-
+	else {
+		mapFirstChoice = "prophets";
+		mapSecondChoice = "patriarchs";
+	}
+	if ($("#" + mapFirstChoice + "_li").is(":visible"))
+		$('.nav-tabs a[href="#' + mapFirstChoice + '"]').tab('show');
+	else
+		$('.nav-tabs a[href="#' + mapSecondChoice + '"]').tab('show');
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		var target = $(e.target).attr("href") // activated tab
+		if (target === "#palopenmaps")
+			$("#palopenmapsiframe").attr('src',"https://palopenmaps.org/view/9999/@" + latArg + ',' + longArg);
+		if (target === "#googlemap")
+			// Async script executes immediately and must be after any DOM elements used in callback.
+			$("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
+	});
 })();
 
 function updateRedCircle(latArg, longArg, latMax, latMin, longMax, longMin, latRatio, longRatio, xAdd, yAdd, mapID) {
