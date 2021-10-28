@@ -65,8 +65,8 @@
     align="right">
 </iframe>
 <br>
-<iframe id="f3" width="900" height="550" style="border:0" loading="lazy" allowfullscreen
-src="https://www.google.com/maps/embed/v1/view?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&zoom=11&maptype=satellite&center=33.545097,36.224661"></iframe>
+<iframe id="f3" width="900" height="550" style="border:0" 
+src="/html/multimap.html?coord=33.545097,36.224661"></iframe>
 <script>
 
 (function() {
@@ -158,7 +158,7 @@ window.onmessage = function(e) {
 				document.getElementById("f1").src = newURL;
 				console.log("old: " + curURL);
 				console.log("new: " + newURL);
-				var googleURL = "https://www.google.com/maps/embed/v1/view?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&zoom=14&maptype=satellite&center=" + gpsInfo;
+				var googleURL = "/html/multimap.html?coord=" + gpsInfo;
 				document.getElementById("f3").src = googleURL;
 			}
         }
