@@ -384,8 +384,11 @@ var SidebarView = Backbone.View.extend({
 	
 	_isItALocation: function(mainWord, ref) {
 		var passages = step.wordLocations[mainWord.strongNumber];
-		var posOfDot1 = ref.indexOf(".");
-		var bookName = ref.substr(0, posOfDot1 + 1); // Include the "." (dot)
+		var bookName = "";
+		if (typeof ref === "undefined")
+			ref = step.previousSideBarLexiconRef;
+		bookName = ref.substr(0, ref.indexOf(".") + 1); // Include the "." (dot)
+		step.previousSideBarLexiconRef = ref;
 		if (typeof passages === "number") this._lookUpGeoInfo(mainWord, bookName, passages);
 		else if (typeof passages === "object") {
 			var posOfDot1 = ref.indexOf(".");
