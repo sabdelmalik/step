@@ -75,9 +75,10 @@
 				<li id="jesusministry_li"><a href="#jesusministry" data-toggle="tab">Time of Jesus</a></li>
 				<li id="jerusalem_li"><a href="#jerusalem" data-toggle="tab">Jerusalem</a></li>
 				<li id="earlychurch_li"><a href="#earlychurch" data-toggle="tab">Early Church</a></li>
+				<li id="palopenmaps_li"><a href="#palopenmaps" data-toggle="tab">Palestine Open Maps</a></li>
 			</ul>
 			<div class="tab-content">
-				<div class="tab-pane fade in active" id="googlemap">
+				<div class="tab-pane fade" id="googlemap">
 					<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
 					<script
 					  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly"
@@ -112,16 +113,18 @@
 					<img class="biblemap" src="/images/earlychurch.png" />
 					<img class="redcircle" src="/images/circle.png" />
 				</div>
+				<div class="tab-pane fade" id="palopenmaps">
+					<iframe id="palopenmapsiframe" src="" width="100%" height="800px" scrolling="yes"></iframe>
+				</div>
 			</div>
 		</div>
 	</div>
-
-
 </div>
 
 <script>
 (function() {
 	var queryString = window.location.search;
+	var coord = "";
 	var pos = queryString.indexOf("coord=");
 	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
 		var tmp = queryString.substr(pos + 6);
@@ -129,6 +132,15 @@
 		if (pos == -1) coord = tmp;
 		else if (pos > 0) coord = tmp.substr(0,pos);
 	}
+	var bookName = "";
+	pos = queryString.indexOf("book=");
+	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
+		var tmp = queryString.substr(pos + 5);
+		pos = tmp.indexOf("&");
+		if (pos == -1) bookName = tmp;
+		else if (pos > 0) bookName = tmp.substr(0,pos);
+	}
+
 	var tmpAry = coord.split(",");
 	latArg = parseFloat(tmpAry[0]);
 	longArg = parseFloat(tmpAry[1]);
@@ -140,6 +152,27 @@
 	updateRedCircle(latArg, longArg, 33.564, 31.55298, 36.08254, 34.45395, 420, 337.7148, -30, 40, "jesusministry");
 	updateRedCircle(latArg, longArg, 31.77745, 31.77743, 35.23494, 35.23492, 0, 0, 0, 0, "jerusalem");
 	updateRedCircle(latArg, longArg, 43.27807074, 29.39713999, 39.12166695, 12.26213721, 59.86630254, 46.4189061, 0, 25, "earlychurch");
+	$("#palopenmapsiframe").attr('src',"https://palopenmaps.org/view/9999/@" + latArg + ',' + longArg);
+	
+	if (bookName === "Gen") {
+		if ($("#patriarchs_li").is(":visible"))
+			$('.nav-tabs a[href="#patriarchs"]').tab('show');
+	}
+	else if (bookName === "Exod") {
+		if ($("#exodus_li").is(":visible"))
+			$('.nav-tabs a[href="#exodus"]').tab('show');
+	}
+	else if ("Matt Mark Luke John".indexOf(bookName) > -1) {
+		if ($("#jesusministry_li").is(":visible"))
+			$('.nav-tabs a[href="#jesusministry"]').tab('show');
+	}
+	else if ("Acts Rom 1Cor 2Cor Gal Eph Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev".indexOf(bookName) > -1) {
+		if ($("#earlychurch_li").is(":visible"))
+			$('.nav-tabs a[href="#earlychurch"]').tab('show');
+	}
+	 
+	
+
 })();
 
 function updateRedCircle(latArg, longArg, latMax, latMin, longMax, longMin, latRatio, longRatio, xAdd, yAdd, mapID) {
