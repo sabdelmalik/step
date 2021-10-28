@@ -158,7 +158,7 @@
 		if ($("#patriarchs_li").is(":visible"))
 			$('.nav-tabs a[href="#patriarchs"]').tab('show');
 	}
-	else if (bookName === "Exod") {
+	else if ("Exod Lev Num Deut Josh".indexOf(bookName) > -1) {
 		if ($("#exodus_li").is(":visible"))
 			$('.nav-tabs a[href="#exodus"]').tab('show');
 	}
@@ -170,8 +170,6 @@
 		if ($("#earlychurch_li").is(":visible"))
 			$('.nav-tabs a[href="#earlychurch"]').tab('show');
 	}
-	 
-	
 
 })();
 
