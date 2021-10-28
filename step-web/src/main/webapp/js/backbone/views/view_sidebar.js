@@ -239,6 +239,7 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.stepGloss)
                 .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
+				.append('<span id="possibleMap"></span>')
         );
     },
 
@@ -373,7 +374,7 @@ var SidebarView = Backbone.View.extend({
 	_lookUpGeoInfo: function(mainWord, bookName, indexToCoordArray) {
 		var geoForWord = step.wordLocations["coords"][indexToCoordArray];
 		bookName = bookName.substring(0, bookName.length - 1);
-		$("#possibleMap").empty().html("<br><a href='/html/multimap.html?coord=" + geoForWord + 
+		$("#possibleMap").empty().html("<a href='/html/multimap.html?coord=" + geoForWord + 
 			"&strong=" + mainWord.strongNumber + "&gloss=" + mainWord.stepGloss +
 			"&book=" + bookName +
 			"' target='_new'>" +
@@ -432,7 +433,6 @@ var SidebarView = Backbone.View.extend({
         this._appendLexiconSearch(panel, mainWord);
         var displayEnglishLexicon = true;
         var foundChineseJSON = false;
-		panel.append('<div id="possibleMap"></div>');
 
         if (currentUserLang.indexOf("es") == 0) {
             // displayEnglishLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithEsLexicon") ||
