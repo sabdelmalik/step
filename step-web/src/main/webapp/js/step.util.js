@@ -2627,7 +2627,7 @@ step.util = {
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
-		if ((introCount < 3) || (showAnyway)) {
+		if ((introCount < 1) || (showAnyway)) {
 			var introJsSteps = [
 				{
 					intro: __s.introjs_intro
@@ -2659,7 +2659,7 @@ step.util = {
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.multiVersionCount") : $.cookie('step.multiVersionCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
-		if ((window.innerWidth > 499) && (introCount < 2)) {
+		if ((window.innerWidth > 499) && (introCount < 1)) {
 			var introJsSteps = [
 				{
 					element: document.querySelector('.passageContainer.active').querySelector('.dropdown.settingsDropdown'),
