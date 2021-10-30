@@ -377,6 +377,7 @@ var SidebarView = Backbone.View.extend({
 		var possibleMapElement = $("#possibleMap");
 		if (possibleMapElement.length == 0) {
 			console.log ("cannot find possible Map ID in html");
+			// add a sleep here
 			possibleMapElement = $("#possibleMap");
 		}
 		possibleMapElement.empty().html("<a href='/html/multimap.html?coord=" + geoForWord + 
@@ -390,53 +391,49 @@ var SidebarView = Backbone.View.extend({
 	_isItALocation: function(mainWord, ref) {
 		var passages = step.wordLocations[mainWord.strongNumber];
 		if (typeof ref === "undefined") {
-			if (typeof step.previousSideBarLexiconRef === "undefined") {
+			if (typeof step.previousSideBarLexiconRef !== "object") {
 				ref = "";
 			}
-			else ref = step.previousSideBarLexiconRef;
+			else {
+				if (mainWord.strongNumber === step.previousSideBarLexiconRef[0])
+					ref = step.previousSideBarLexiconRef[1];
+			}
 		}
+		else step.previousSideBarLexiconRef = [mainWord.strongNumber, ref];
 		var posOfDot1 = ref.indexOf(".");
 		var bookName = (posOfDot1 > 2) ? ref.substr(0, posOfDot1 + 1) : ""; // Include the "." (dot)
-		step.previousSideBarLexiconRef = ref;
 		if (typeof passages === "number") {
 			var indexToCoordArray = passages;
 			this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
 		}
-		else if (typeof passages === "object") {
-			if (bookName === "") {
-				var tmpArray = passages[0].split("*"); // data before the * is a list of reference, after the * is the index to the coordinate array
+		else if ((typeof passages === "object") && (ref !== "")) {
+			var posOfDot2 = ref.indexOf(".", posOfDot1 + 1);
+			var chapter = ref.substring(posOfDot1 + 1, posOfDot2);
+			var verse = ref.substr(posOfDot2 + 1);
+			loop1:
+			for (var i = 0; i < passages.length; i ++) {
+				var tmpArray = passages[i].split("*"); // data before the * is a list of reference, after the * is the index to the coordinate array
 				var indexToCoordArray = tmpArray[1];
-				this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
-			}
-			else {
-				var posOfDot2 = ref.indexOf(".", posOfDot1 + 1);
-				var chapter = ref.substring(posOfDot1 + 1, posOfDot2);
-				var verse = ref.substr(posOfDot2 + 1);
-				loop1:
-				for (var i = 0; i < passages.length; i ++) {
-					var tmpArray = passages[i].split("*"); // data before the * is a list of reference, after the * is the index to the coordinate array
-					var indexToCoordArray = tmpArray[1];
-					var passagesFromSameBook = tmpArray[0].split(";");
-					loop2:
-					for (var j = 0; j < passagesFromSameBook.length; j ++) {
-						if (passagesFromSameBook[j].indexOf(bookName) == 0) {
-							var chptrVrsToSearch = passagesFromSameBook[j].substr(bookName.length);
-							var chptrVrsArray = chptrVrsToSearch.split(",");
-							var currentChapter = 0;
-							for (var k = 0; k < chptrVrsArray.length; k ++) {
-								var currentVerse = 0;
-								var tmp = chptrVrsArray[k].split(":");
-								if (tmp.length == 2) {
-									currentChapter = tmp[0];
-									currentVerse =  tmp[1];
-								}
-								else currentVerse =  tmp[0];
-								if ((currentChapter == chapter) && (currentVerse == verse)) {
-									this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
-									break loop1;
-								}
-								else if (currentChapter > chapter) break loop2;
+				var passagesFromSameBook = tmpArray[0].split(";");
+				loop2:
+				for (var j = 0; j < passagesFromSameBook.length; j ++) {
+					if (passagesFromSameBook[j].indexOf(bookName) == 0) {
+						var chptrVrsToSearch = passagesFromSameBook[j].substr(bookName.length);
+						var chptrVrsArray = chptrVrsToSearch.split(",");
+						var currentChapter = 0;
+						for (var k = 0; k < chptrVrsArray.length; k ++) {
+							var currentVerse = 0;
+							var tmp = chptrVrsArray[k].split(":");
+							if (tmp.length == 2) {
+								currentChapter = tmp[0];
+								currentVerse =  tmp[1];
 							}
+							else currentVerse =  tmp[0];
+							if ((currentChapter == chapter) && (currentVerse == verse)) {
+								this._lookUpGeoInfo(mainWord, bookName, indexToCoordArray);
+								break loop1;
+							}
+							else if (currentChapter > chapter) break loop2;
 						}
 					}
 				}

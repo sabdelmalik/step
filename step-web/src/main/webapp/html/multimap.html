@@ -182,6 +182,7 @@
 	updateRedCircle(latArg, longArg, 33.564, 31.55298, 36.08254, 34.45395, 420, 337.7148, -30, 40, "jesusministry");
 	updateRedCircle(latArg, longArg, 31.77745, 31.77743, 35.23494, 35.23492, 0, 0, 0, 0, "jerusalem");
 	updateRedCircle(latArg, longArg, 43.27807074, 29.39713999, 39.12166695, 12.26213721, 59.86630254, 46.4189061, 0, 25, "earlychurch");
+	updateRedCircle(latArg, longArg, 33.481488, 29.490899, 35.724611, 33.9837704, 0, 0, 0, 0, "palopenmaps");
 	
 	var mapFirstChoice = "";
 	var mapSecondChoice = "";
@@ -223,11 +224,12 @@
 		$('.nav-tabs a[href="#' + mapFirstChoice + '"]').tab('show');
 	else
 		$('.nav-tabs a[href="#' + mapSecondChoice + '"]').tab('show');
+
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var target = $(e.target).attr("href") // activated tab
 		if (target === "#palopenmaps")
 			$("#palopenmapsiframe").attr('src',"https://palopenmaps.org/view/9999/@" + latArg + ',' + longArg);
-		if (target === "#googlemap")
+		else if (target === "#googlemap")
 			// Async script executes immediately and must be after any DOM elements used in callback.
 			$("#googlemap").append("<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBSwzetgtDCvf5nUU0KcSdpjKeHOWo4z4&callback=initMap&libraries=&v=weekly' async ><\/script>");
 	});
@@ -237,7 +239,7 @@ function updateRedCircle(latArg, longArg, latMax, latMin, longMax, longMin, latR
 	if ((latArg < latMin) || (latArg > latMax) || (longArg < longMin) || (longArg > longMax)) {
 		$("#" + mapID + "_li").hide();
 	}
-	else {
+	else if (mapID !== "palopenmaps") {
 		if ((latRatio == 0) || (longRatio == 0)) {
 			$("#" + mapID).find(".redcircle").hide();
 		}
