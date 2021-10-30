@@ -163,7 +163,14 @@
 		if (pos == -1) bookName = tmp;
 		else if (pos > 0) bookName = tmp.substr(0,pos);
 	}
-
+	var strongNum = "";
+	pos = queryString.indexOf("strong=");
+	if ((pos > 0) && ((queryString.substr(pos-1,1) == "?") || (queryString.substr(pos-1,1) == "&")) ) {
+		var tmp = queryString.substr(pos + 5);
+		pos = tmp.indexOf("&");
+		if (pos == -1) strongNum = tmp;
+		else if (pos > 0) strongNum = tmp.substr(0,pos);
+	}
 	var tmpAry = coord.split(",");
 	latArg = parseFloat(tmpAry[0]);
 	longArg = parseFloat(tmpAry[1]);
@@ -178,7 +185,17 @@
 	
 	var mapFirstChoice = "";
 	var mapSecondChoice = "";
-	if ("Gen Job".indexOf(bookName) > -1) {
+	if (bookName == "") {
+		if (strongNum.indexOf("H") == 0) {
+			mapFirstChoice = "patriarchs";
+			mapSecondChoice = "earlychurch";
+		}
+		else {
+			mapFirstChoice = "earlychurch";
+			mapSecondChoice = "patriarchs";
+		}
+	}
+	else if ("Gen Job".indexOf(bookName) > -1) {
 		mapFirstChoice = "patriarchs";
 		mapSecondChoice = "earlychurch";
 	}
