@@ -48,10 +48,8 @@
         text-decoration: underline;
         cursor: pointer;
 	}
-	.tb_col3 {
-		font-size: 14px;
-		border: 2px solid #17758f;
-		font-size: 70%;
+	.mapLink {
+		font-size: 12px;
 	    word-break: break-all;
         color: blue;
         text-decoration: underline;
@@ -78,15 +76,13 @@
 <div class="fixTableHead">
 <table>
   <colgroup>
-	<col span="1" style="width:15%;">
-	<col span="1" style="width:60%;">
-	<col span="1" style="width:14%;">
+	<col span="1" style="width:20%;">
+	<col span="1" style="width:80%;">
   </colgroup>
   <thead>
     <tr class="tb_head">
-      <th>Location</td>
-      <th>Passage</th>
-      <th>Maps</th>
+      <th>Location&nbsp;<span style="font-size:9px">click below to open map in another tab</span></th>
+      <th>Passage&nbsp;<span style="font-size:9px">click below to update passage on left and map on bottom</span></th>
     </tr>
   </thead>
   <tbody id="tb_body">
@@ -127,9 +123,10 @@
 			var geoAbbr = "";
 			geoNum = array[i][2].split(',');
 			tblRowHTML += 
-				'<tr><td class="tb_col1">' + array[i][0] + '</td>' +
+				'<tr><td class="tb_col1">' + array[i][0] +
+					'&nbsp;<span class="mapLink">map<span style="display:none">' + array[i][2] + '</span></span></td>' +
 				    '<td class="tb_col2">' + array[i][1] + '</td>' +
-					'<td class="tb_col3">Maps<span style="display:none">' + array[i][2] + '</span></td></tr>';
+					'</tr>';
 		}
 		$("#tb_body").append(tblRowHTML);
     });
@@ -138,14 +135,12 @@
     var rows = $("#tb_body").find("tr");
     for (var i = 0; i < rows.length; i ++) {
         rows[i].i = i;
-//        rows[i].cells[0].addEventListener("click", function() {
-//            goToNewSection(this, 1);
-//        }, false);
+		var mapSpan = $(rows[i].cells[0]).find(".mapLink");
+		mapSpan[0].addEventListener("click", function() {
+            goToNewSection(this, 1);
+		},false);
         rows[i].cells[1].addEventListener("click", function() {
             goToNewSection(this, 2);
-        }, false);
-        rows[i].cells[2].addEventListener("click", function() {
-            goToNewSection(this, 3);
         }, false);
     }
 
@@ -159,19 +154,17 @@
 
 function goToNewSection(item, cellNum) {
     var row = item.parentNode;
+	if (cellNum == 1) row = row.parentNode;
     var col1 = row.cells[0].innerText;
     var col2 = row.cells[1].innerText;
-    var col3 = row.cells[2].innerText;
-    $(".tb_col1").css("background-color", "white");
-    var gps = $(row.cells[2]).find("span")[0].innerText;
+    var gps = $(row.cells[0]).find("span")[1].innerText;
     if (cellNum == 2) {
         window.top.postMessage(col2 + "@@" + gps, '*');
+		$(".tb_col1").css("background-color", "white");
         $(row.cells[0]).css("background-color","cyan")
     }
-    else if (cellNum == 3) {
-//        window.open("https://www.google.com/maps/@" + gps + ",14z/data=!5m1!1e4");
-        window.open("multimap.html?coord=" + gps);
-        $(row.cells[0]).css("background-color","cyan")
+    else if (cellNum == 1) {
+        window.open("/html/multimap.html?coord=" + gps);
     }
 }
 
@@ -181,7 +174,6 @@ function handleKeyboardInput(e) {
 		userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s+/g, ' ').replace(/^\s+/g, '');
 		$('textarea#userTextInput').val(userInput);
 	}
-	console.log(userInput);
 	if ((typeof userInput !== "string") || (userInput.length = 0)) {
 		$("tr").show();
 	}
