@@ -391,13 +391,10 @@ var SidebarView = Backbone.View.extend({
 	_isItALocation: function(mainWord, ref) {
 		var passages = step.wordLocations[mainWord.strongNumber];
 		if (typeof ref === "undefined") {
-			if (typeof step.previousSideBarLexiconRef !== "object") {
-				ref = "";
+			if ((typeof step.previousSideBarLexiconRef === "object") && (mainWord.strongNumber === step.previousSideBarLexiconRef[0])) {
+				ref = step.previousSideBarLexiconRef[1];
 			}
-			else {
-				if (mainWord.strongNumber === step.previousSideBarLexiconRef[0])
-					ref = step.previousSideBarLexiconRef[1];
-			}
+			else ref = "";
 		}
 		else step.previousSideBarLexiconRef = [mainWord.strongNumber, ref];
 		var posOfDot1 = ref.indexOf(".");
