@@ -171,6 +171,10 @@
 		if (pos == -1) strongNum = tmp;
 		else if (pos > 0) strongNum = tmp.substr(0,pos);
 	}
+	if (queryString.indexOf("stepbible.org") == -1) {
+		$("#palopenmaps_li").find("a")[0].innerHTML = "Pre-modern maps (online)";
+		$("#googlemap_li").hide();
+	}
 	var tmpAry = coord.split(",");
 	latArg = parseFloat(tmpAry[0]);
 	longArg = parseFloat(tmpAry[1]);
