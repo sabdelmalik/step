@@ -1029,7 +1029,6 @@ step.searchSelect = {
 					var curSearchWord = "";
 					if (this.previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = this.previousSearchTokens[i].substr(5);
 					else if (this.previousSearchTokens[i].substr(0, 7) === "strong=") {
-						console.log("search word: " + searchWord + " " + this.previousSearchTokens[i].substr(7));
 						if (searchWord.search(/([GH])\d{4,5}/) > -1) {
 							if (RegExp.$1 !== this.previousSearchTokens[i].substr(7, 1)) {
 								var msg = "You are trying to search Greek and Hebrew words together. If you do not intend to perform this type of search, just don't search Hebrew and Greek words together in a single search.  This is only supported by the \"Classical Interface\" when you have opened a Bible with Old Testament tagged with Hebrew words and another Bible with Old Testament tagged with Greek words.  To open the \"Classical Interface\" ";
