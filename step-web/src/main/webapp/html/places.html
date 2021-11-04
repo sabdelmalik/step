@@ -29,6 +29,7 @@
     table {
       border-collapse: collapse;
       width: 100%;
+	  table-layout: fixed;
     }
     th {
       padding: 8px 15px;
@@ -44,13 +45,12 @@
 	.tb_col2 {
 		font-size: 14px;
 		border: 2px solid #17758f;
-		word-wrap: break-word;
+	    word-wrap: break-word;
         color: blue;
         cursor: pointer;
 	}
 	.mapLink {
 		font-size: 12px;
-	    word-wrap: break-word;
         color: blue;
         text-decoration: underline;
         cursor: pointer;
@@ -156,16 +156,16 @@ function goToNewSection(item, cellNum) {
     var row = item.parentNode;
 	if (cellNum == 1) row = row.parentNode;
     var passages = row.cells[1].innerText;
-    var gps = $(row.cells[0]).find("span")[1].innerText;
+    var gpsAndBook = $(row.cells[0]).find("span")[1].innerText;
 	var bookName = passages.substr(0,passages.indexOf("."));
-	if ((typeof bookName === "string") && (bookName.length > 1)) gps += "&book=" + bookName;
+	if ((typeof bookName === "string") && (bookName.length > 1)) gpsAndBook += "&book=" + bookName;
     if (cellNum == 2) {
-        window.top.postMessage(passages.replace(/ /g, ";") + "@@" + gps, '*');
+        window.top.postMessage(passages.replace(/ /g, ";") + "@@" + gpsAndBook, '*');
 		$(".tb_col1").css("background-color", "white");
         $(row.cells[0]).css("background-color","cyan")
     }
     else if (cellNum == 1) {
-        window.open("/html/multimap.html?coord=" + gps);
+        window.open("/html/multimap.html?coord=" + gpsAndBook);
     }
 }
 
