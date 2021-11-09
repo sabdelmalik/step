@@ -7,7 +7,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
@@ -180,6 +179,6 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
      * @return * @return the versification for the OT OSMHB book
      */
     private Versification getOTBookVersification() {
-        return this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
+        return this.versificationService.getVersificationForVersion(JSwordPassageService.BEST_VERSIFICATION); //JSwordPassageServiceImpl.OT_BOOK);
     }
 }

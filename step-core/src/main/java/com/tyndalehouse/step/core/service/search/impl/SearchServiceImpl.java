@@ -118,7 +118,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * value representing a original spelling sort
      */
-    public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([Hh]\\d+[a-zA-Z])");
+    public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([GgHh]\\d+[a-zA-Z])");
     public static final Pattern ALL_STRONGS = Pattern.compile("strong:[GgHh]\\d+\\w?");
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
     private static final String SYNTAX_FORMAT = "[%s...]";

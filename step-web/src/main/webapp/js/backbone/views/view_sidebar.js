@@ -718,7 +718,7 @@ var SidebarView = Backbone.View.extend({
 
                             $.getSafe(BIBLE_GET_BIBLE_TEXT + chosenVersion + "/" + encodeURIComponent(xref), function (data) {
                                 api.set('content.title.text', data.longName);
-                                api.set('content.text', data.value.replace(/ strong=['"][GH]\d{4,5}[A-Za-z]?\s?['"]/g, "")); // Strip the strong tag
+                                api.set('content.text', data.value.replace(/ strong=['"][GH]\d{1,5}[A-Za-z]?\s?['"]/g, "")); // Strip the strong tag
                                 api.set('content.osisId', data.osisId)
                             }).error(function() {
                                 changeBaseURL();
