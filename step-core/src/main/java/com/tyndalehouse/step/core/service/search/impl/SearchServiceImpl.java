@@ -1710,7 +1710,7 @@ public class SearchServiceImpl implements SearchService {
         for (final String s : strongs) {
             //if non-augmented, we take the string
             final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
-            String paddedStrong = padStrongNumber(prefixedStrong.toUpperCase(Locale.ENGLISH), false);
+            String paddedStrong = padStrongNumber(prefixedStrong, false); // .toUpperCase(Locale.ENGLISH)
 
             if(Character.isDigit(paddedStrong.charAt(paddedStrong.length() - 1))) {
                 Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
