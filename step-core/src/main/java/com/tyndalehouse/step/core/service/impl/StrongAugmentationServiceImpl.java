@@ -151,7 +151,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     public Key getVersesForAugmentedStrong(final String augmentedStrong) {
         final EntityDoc[] entityDocs = this.augmentedStrongs.searchExactTermBySingleField("augmentedStrong", 1, augmentedStrong);
         if (entityDocs.length == 0) {
-            return PassageKeyFactory.instance().createEmptyKeyList(getOTBookVersification());
+            return PassageKeyFactory.instance().createEmptyKeyList(getOTNTBookVersification());
         }
 
         //otherwise we have some
@@ -160,7 +160,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         }
 
         try {
-            return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
+            return PassageKeyFactory.instance().getKey(getOTNTBookVersification(), entityDocs[0].get(AS_REFERENCES));
         } catch (NoSuchKeyException e) {
             throw new StepInternalException("Unable to parse references for some of the entries in the augmented strongs data", e);
         }
@@ -176,9 +176,9 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     }
 
     /**
-     * @return * @return the versification for the OT OSMHB book
+     * @return * @return the versification for both OT and NT books
      */
-    private Versification getOTBookVersification() {
-        return this.versificationService.getVersificationForVersion(JSwordPassageService.BEST_VERSIFICATION); //JSwordPassageServiceImpl.OT_BOOK);
+    private Versification getOTNTBookVersification() {
+        return this.versificationService.getVersificationForVersion(JSwordPassageService.BEST_VERSIFICATION);
     }
 }

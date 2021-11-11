@@ -1709,9 +1709,9 @@ public class SearchServiceImpl implements SearchService {
         final Set<String> strongList = new HashSet<>();
         for (final String s : strongs) {
             //if non-augmented, we take the string
-            final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
-            String paddedStrong = padStrongNumber(prefixedStrong, false); // .toUpperCase(Locale.ENGLISH)
-
+            String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
+            prefixedStrong = prefixedStrong.substring(0, 1).toUpperCase(Locale.ENGLISH) + prefixedStrong.substring(1);
+            String paddedStrong = padStrongNumber(prefixedStrong, false);
             if(Character.isDigit(paddedStrong.charAt(paddedStrong.length() - 1))) {
                 Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
                 if (suffix != null) {
