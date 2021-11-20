@@ -7,6 +7,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.StrongAugmentationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
@@ -151,7 +152,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     public Key getVersesForAugmentedStrong(final String augmentedStrong) {
         final EntityDoc[] entityDocs = this.augmentedStrongs.searchExactTermBySingleField("augmentedStrong", 1, augmentedStrong);
         if (entityDocs.length == 0) {
-            return PassageKeyFactory.instance().createEmptyKeyList(getOTNTBookVersification());
+            return PassageKeyFactory.instance().createEmptyKeyList(getOTBookVersification());
         }
 
         //otherwise we have some
@@ -160,7 +161,10 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         }
 
         try {
-            return PassageKeyFactory.instance().getKey(getOTNTBookVersification(), entityDocs[0].get(AS_REFERENCES));
+            if ((augmentedStrong.charAt(0) == 'G') || (augmentedStrong.charAt(0) == 'g'))
+                return PassageKeyFactory.instance().getKey(getESVBookVersification(), entityDocs[0].get(AS_REFERENCES));
+            else
+                return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
         } catch (NoSuchKeyException e) {
             throw new StepInternalException("Unable to parse references for some of the entries in the augmented strongs data", e);
         }
@@ -176,9 +180,17 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     }
 
     /**
-     * @return * @return the versification for both OT and NT books
+     * @return * @return the versification for the OT OSMHB book
      */
-    private Versification getOTNTBookVersification() {
-        return this.versificationService.getVersificationForVersion(JSwordPassageService.BEST_VERSIFICATION);
+    private Versification getOTBookVersification() {
+        return this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
     }
+
+    /**
+     * @return * @return the versification for ESV which should be NRSV versification
+     */
+    private Versification getESVBookVersification() {
+        return this.versificationService.getVersificationForVersion("ESV");
+    }
+
 }

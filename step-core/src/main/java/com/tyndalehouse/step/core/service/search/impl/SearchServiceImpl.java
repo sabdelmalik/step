@@ -1371,8 +1371,8 @@ public class SearchServiceImpl implements SearchService {
 
         setUniqueConsideredDefinitions(sq, results, relatedResults);
 
-        // append range to query
-        sq.getCurrentSearch().setQuery(fullQuery.toString().toLowerCase(), true);
+        // append range to query.  On 11/17/2021 remove lowercase() to support mix case suffix in Strong number
+        sq.getCurrentSearch().setQuery( fullQuery.toString(), true);
         return filteredStrongs;
     }
 
@@ -1710,7 +1710,7 @@ public class SearchServiceImpl implements SearchService {
         for (final String s : strongs) {
             //if non-augmented, we take the string
             String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
-            prefixedStrong = prefixedStrong.substring(0, 1).toUpperCase(Locale.ENGLISH) + prefixedStrong.substring(1);
+            prefixedStrong = prefixedStrong.substring(0, 1).toUpperCase(Locale.ENGLISH) + prefixedStrong.substring(1);  // uppercase first letter
             String paddedStrong = padStrongNumber(prefixedStrong, false);
             if(Character.isDigit(paddedStrong.charAt(paddedStrong.length() - 1))) {
                 Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
