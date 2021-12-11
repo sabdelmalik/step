@@ -1,3 +1,4 @@
+window.step = window.step || {};
 step.searchSelect = {
 	version: "ESV_th",
 	userLang: "en",
@@ -103,7 +104,8 @@ step.searchSelect = {
 	idx2BookOrder: {},
 
 	initSearchSelection: function() {
-		this.userLang = step.state.language() || "en-US";
+		if ((typeof step.state === "undefined") || (typeof step.state.language === "undefined")) this.userLang = "en-US";
+		else this.userLang = step.state.language() || "en-US";
         this.version = "ESV_th";
         this.searchOnSpecificType = "";
         this.searchModalCurrentPage = 1;
@@ -253,7 +255,7 @@ step.searchSelect = {
 			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			listOfPreviousSearch.push(html);
 			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
-			if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
+			if (strongNum.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
 			previousSearchTokensArg.push("strong=" + strongNum);
 			if (actPsgeDataElm.item.stepTransliteration !== "") step.util.putStrongDetails(strongNum, htmlOfTerm);
 		}
@@ -266,16 +268,45 @@ step.searchSelect = {
 	},
 
 	handleKeyboardInput: function(e) {
-		var userInput =  $('textarea#userTextInput').val();
-		if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
-			$('#warningMessage').text(__s.click_to_select_search);
-			userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
-			$('textarea#userTextInput').val(userInput);
-			if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true);
+		if (e.target.id === "enterRange") {
+			$('#userEnterRangeError').text("");
+			var userInput =  $('textarea#enterRange').val();
+			userInput = userInput.replace(/[\n\r]/g, '').replace(/[\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+			userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
+			$('textarea#enterRange').val(userInput);
+			if (userInput.length > 3) {
+				var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + step.searchSelect.version + "%7C?lang=" + step.searchSelect.userLang;
+				$.getJSON(url, function (data) {
+					if (data.length == 0) {
+						$("#updateRangeButton").hide();
+						$('#userEnterRangeError').text("No match for " + userInput + ", please update your entry.");
+						$('textarea#enterRange').focus();
+						$('textarea#enterRange').val(userInput);
+					}
+					else $("#updateRangeButton").show();
+				}).fail(function() {
+					changeBaseURL();
+				});
+			}
+			else {
+				if ((userInput.length == 0) && (step.searchSelect.searchRange.length > 0) && (step.searchSelect.searchRange !== "Gen-Rev"))
+					$("#updateRangeButton").show();
+				else $("#updateRangeButton").hide();
+			}
 		}
 		else {
-			$('#warningMessage').text("");
-			step.searchSelect._handleEnteredSearchWord();
+			var userInput =  $('textarea#userTextInput').val();
+			if ((userInput.slice(-1) === "\n") || (e.originalEvent.inputType === "insertLineBreak")) {
+				$('#warningMessage').text(__s.click_to_select_search);
+				userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
+				$('textarea#userTextInput').val(userInput);
+				if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) step.searchSelect._handleEnteredSearchWord(null, null, true);
+				if ($("#searchResultstext").find("a").text() != userInput) step.searchSelect._handleEnteredSearchWord();
+			}
+			else {
+				$('#warningMessage').text("");
+				step.searchSelect._handleEnteredSearchWord();
+			}
 		}
 	},
 
@@ -284,7 +315,7 @@ step.searchSelect = {
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
 		showPreviousSearch(); // The function will determine if it need to show previous search
-		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
+		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range modal because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(this._buildSearchHeaderAndTable());
 			$('#previousSearch').show();
 			if (this.searchModalCurrentPage == 1) $('#srchModalBackButton').hide();
@@ -307,7 +338,7 @@ step.searchSelect = {
 			$('#srchModalBackButton').hide();
 			this._handleEnteredSearchWord();
 		}
-		else alert('Unknown state goBackToPreviousPage');
+		else console.log('Unknown state goBackToPreviousPage');
 	},
 
 	_buildSearchHeaderAndTable: function() {
@@ -368,15 +399,17 @@ step.searchSelect = {
 		return html;
 	},
 
-	_buildRangeHeaderAndTable: function() {
+	_buildRangeHeaderAndTable: function(booksToDisplay) {
+		var onlyDisplaySpecifiedBooks = ((typeof booksToDisplay === "object") && (Array.isArray(booksToDisplay)) && (booksToDisplay.length > 0));
 		$('#searchSelectError').text("");
 		$('#updateFeedback').text("");
-		var html = this._buildRangeHeaderAndSkeleton();
+		var html = this._buildRangeHeaderAndSkeleton(onlyDisplaySpecifiedBooks);
 		$('#previousSearch').hide();
 		$('#searchHdrTable').empty().append(html);
 		$('#srchModalBackButton').show();
 		$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
 		this._buildBookTable();
+		var keyboardEnteredRange = false;
 		if (this.searchRange !== 'Gen-Rev') {
 			var tmpSearchRange = this.searchRange + ',';
 			var posOfComma = tmpSearchRange.indexOf(',');
@@ -387,6 +420,7 @@ step.searchSelect = {
 				if (posOfDash == -1) {
 					var posOfBook = this.idx2BookOrder[curRange];
 					if (typeof posOfBook !== "undefined") this.bookOrder[posOfBook][1] = true;
+					else keyboardEnteredRange = true;
 				}
 				else if (posOfDash > 1) {
 					var firstBook = curRange.substring(0, posOfDash);
@@ -394,12 +428,14 @@ step.searchSelect = {
 					var posOfBook1 = this.idx2BookOrder[firstBook];
 					var posOfBook2 = this.idx2BookOrder[secondBook];
 					if (typeof posOfBook1 !== "undefined") this.bookOrder[posOfBook1][1] = true;
+					else keyboardEnteredRange = true;
 					if (typeof posOfBook2 !== "undefined") {
 						this.bookOrder[posOfBook2][1] = true;
 						if ((posOfBook1 > -1) && (posOfBook1 < posOfBook2)) {
 							for (var i = posOfBook1 + 1; i < posOfBook2; i ++) this.bookOrder[i][1] = true; 
 						}
 					}
+					else keyboardEnteredRange = true;
 				}
 				var posOfComma = tmpSearchRange.indexOf(',');
 				if (posOfComma === -1) {
@@ -412,39 +448,62 @@ step.searchSelect = {
 				}
 			}
 		}
-		for (var i = 0; i < 3; i++) {
-			var curGroup;
-			var idPrefix;
-			if (i == 0) {
-			   curGroup = this.groupsOT;
-			   idPrefix = 'ot_tableg';
-			}
-			else if (i == 1) {
-			   curGroup = this.groupsNT;
-			   idPrefix = 'nt_tableg';
-			}
-			else if (i == 2) {
-			   curGroup = this.groupsOther;
-			   idPrefix = 'ob_tableg';
-			}
-			for (var j = 0; j < curGroup.length; j++) {
-				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
-					if ( (curGroup[j].bookOrderPos[k] > -1) &&
-						(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
-					   this._userClickedBook(idPrefix + j + 'b' + k);
+		if (keyboardEnteredRange) this._buildRangeKeyboard(this.searchRange);
+		else {
+			for (var i = 0; i < 3; i++) {
+				var curGroup;
+				var idPrefix;
+				if (i == 0) {
+				   curGroup = this.groupsOT;
+				   idPrefix = 'ot_tableg';
+				}
+				else if (i == 1) {
+				   curGroup = this.groupsNT;
+				   idPrefix = 'nt_tableg';
+				}
+				else if (i == 2) {
+				   curGroup = this.groupsOther;
+				   idPrefix = 'ob_tableg';
+				}
+				var allGroupsDisabled = true;
+				for (var j = 0; j < curGroup.length; j++) {
+					var allBooksInGroupDisabled = true;
+					for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
+						if ( (curGroup[j].bookOrderPos[k] > -1) &&
+							(!(this.bookOrder[curGroup[j].bookOrderPos[k]][1])) ) {
+						   this._userClickedBook(idPrefix + j + 'b' + k);
+						}
+						if (onlyDisplaySpecifiedBooks) {
+							curBook = this.bookOrder[curGroup[j].bookOrderPos[k]][0];
+							if (booksToDisplay.indexOf(curBook) == -1)
+								$("#" + idPrefix + j + 'b' + k).prop("disabled",true).css('opacity',0.5);
+							else {
+								allBooksInGroupDisabled = false;
+								allGroupsDisabled = false;
+							}
+						}
+					}
+					if ((onlyDisplaySpecifiedBooks) && (allBooksInGroupDisabled)) {
+						for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
+							$("#" + idPrefix + j + 'b' + k).hide(); // hide the button
+							$("#" + idPrefix + j + 'b' + k).parent().parent().hide(); // hide the tr
+						}
+						$("#" + idPrefix + j).hide(); // hide the group button (e.g.: book of Moses)
 					}
 				}
+				if ((onlyDisplaySpecifiedBooks) && (allGroupsDisabled))
+					$("#" + idPrefix.substr(0, 3) + "hdr").hide(); // hide the New Testament or Old Testament button
 			}
+			if (this.searchRange === 'Gen-Rev') $('#updateFeedback').text(__s.all_books_not_selected);
+			else $('#updateFeedback').text(__s.search_range_button_color_desc);
 		}
-		if (this.searchRange === 'Gen-Rev') $('#updateFeedback').text(__s.all_books_not_selected);
-		else $('#updateFeedback').text(__s.search_range_button_color_desc);
 		$('#searchSelectError').text("");
 		$('#updateRangeButton').hide();
 		$('#updateRangeButton').text(__s.update_search_range);
 		$('#updateButton').hide();
 	},
 
-	_buildRangeHeaderAndSkeleton: function() {
+	_buildRangeHeaderAndSkeleton: function(onlyDisplaySpecifiedBooks) {
 		var fontSize = 16;
 		var html = '<div class="header">' +
 			'<h4>' + __s.click_to_select_search_range + ':</h4>' +
@@ -462,56 +521,117 @@ step.searchSelect = {
 			'<div id="nt_table"/>' +
 			'<h4 id="other_books_hdr"/>' +
 			'<div id="ob_table"/>';
+			if ((!onlyDisplaySpecifiedBooks) && (!step.touchDevice)) {
+				$('.footer').prepend('<a id="keyboardEntry" href="javascript:step.searchSelect._buildRangeKeyboard();"><img src="/images/keyboard.jpg" alt="Keyboard entry"></a>');
+			}
 		return html;
 	},
 
-	_updateRange: function() {
+	_buildRangeKeyboard: function(searchRange) {
 		$('#searchSelectError').text("");
-		for (var i = 0; i < 3; i++) {
-			var curGroup;
-			var idPrefix;
-			if (i == 0) {
-				curGroup = this.groupsOT;
-				idPrefix = '#ot_tableg';
-			}
-			else if (i == 1) {
-				curGroup = this.groupsNT;
-				idPrefix = '#nt_tableg';
-			}
-			else if (i == 2) {
-				curGroup = this.groupsOther;
-				idPrefix = '#ob_tableg';
-			}
-			for (var j = 0; j < curGroup.length; j++) {
-				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
-					if (curGroup[j].bookOrderPos[k] > -1) {
-						if ( ($(idPrefix + j + 'b' + k).hasClass('stepPressedButton')) &&
-							 (curGroup[j].bookOrderPos[k] > -1) )
-							this.bookOrder[curGroup[j].bookOrderPos[k]][1] = true;
-						else this.bookOrder[curGroup[j].bookOrderPos[k]][1] = false;
+		$('#updateFeedback').text("");
+		$("#keyboardEntry").remove();
+		var fontSize = 16;
+		var html = '<div class="header">' +
+			'<h4>Enter your search range:</h4>' +
+			'</div>' +
+			'<textarea id="enterRange" rows="1" class="stepFgBg" style="font-size:13px;width:95%;margin-left:5;resize=none;height:24px"' +
+				' placeholder="Enter search range"></textarea>' +
+			'<br>' +
+			'<span id="userEnterRangeError" style="color: red"></span>' +
+			'<h5>Examples:</h5>' +
+			'<p>Rom.1-3 (Romans chapter 1 to 3)</p>' +
+			'<p>Psa.1-15,Pro.1-13 (Psalm chapter 1 to 15 and Proverbs chapter 1 to 15)</p>';
+				
+		$('#previousSearch').hide();
+		$('#searchHdrTable').empty().append(html);
+		if (typeof searchRange === "string") $("#enterRange").val(searchRange);
+		$('textarea#enterRange').focus();
+		$('#srchModalBackButton').show();
+		$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
+
+
+		$('#searchSelectError').text("");
+		$('#updateRangeButton').hide();
+		$('#updateRangeButton').text(__s.update_search_range);
+		$('#updateButton').hide();
+		$(function(){
+			$('textarea#enterRange').on('input', function(e){
+				this.timer && clearTimeout(this.timer);
+				this.timer = setTimeout(step.searchSelect.handleKeyboardInput, 300, e);
+			});
+		});
+	},
+
+	_updateRange: function() {
+		var keyboardInput = $('textarea#enterRange').val();
+		if (typeof keyboardInput === "string") {
+			if (keyboardInput === "") keyboardInput = "Gen-Rev"
+			this.searchRange = keyboardInput;
+			this.goBackToPreviousPage();
+		}
+		else {
+			$('#searchSelectError').text("");
+			var allSelectedBooks = "";
+			for (var i = 0; i < 3; i++) {
+				var curGroup;
+				var idPrefix;
+				if (i == 0) {
+					curGroup = this.groupsOT;
+					idPrefix = '#ot_tableg';
+				}
+				else if (i == 1) {
+					curGroup = this.groupsNT;
+					idPrefix = '#nt_tableg';
+				}
+				else if (i == 2) {
+					curGroup = this.groupsOther;
+					idPrefix = '#ob_tableg';
+				}
+				for (var j = 0; j < curGroup.length; j++) {
+					for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
+						if (curGroup[j].bookOrderPos[k] > -1) {
+							if ( ($(idPrefix + j + 'b' + k).hasClass('stepPressedButton')) &&
+								 (curGroup[j].bookOrderPos[k] > -1) ) {
+								this.bookOrder[curGroup[j].bookOrderPos[k]][1] = true;
+								allSelectedBooks += "," + this.bookOrder[curGroup[j].bookOrderPos[k]][0];
+							}
+							else this.bookOrder[curGroup[j].bookOrderPos[k]][1] = false;
+						}
 					}
 				}
 			}
-		}
-		var start = -1;
-		var end = -1;
-		var result = "";
-		for (var i = 0; i < this.bookOrder.length; i++) {
-			if (this.bookOrder[i][1]) {
-				if (start === -1) start = i;
-				end = i;
+			var start = -1;
+			var end = -1;
+			var result = "";
+			for (var i = 0; i < this.bookOrder.length; i++) {
+				if (this.bookOrder[i][1]) {
+					if (start === -1) start = i;
+					end = i;
+				}
+				else {
+					result += this._createSingleRange(start, end);
+					start = -1;
+					end = -1;
+				}
 			}
-			else {
-				result += this._createSingleRange(start, end);
-				start = -1;
-				end = -1;
+			result += this._createSingleRange(start, end);
+			if (result.length > 0) this.searchRange = result.replace(/,$/, '');
+			else this.searchRange = "Gen-Rev";
+			this.rangeWasUpdated = true;
+			if (typeof step.util === "undefined") {
+				var element = document.getElementById("rangeModal");
+				if (element) {	
+					$('#rangeModal').modal('hide');
+					$('#rangeModal').modal({
+						show: false
+					});
+					if (element.parentNode) element.parentNode.removeChild(element);
+				}
+				filterByRange(allSelectedBooks);
 			}
+			else this.goBackToPreviousPage();
 		}
-		result += this._createSingleRange(start, end);
-		if (result.length > 0) this.searchRange = result.replace(/,$/, '');
-		else this.searchRange = "Gen-Rev";
-		this.rangeWasUpdated = true;
-		this.goBackToPreviousPage();
 	},
 
 	_createSingleRange: function(start, end) {
@@ -546,6 +666,7 @@ step.searchSelect = {
 	},
 
 	_getTranslationType: function() {
+		if (typeof step.util === "undefined") return "OTNT"; // probably called from the split.html or related doc
 		var versionAltName = '';
 		var data = step.util.activePassage().get("searchTokens") || [];
 		for (var i = 0; i < data.length; i++) {
@@ -962,11 +1083,12 @@ step.searchSelect = {
 				allVersions += 'version=' + activePassageData[i].item.shortInitials;
 			}
 		}
+		if (typeof searchWord !== "string") searchWord = "";
 		if (searchType === TEXT_SEARCH) currentSearch = '|syntax=t=' + searchWord;
 		else if (searchType === STRONG_NUMBER) {
 			if (!this.includePreviousSearches) currentSearch = '|strong=' + searchWord;
 			else {
-				if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a, b, c, d, e, f or g
+				if (searchWord.search(/([GH]\d{1,5})[A-Za-z]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a, b, c, d, e, f, g, ...
 				currentSearch = '|syntax=t=strong:' + searchWord;
 			}
 			step.util.putStrongDetails(searchWord, displayText);
@@ -988,8 +1110,17 @@ step.searchSelect = {
 						previousSearchRelationship = " ";
 					var curSearchWord = "";
 					if (this.previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = this.previousSearchTokens[i].substr(5);
-					else if (this.previousSearchTokens[i].substr(0, 7) === "strong=")
+					else if (this.previousSearchTokens[i].substr(0, 7) === "strong=") {
+						if (searchWord.search(/([GH])\d{4,5}/) > -1) {
+							if (RegExp.$1 !== this.previousSearchTokens[i].substr(7, 1)) {
+								var msg = "You are trying to search Greek and Hebrew words together. If you do not intend to perform this type of search, just don't search Hebrew and Greek words together in a single search.  This is only supported by the \"Classical Interface\" when you have opened a Bible with Old Testament tagged with Hebrew words and another Bible with Old Testament tagged with Greek words.  To open the \"Classical Interface\" ";
+								msg += (window.innerWidth <= 767) ? "click on the three horizontal bars at the upper right, click on \"More\" and then click on \"Classical interface\"." :
+																	"click on \"More\" in the upper right and then click on \"Classical interface\".";
+								alert(msg);
+							}
+						}
 						curSearchWord = "strong:" + this.previousSearchTokens[i].substr(7);
+					}
 					if (curSearchWord !== "") {
 						numOfPreviousSyntaxSearch ++;
 						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=t=";

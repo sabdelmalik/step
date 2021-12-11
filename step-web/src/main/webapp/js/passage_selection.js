@@ -1,3 +1,4 @@
+window.step = window.step || {};
 step.passageSelect = {
 	version: "ESV_th",
 	userLang: "en",
@@ -7,7 +8,7 @@ step.passageSelect = {
 	lastNumOfChapters: '',
 	arrayOfTyplicalBooksChapters: [],
 	osisChapterJsword: [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
-		["Gen", 50, [54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,40,16,54,42,56,29,34,13]],
+		["Gen", 50, [31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,46,22,35,43,55,32,20,31,29,43,36,30,23,23,57,38,34,34,28,34,31,22,33,26]],
 		["Exo", 40, [22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38], "Exod"],
 		["Lev", 27, [17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,37,27,24,33,44,23,55,46,34]],
 		["Num", 36, [54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,40,16,54,42,56,29,34,13]],
@@ -115,7 +116,7 @@ step.passageSelect = {
 					if ((first2Char === "1 ") || (first2Char === "2 ") || (first2Char === "3 "))
 						checkString = checkString.substr(0,1) + checkString.substr(2);
 					if (checkString.indexOf(firstWord) == 0) {
-						firstWord = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
+						firstWord = (this.osisChapterJsword[i].length == 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
 						firstWord = firstWord.toLowerCase();
 						break;
 					}
@@ -142,7 +143,6 @@ step.passageSelect = {
 
 	_buildBookTable: function(summaryMode, translationType) {
 		$('#enterYourPassage').show();
-		$('#keyboard_icon').show();
 		if (((this.userLang.toLowerCase().indexOf("en") == 0) || (this.userLang.toLowerCase().indexOf("es") == 0) || (this.userLang.toLowerCase().indexOf("zh") == 0)) &&
 			(translationType !== "")) {
 			this._buildBookHTMLTable(translationType, summaryMode);
@@ -174,8 +174,8 @@ step.passageSelect = {
 									  (step.keyedVersions[data[i].item.initials].languageCode === "en"));
 			}
 		}
-		var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
-		var translationsWithPopularNTBooksChapters = ' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag ee elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ';
+		var translationsWithPopularBooksChapters = " niv esv nasb nasb_th nav sparv sparv1909 cun cuns chincvs abp abpgrk acv akjv alb arasvd asmulb asv bbe benulb bsb bulprotrev burjudson ccb clarke cro cym czebkr dan dan1871 darby dtn dutkant dutsvv ee esperanto fcb finbiblia finpr frebbb frecrl fremartin frepgr gen gerelb1871 gerelb1905 gergruenewald gersch gujulb haitian hcsb hinulb hnv hrvcb hunkar icelandic itadio itarive jfb jub kanulb kjv korhkjv korrv lbla luther mal1865 malulb maori marulb mhc mhcc nbla ndebele neno netfull nhe nhj nhm norsk norsmb ntlr nvi oriulb panulb pnvi polgdanska porar romcor roth rskj rwebs scofield serdke shona sparvg spasev swe1917 swekarlxii1873 tagangbiblia tamulb telulb tglulb tsk ukjv ukrainian umgreek urdulb viet vulgj web webb webm webs ylt ";
+		var translationsWithPopularNTBooksChapters = ' 20c abbott ant armwestern barnes bashautin burkitt bwe byz cebulb che1860 comm copsahhorner copsahidica copsahidicmss diag elz eth family godb hauulb indulb khmkcb latvian leb lo mont murd nepulb nestle pesh pltulb pnt portb rkjn rwp sblg sblgntapp spavnt swahili swaulb thgnt tisch tnt tr ukrkulish uma varapp weym whnu wors ';
 		var translationsWithPopularOTBooksChapters = ' ab gertextbibel kd wlc lees lxx rusmakarij ';
 		var lowerCaseVersion = ' ' + this.version.toLowerCase() + ' ';
 		versionAltName = ' ' + versionAltName.toLowerCase() + ' ';
@@ -433,8 +433,8 @@ step.passageSelect = {
 		$.getJSON(url, function (data) {
 			if (data.length > 0) {
 				if (data[0].suggestion.passage) {
+					console.log("Program error: unexpected result from SEARCH_AUTO_SUGGESTIONS");
 					console.log(data);
-					$('#userEnterPassageError').text("Program error: unexpend result from SEARCH_AUTO_SUGGESTIONS");
 				}
 				else if (!verifyOnly) step.passageSelect.goToPassage(data[0].suggestion.osisID, 0); // 0 is ready to go to passage
 			}
@@ -452,7 +452,6 @@ step.passageSelect = {
 	_buildChptrVrsTbl: function(data, bookOsisID, numOfChptrsOrVrs, isChapter, version, userLang, summaryMode) {
 		var headerMsg;
 		$('#enterYourPassage').hide();
-		$('#keyboard_icon').hide();
 		if (isChapter) {
 			headerMsg = __s.please_select_chapter;
 			this.modalMode = 'chapter';
