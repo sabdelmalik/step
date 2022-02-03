@@ -161,10 +161,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         }
 
         try {
-            if ((augmentedStrong.charAt(0) == 'G') || (augmentedStrong.charAt(0) == 'g'))
-                return PassageKeyFactory.instance().getKey(getESVBookVersification(), entityDocs[0].get(AS_REFERENCES));
-            else
-                return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
+            return PassageKeyFactory.instance().getKey(getOTBookVersification(), entityDocs[0].get(AS_REFERENCES));
         } catch (NoSuchKeyException e) {
             throw new StepInternalException("Unable to parse references for some of the entries in the augmented strongs data", e);
         }
@@ -185,12 +182,4 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     private Versification getOTBookVersification() {
         return this.versificationService.getVersificationForVersion(JSwordPassageServiceImpl.OT_BOOK);
     }
-
-    /**
-     * @return * @return the versification for ESV which should be NRSV versification
-     */
-    private Versification getESVBookVersification() {
-        return this.versificationService.getVersificationForVersion("ESV");
-    }
-
 }

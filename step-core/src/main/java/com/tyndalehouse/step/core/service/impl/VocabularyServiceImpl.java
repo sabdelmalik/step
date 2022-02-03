@@ -141,7 +141,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             if (subStrong != null && subStrong.length() > 3) {
                 final String first4Chars = subStrong.substring(0, 4);
                 try {
-                    String suffix = subStrong.length() > 4 && Character.isAlphabetic(subStrong.charAt(4)) ? subStrong.substring(4, 5) : ""; // removed the .toLowerCase() to support mixed case STRONG code
+                    String suffix = subStrong.length() > 4 && Character.isAlphabetic(subStrong.charAt(4)) ? subStrong.substring(4, 5).toLowerCase() : "";
                     return String.format("%c%04d%s", strongNumber.charAt(baseIndex),
                             Integer.parseInt(first4Chars), suffix);
                 } catch (final NumberFormatException ex) {
