@@ -55,9 +55,10 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         //for each key, we see if there is an augment strong number
         final StringBuilder query = new StringBuilder(keys.length * 10 + 16);
         query.append("(");
+        boolean hebrew = false;
         for (int i = 0; i < keys.length; i++) {
-            //if Hebrew and not augmented
-            if (isNonAugmentedHebrew(keys[i])) {
+            if (keys[i].charAt(0) == 'H') hebrew = true;
+            if (isNonAugmented(keys[i])) {
                 //then we're looking at Hebrew, so look up the augmentedStrongs data
                 //and we're looking for the first of any strong number
                 //build the lucene query...
@@ -83,7 +84,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 }
             }
             if (foundDigit) {
-                individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
+                if (hebrew) individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.OT_BOOK).getKey().getOsisID());
+                else individualVerses = StringUtils.split(this.versificationService.convertReference(reference, version, JSwordPassageService.REFERENCE_BOOK).getKey().getOsisID());
             }
             else { // If there are no chapter or verse number, the query does not need to list all the verses in the book.
                 individualVerses = new String[1];
@@ -138,8 +140,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return new AugmentedStrongs(augmentedStrongs.values().toArray(augmented), docs);
     }
 
-    private boolean isNonAugmentedHebrew(final String key) {
-        return key.charAt(0) == 'H' && Character.isDigit(key.charAt(key.length() - 1));
+    private boolean isNonAugmented(final String key) {
+        return (key.charAt(0) == 'H' || key.charAt(0) == 'G') && Character.isDigit(key.charAt(key.length() - 1));
     }
 
     @Override

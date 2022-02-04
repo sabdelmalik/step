@@ -24,6 +24,7 @@ public class AugmentedStrongsAnalyzer extends PerFieldAnalyzerWrapper {
     @Inject
     public AugmentedStrongsAnalyzer() {
         super(new StandardAnalyzer(LUCENE_30));
+        //addAnalyzer("augmentedStrong", new KeywordAnalyzer());  This line was added in Nov 2021, but does not seem to work.
         addAnalyzer("references", new ReferenceAnalyzer());
     }
 }
