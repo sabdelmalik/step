@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-mvn</artifactId>
-		<version>2.1.31-SNAPSHOT</version>
+		<version>2.1.37</version>
 	</parent>
 
 	<artifactId>step-web</artifactId>
@@ -643,11 +643,11 @@
 					<configuration>
 						<container>
 							<containerId>tomcat6x</containerId>
-							<home>/opt/bitnami/dev-step-tomcat</home>
+							<home>/var/lib/tomcat9</home>
 						</container>
 						<configuration>
 							<type>existing</type>
-							<home>/opt/bitnami/dev-step-tomcat</home>
+							<home>/var/lib/tomcat9</home>
 						</configuration>
 						<deployer>
 							<type>installed</type>

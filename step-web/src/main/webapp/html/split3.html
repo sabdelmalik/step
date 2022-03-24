@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>STEP with another frame</title>
+  <meta name="description" content="STEPBible reports on Gospel Harmony, Places (Maps), OT Parallels, NT Letter Structure, OT used in NT, Miracles...">
   <link rel="shortcut icon" href="/images/step-favicon.ico"/>
   <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
   <style>
@@ -58,8 +59,8 @@
     frameborder="1" scrolling="yes"                           
     style="display:block;background: #000;border: none;height: 48vh;width: 49vw;"
     align="left">
-</iframe>  
-<iframe id="f2" src="https://docs.google.com/document/d/0BwZi_iH0jiVPYmFJaHF5cW5qZGI4SzdqVWk0X3puNWF2LTZj/edit?resourcekey=0--q7VMimwQ9ohi78YEDzBog"
+</iframe>
+<iframe id="f2" src="https://www.stepbible.org/html/gospel_harmony.html"
     frameborder="1" scrolling="yes"  
     style="display:block;background: #000;border: none;height: 48vh;width: 48vw;"
     align="right">
@@ -85,6 +86,10 @@ src="/html/multimap.html?coord=33.545097,36.224661&book=2Kgs"></iframe>
     console.log(queryString);
     console.log(firstURL);
     console.log(secondURL);
+	if (secondURL.indexOf("places") > -1) {
+		document.title = "Maps, Geography of places, towns, rivers in the Bible";
+		document.getElementsByTagName('meta')["description"].content = "Locations, countries, towns, cities, rivers, places in the Bible, mapped, maps with Bible references. Searchable by reference or place names.";
+	}
 	var fullHeight = $(document).height();
 	var fullWidth = $(document).width();
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;
