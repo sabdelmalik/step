@@ -37,6 +37,7 @@ import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
@@ -69,10 +70,10 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
         this.versionResolver = versionResolver;
     }
 
-//    @Override
-//    public String getVerseRange(final int startVerseId, final int endVerseId) {
-//        return getVerseRange(startVerseId, endVerseId, JSwordPassageService.REFERENCE_BOOK);
-//    }
+    @Override
+    public String getVerseRange(final int startVerseId, final int endVerseId) {
+        return getVerseRange(startVerseId, endVerseId, JSwordPassageService.REFERENCE_BOOK);
+    }
 
     @Override
     public String getVerseRange(final int startVerseId, final int endVerseId, final String version) {
@@ -141,19 +142,7 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
 
         try {
             Passage p = PassageKeyFactory.instance().getKey(source, reference);
-            Passage pInTargetVersification = VersificationsMapper.instance().map(p, target);
-            //int ordinal = pInTargetVersification.getVerseAt(0).getOrdinal();
-            return new KeyWrapper(pInTargetVersification);
-        } catch (NoSuchKeyException e) {
-            throw new StepInternalException(e.getMessage(), e);
-        }
-    }
-
-    public int convertReferenceGetOrdinal (final String reference, final Versification source, final Versification target) {
-        try {
-            Passage p = PassageKeyFactory.instance().getKey(source, reference);
-            Passage pInTargetVersification = VersificationsMapper.instance().map(p, target);
-            return pInTargetVersification.getVerseAt(0).getOrdinal();
+            return new KeyWrapper(VersificationsMapper.instance().map(p, target));
         } catch (NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
         }

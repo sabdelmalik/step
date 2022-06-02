@@ -78,7 +78,6 @@ public class IndividualSearch {
     private String mainRange;
     private String[] originalFilter;
     private String originalQuery;
-    private String searchJoinType;
 
     /**
      * Instantiates a single search to be executed.
@@ -88,13 +87,11 @@ public class IndividualSearch {
      * @param query    the query to be run
      */
     public IndividualSearch(final SearchType type, final List<String> versions,
-                            final String query, final String range, final String[] filter,
-                            final String searchJoinType) {
+                            final String query, final String range, final String[] filter) {
         this.type = type;
         this.mainRange = range;
         this.versions = versions.toArray(new String[versions.size()]);
         this.originalFilter = filter;
-        this.searchJoinType = searchJoinType;
 
         if (this.type == SearchType.SUBJECT_SIMPLE) {
             this.originalQuery = query;
@@ -116,19 +113,8 @@ public class IndividualSearch {
      * @param restriction a restriction, other than the one specified in the syntax
      */
     public IndividualSearch(final String query, final String[] versions, final String restriction) {
-        this(query, versions, restriction, "AND");
-    }
-
-    /**
-     * Initialises the search from the query string.
-     *
-     * @param query       the query that is being sent to the app to search for
-     * @param restriction a restriction, other than the one specified in the syntax
-     */
-    public IndividualSearch(final String query, final String[] versions, final String restriction, final String searchJoinType) {
         this.secondaryRange = restriction;
         this.versions = versions;
-        this.searchJoinType = searchJoinType;
         if (query.startsWith(TEXT)) {
             this.query = transformToTextQuery(query.substring(TEXT.length()));
             this.type = SearchType.TEXT;
@@ -151,9 +137,10 @@ public class IndividualSearch {
             // return straight away
             throw new TranslatedException("blank_search_provided");
         }
+
         LOGGER.debug(
                 "The following search has been constructed: type [{}]\nquery [{}]\n subRange [{}], mainRange [{}]",
-                this.type, query, this.subRange, this.mainRange);
+                new Object[]{this.type, query, this.subRange, this.mainRange});
     }
 
     /**
@@ -277,8 +264,10 @@ public class IndividualSearch {
                 break;
         }
 
+        final String trimmedQuery = parsedSubject.substring(index);
+
         // fill in the query and versions
-        this.query = parsedSubject.substring(index);
+        this.query = trimmedQuery;
 
         if (this.type == SearchType.SUBJECT_SIMPLE) {
             // amend the query
@@ -305,13 +294,6 @@ public class IndividualSearch {
 
             this.query = subjectQuery.toString();
         }
-    }
-
-    /**
-     * @return the searchJoinType
-     */
-    public String getSearchJoinType() {
-        return this.searchJoinType;
     }
 
     /**
@@ -372,6 +354,13 @@ public class IndividualSearch {
     }
 
     /**
+     * @return the amendedQuery
+     */
+    public boolean isAmendedQuery() {
+        return this.amendedQuery;
+    }
+
+    /**
      * @return the subRange
      */
     public String getSubRange() {
@@ -386,11 +375,21 @@ public class IndividualSearch {
     }
 
     /**
+     * allows to set the main range
+     *
+     * @param mainRange the main range
+     */
+    public void setMainRange(String mainRange) {
+        this.mainRange = mainRange;
+    }
+
+    /**
      * @return the originalFilter
      */
     public String[] getOriginalFilter() {
         return this.originalFilter;
     }
+
 
     /**
      * @return The untampered query

@@ -60,7 +60,7 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.StrongAugmentationService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * The object that will be responsible for loading all the data into Lucene and downloading key versions of
@@ -72,42 +72,41 @@ import com.tyndalehouse.step.core.service.StrongAugmentationService;
  */
 public class Loader {
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
-//    private final JSwordPassageService jsword;
+    private final JSwordPassageService jsword;
     private final Properties coreProperties;
     private final JSwordModuleService jswordModule;
     private final EntityManager entityManager;
-    private final BlockingQueue<String> progress = new LinkedBlockingQueue<>();
-    private final Set<String> appSpecificModules = new HashSet<>();
+
+    private final BlockingQueue<String> progress = new LinkedBlockingQueue<String>();
+    private final Set<String> appSpecificModules = new HashSet<String>();
     private boolean complete = false;
     private final Provider<ClientSession> clientSessionProvider;
-    private final String runningAppVersion;
-    private final AppManagerService appManager;
+    private String runningAppVersion;
+    private AppManagerService appManager;
     private WorkListener workListener;
     private int totalProgress = 0;
     private int totalItems = 6;
     private boolean inProgress = false;
-    private final StrongAugmentationService strongAugmentationService;
 
     /**
      * The loader is given a connection source to load the data.
+     *
+     * @param jsword                the jsword service
      * @param jswordModule          the service helping with installation of jsword modules
      * @param coreProperties        the step core properties
      * @param entityManager         the entity manager
-     * @param strongAugmentationService            the strongAugmentationService Strong service
      * @param clientSessionProvider the client session provider
      */
     @Inject
-    public Loader( // final JSwordPassageService jsword,
-                  final JSwordModuleService jswordModule,
+    public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
-                  final StrongAugmentationService strongAugmentationService, final Provider<ClientSession> clientSessionProvider,
+                  final Provider<ClientSession> clientSessionProvider,
                   AppManagerService appManager
     ) {
-//        this.jsword = jsword;
+        this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
-        this.strongAugmentationService = strongAugmentationService;
         this.clientSessionProvider = clientSessionProvider;
         this.runningAppVersion = coreProperties.getProperty(AppManagerService.APP_VERSION);
         this.appManager = appManager;
@@ -213,7 +212,7 @@ public class Loader {
         this.jswordModule.installBook(version);
 
         // very ugly, but as good as it's going to get for now
-//        double installProgress = 0;
+        double installProgress = 0;
         this.addUpdate("installed_version_success", version);
     }
 
@@ -255,37 +254,28 @@ public class Loader {
         LOGGER.info("Finished loading...");
     }
 
-    void loadAugmentedStrongs() {
+    int loadAugmentedStrongs() {
         LOGGER.debug("Indexing augmented strongs");
-//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
-//        System.out.println("Total: " + (double) Runtime.getRuntime().totalMemory() / 1024);
-//        System.out.println("KB0: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
-        this.strongAugmentationService.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
-//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
-//
-//        System.out.println("KB1: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
-//        this.addUpdate("install_augmented_strongs");
-//
-//        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("augmentedStrongs");
-//
-//        final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
-//                this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
-//        loader.init(this);
-//
-//        final int close = writer.close();
-//
-//        this.addUpdate("install_augmented_strongs_complete", close);
-//        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
-//
-//        System.out.println("KB2: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
-        //return close;
+        this.addUpdate("install_augmented_strongs");
+
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("augmentedStrongs");
+
+        final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
+                this.coreProperties.getProperty("test.data.path.augmentedstrongs"));
+        loader.init(this);
+
+        final int close = writer.close();
+
+        this.addUpdate("install_augmented_strongs_complete", close);
+        return close;
     }
 
     /**
      * loads the alternative translation data.
      *
+     * @return the number of entries that have been loaded
      */
-    void loadAlternativeTranslations() {
+    int loadAlternativeTranslations() {
         LOGGER.debug("Indexing Alternative versions");
         this.addUpdate("install_alternative_meanings");
 
@@ -300,6 +290,7 @@ public class Loader {
         LOGGER.debug("Writing Alternative Versions index");
 
         this.addUpdate("install_alternative_meanings_complete", close);
+        return close;
     }
 
     /**
@@ -345,8 +336,9 @@ public class Loader {
     /**
      * Loads all of robinson's morphological data
      *
+     * @return the number of entries
      */
-    void loadRobinsonMorphology() {
+    int loadRobinsonMorphology() {
         this.addUpdate("install_grammar");
 
         LOGGER.debug("Loading robinson morphology");
@@ -358,13 +350,16 @@ public class Loader {
         LOGGER.debug("End of morphology");
 
         this.addUpdate("install_grammar_complete", total);
+
+        return total;
     }
 
     /**
      * Loads Tyndale's version information
      *
+     * @return the number of records loaded
      */
-    void loadVersionInformation() {
+    int loadVersionInformation() {
         this.addUpdate("install_descriptions");
 
         LOGGER.debug("Loading version information");
@@ -374,6 +369,8 @@ public class Loader {
         final int close = writer.close();
 
         this.addUpdate("install_descriptions_complete", close);
+        return close;
+
     }
 
     /**
@@ -506,7 +503,7 @@ public class Loader {
         try {
             locale = this.clientSessionProvider.get().getLocale();
         } catch (final ProvisionException ex) {
-            // LOGGER.debug("Loader can't get client session"); This line is useless because it will always generate an exception.  Since this is legacy code and does not affect any function, I am just commenting this out.
+            LOGGER.debug("Loader can't get client session");
             LOGGER.trace("Unable to provision", ex);
             locale = Locale.ENGLISH;
         }

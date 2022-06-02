@@ -69,7 +69,6 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.utils.language.GreekUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -119,8 +118,8 @@ public class SearchServiceImpl implements SearchService {
     /**
      * value representing a original spelling sort
      */
-    public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([GgHh]\\d+[a-zA-Z])");
-    public static final Pattern ALL_STRONGS = Pattern.compile("strong:([GgHh]\\d+[a-zA-Z]?)");
+    public static final Pattern AUGMENTED_STRONG = Pattern.compile("strong:([Hh]\\d+[a-zA-Z])");
+    public static final Pattern ALL_STRONGS = Pattern.compile("strong:[GgHh]\\d+\\w?");
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
     private static final String SYNTAX_FORMAT = "[%s...]";
     private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz", "LXX"};
@@ -175,6 +174,7 @@ public class SearchServiceImpl implements SearchService {
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
+
     }
 
     @Override
@@ -429,66 +429,35 @@ public class SearchServiceImpl implements SearchService {
         if (StringUtils.isNotBlank(filter)) {
             filters = StringUtils.split(filter, "[ ,]+");
         }
-        String[] searchJoins = new String[0];
+
         for (SearchToken st : searchTokens) {
             final String tokenType = st.getTokenType();
-            if (tokenType.equals("searchJoins")) {
-                searchJoins = st.getToken().split(",");
-                for (int i = 0; i < searchJoins.length; i++) {
-                    // If it is not AND, OR or NOT, use AND
-                    if ((!searchJoins[i].equals("AND")) && (!searchJoins[i].equals("OR")) &&
-                        (!searchJoins[i].equals("NOT")))
-                        searchJoins[i] = "AND";
-                }
-                break;
-            }
-        }
-        int searchJoinCount = -1;
-        for (SearchToken st : searchTokens) {
-            final String tokenType = st.getTokenType();
-            String curSearchJoin = "AND";
-            // The first search will have AND searchJoin. A searchJoinCount of -1 means it is the first search.
-            // If not enough searchJoins were provided by the request from the browser, the AND join will be used.
-            if ((searchJoinCount > -1) && (searchJoinCount < searchJoins.length))
-                curSearchJoin = searchJoins[searchJoinCount];
             if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
-                addWordSearches(versions, references, st.getToken(), filters, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addWordSearches(versions, references, st.getToken(), filters, individualSearches);
             } else if (SearchToken.MEANINGS.equals(tokenType)) {
-                addSearch(SearchType.ORIGINAL_MEANING, versions, references, st.getToken(), filters, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addSearch(SearchType.ORIGINAL_MEANING, versions, references, st.getToken(), filters, individualSearches);
             } else if (SearchToken.EXACT_FORM.equals(tokenType)) {
-                addSearch(SearchType.EXACT_FORM, versions, references, st.getToken(), filters, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addSearch(SearchType.EXACT_FORM, versions, references, st.getToken(), filters, individualSearches);
             } else if (SearchToken.TEXT_SEARCH.equals(tokenType)) {
-                addSearch(SearchType.TEXT, versions, references, st.getToken(), null, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addSearch(SearchType.TEXT, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.SUBJECT_SEARCH.equals(tokenType)) {
-                addSearch(SearchType.SUBJECT_SIMPLE, versions, references, st.getToken(), null, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addSearch(SearchType.SUBJECT_SIMPLE, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.NAVE_SEARCH.equals(tokenType)) {
-                addSearch(SearchType.SUBJECT_EXTENDED, versions, references, st.getToken(), null, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addSearch(SearchType.SUBJECT_EXTENDED, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.NAVE_SEARCH_EXTENDED.equals(tokenType)) {
-                addSearch(SearchType.SUBJECT_FULL, versions, references, st.getToken(), null, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addSearch(SearchType.SUBJECT_FULL, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.TOPIC_BY_REF.equals(tokenType)) {
-                addSearch(SearchType.SUBJECT_RELATED, versions, references, st.getToken(), null, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addSearch(SearchType.SUBJECT_RELATED, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.RELATED_VERSES.equals(tokenType)) {
-                addSearch(SearchType.RELATED_VERSES, versions, references, st.getToken(), null, individualSearches, curSearchJoin);
-                searchJoinCount ++;
+                addSearch(SearchType.RELATED_VERSES, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.SYNTAX.equals(tokenType)) {
                 //add a number of searches from the query syntax given...
                 final IndividualSearch[] searches = new SearchQuery(st.getToken(), versions.toArray(new String[versions.size()]), null,
-                        context, pageNumber, references, curSearchJoin).getSearches();
-                searchJoinCount ++;
+                        context, pageNumber, references).getSearches();
                 for (IndividualSearch is : searches) {
                     individualSearches.add(is);
-                    searchJoinCount ++;
                 }
-            }
-            else {
+            } else {
                 //ignore and do nothing - generally references and versions which have been parsed already
             }
         }
@@ -508,8 +477,8 @@ public class SearchServiceImpl implements SearchService {
      * @param searchTerm         the search term
      * @param individualSearches the searches to perform
      */
-    private void addSearch(final SearchType searchType, final List<String> versions, final String references, final String searchTerm, final String[] filter, final List<IndividualSearch> individualSearches, final String searchJoinType) {
-        individualSearches.add(new IndividualSearch(searchType, versions, searchTerm, getInclusion(references), filter, searchJoinType));
+    private void addSearch(final SearchType searchType, final List<String> versions, final String references, final String searchTerm, final String[] filter, final List<IndividualSearch> individualSearches) {
+        individualSearches.add(new IndividualSearch(searchType, versions, searchTerm, getInclusion(references), filter));
     }
 
     /**
@@ -522,7 +491,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private void addWordSearches(final List<String> versions, final String references,
                                  String strong, final String[] filters,
-                                 final List<IndividualSearch> individualSearches, final String searchJoinType) {
+                                 final List<IndividualSearch> individualSearches) {
         String[] filtersForSearch = filters;
         if (filters == null || filters.length == 0) {
             filtersForSearch = new String[]{strong};
@@ -533,7 +502,7 @@ public class SearchServiceImpl implements SearchService {
         boolean isGreek = strong.charAt(0) == 'G';
         individualSearches.add(new IndividualSearch(
                 isGreek ? SearchType.ORIGINAL_GREEK_RELATED : SearchType.ORIGINAL_HEBREW_RELATED,
-                versions, strong, getInclusion(references), filtersForSearch, searchJoinType));
+                versions, strong, getInclusion(references), filtersForSearch));
     }
 
 
@@ -893,12 +862,8 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult executeJoiningSearches(final SearchQuery sq) {
         // we run each individual search, and get all the keys out of each
 
-        ImmutablePair<Key, Set> r = runJoiningSearches(sq);
-        final Key results = r.getLeft();
-        final Set<String> strongs = r.getRight();
-        SearchResult result = getSearchResultFromKey(sq, results);
-        result.setStrongHighlights(new ArrayList<>(strongs));
-        return result;
+        final Key results = runJoiningSearches(sq);
+        return getSearchResultFromKey(sq, results);
     }
 
     /**
@@ -921,53 +886,50 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query
      * @return the key to all the results
      */
-    private ImmutablePair<Key, Set> runJoiningSearches(final SearchQuery sq) {
+    private Key runJoiningSearches(final SearchQuery sq) {
         Key results = null;
-        Set<String> strongs = new HashSet<String>();
         do {
-            IndividualSearch curSearch = sq.getCurrentSearch();
-            switch (curSearch.getType()) {
+            switch (sq.getCurrentSearch().getType()) {
                 case TEXT:
-                    results = intersect(results, this.jswordSearch.searchKeys(sq), curSearch.getSearchJoinType());
+                    results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
                 case ORIGINAL_GREEK_FORMS:
                 case ORIGINAL_HEBREW_FORMS:
                     adaptQueryForStrongSearch(sq);
-                    results = intersect(results, this.jswordSearch.searchKeys(sq), curSearch.getSearchJoinType());
+                    results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
                 case ORIGINAL_GREEK_RELATED:
                 case ORIGINAL_HEBREW_RELATED:
-                    Set<String> curSetOfStrong = adaptQueryForRelatedStrongSearch(sq);
-                    results = intersect(results, this.runStrongTextSearchKeys(sq, curSetOfStrong), curSearch.getSearchJoinType());
-                    strongs.addAll(curSetOfStrong);
+                    Set<String> strongs = adaptQueryForRelatedStrongSearch(sq);
+                    results = intersect(results, this.runStrongTextSearchKeys(sq, strongs));
                     break;
                 case ORIGINAL_MEANING:
-                    strongs.addAll(adaptQueryForMeaningSearch(sq));
-                    results = intersect(results, this.jswordSearch.searchKeys(sq), curSearch.getSearchJoinType());
+                    adaptQueryForMeaningSearch(sq);
+                    results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
                 case EXACT_FORM:
-                    results = intersect(results, getKeysFromOriginalText(sq), curSearch.getSearchJoinType());
+                    results = intersect(results, getKeysFromOriginalText(sq));
                     break;
                 case SUBJECT_SIMPLE:
                 case SUBJECT_EXTENDED:
                 case SUBJECT_FULL:
-                    curSearch.setType(SearchType.SUBJECT_FULL);
-                    curSearch.setQuery(curSearch.getOriginalQuery());
-                    results = intersect(results, this.subjects.getKeys(sq), curSearch.getSearchJoinType());
+                    sq.getCurrentSearch().setType(SearchType.SUBJECT_FULL);
+                    sq.getCurrentSearch().setQuery(sq.getCurrentSearch().getOriginalQuery());
+                    results = intersect(results, this.subjects.getKeys(sq));
                     break;
                 case SUBJECT_RELATED:
                     //no override for related topic searches
-                    results = intersect(results, this.subjects.getKeys(sq), curSearch.getSearchJoinType());
+                    results = intersect(results, this.subjects.getKeys(sq));
                     break;
                 case RELATED_VERSES:
-                    results = intersect(results, this.relatedVerseService.getRelatedVerses(curSearch.getVersions()[0], curSearch.getQuery()), curSearch.getSearchJoinType());
+                    results = intersect(results, this.relatedVerseService.getRelatedVerses(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery()));
                     break;
                 default:
                     throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), sq
                             .getCurrentSearch().getType().getLanguageKey());
             }
         } while (sq.hasMoreSearches());
-        return new ImmutablePair<>(results, strongs);
+        return results;
     }
 
     /**
@@ -1071,7 +1033,7 @@ public class SearchServiceImpl implements SearchService {
             throw new TranslatedException(e, "invalid_reference_in_book", secondaryRange, bookFromVersion.getInitials());
         }
 
-        k = intersect(k, this.jswordSearch.searchKeys(sq), "");
+        k = intersect(k, this.jswordSearch.searchKeys(sq));
         return this.getSearchResultFromKey(sq, k);
     }
 
@@ -1199,10 +1161,8 @@ public class SearchServiceImpl implements SearchService {
         matchAugmentedStrongs.reset();
         while (matchAugmentedStrongs.find()) {
             final String as = matchAugmentedStrongs.group(1);
-            if (!augmentedStrongs.contains(as)) {
-                augmentedStrongs.add(as);
-                strongs.add(this.strongAugmentationService.reduce(as).toUpperCase());
-            }
+            augmentedStrongs.add(as);
+            strongs.add(this.strongAugmentationService.reduce(as).toUpperCase());
         }
 
         //run the normal search
@@ -1210,25 +1170,26 @@ public class SearchServiceImpl implements SearchService {
         if (simpleStrongSearch.contains("strong")) {
             currentSearch.setQuery(simpleStrongSearch);
             key = this.jswordSearch.searchKeys(sq);
-            String simpleStrongNum = simpleStrongSearch.replace("strong:", "").replaceAll(" ", "");
-            this.strongAugmentationService.updatePassageKeyWithAugStrong(simpleStrongNum, key);
         }
+
         //work out the original query without the normal strong numbers
         String blankQuery = ALL_STRONGS.matcher(currentQuery).replaceAll("");
         for (String as : augmentedStrongs) {
-            currentSearch.setQuery(blankQuery + " strong:" + as.substring(0, as.length()-1));
-            Key augmentedResults = this.jswordSearch.searchKeys(sq);
+            currentSearch.setQuery(blankQuery + " strong:" + as.substring(0, as.length() - 1));
+            Key potentialAugmentedResults = this.jswordSearch.searchKeys(sq);
+
             //filter results by augmented strong data set
-            this.strongAugmentationService.updatePassageKeyWithAugStrong(as, augmentedResults);
-            //Key masterAugmentedFilter = this.strongAugmentationService.getVersesForAugmentedStrong(as);
-            //potentialAugmentedResults = intersect(potentialAugmentedResults, masterAugmentedFilter);
+            Key masterAugmentedFilter = this.strongAugmentationService.getVersesForAugmentedStrong(as);
+            potentialAugmentedResults = intersect(potentialAugmentedResults, masterAugmentedFilter);
+
             //add results to current set
             if (key == null) {
-                key = augmentedResults;
+                key = potentialAugmentedResults;
             } else {
-                key.addAll(augmentedResults);
+                key.addAll(potentialAugmentedResults);
             }
         }
+
         currentSearch.setQuery(currentQuery);
         return key;
     }
@@ -1410,8 +1371,8 @@ public class SearchServiceImpl implements SearchService {
 
         setUniqueConsideredDefinitions(sq, results, relatedResults);
 
-        // append range to query.  On 11/17/2021 remove lowercase() to support mix case suffix in Strong number
-        sq.getCurrentSearch().setQuery( fullQuery.toString(), true);
+        // append range to query
+        sq.getCurrentSearch().setQuery(fullQuery.toString().toLowerCase(), true);
         return filteredStrongs;
     }
 
@@ -1490,9 +1451,9 @@ public class SearchServiceImpl implements SearchService {
                 final String strongNumber = doc.get(STRONG_NUMBER_FIELD);
                 if (isInFilter(strongNumber, sq)) {
                     filteredStrongs.add(strongNumber);
-                    final String possibleAppend = STRONG_QUERY + strongNumber + " ";
-                    if (fullQuery.indexOf(possibleAppend) == -1) // prevent duplicates
-                        fullQuery.append(possibleAppend);
+                    fullQuery.append(STRONG_QUERY);
+                    fullQuery.append(strongNumber);
+                    fullQuery.append(' ');
                 }
             }
             return results;
@@ -1634,7 +1595,7 @@ public class SearchServiceImpl implements SearchService {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         final String searchStrong = currentSearch.getQuery();
 
-        //LOGGER.debug("Searching for strongs [{}]", searchStrong);
+        LOGGER.debug("Searching for strongs [{}]", searchStrong);
         return splitToStrongs(searchStrong, sq.getCurrentSearch().getType());
     }
 
@@ -1748,9 +1709,9 @@ public class SearchServiceImpl implements SearchService {
         final Set<String> strongList = new HashSet<>();
         for (final String s : strongs) {
             //if non-augmented, we take the string
-            String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
-            prefixedStrong = prefixedStrong.substring(0, 1).toUpperCase(Locale.ENGLISH) + prefixedStrong.substring(1);  // uppercase first letter
-            String paddedStrong = padStrongNumber(prefixedStrong, false);
+            final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
+            String paddedStrong = padStrongNumber(prefixedStrong.toUpperCase(Locale.ENGLISH), false);
+
             if(Character.isDigit(paddedStrong.charAt(paddedStrong.length() - 1))) {
                 Character suffix = this.strongAugmentationService.getAugmentedStrongSuffix(s);
                 if (suffix != null) {
@@ -1816,7 +1777,7 @@ public class SearchServiceImpl implements SearchService {
      * @param searchKeys the search keys of the current search
      * @return the intersection of both Keys, or searchKeys if results is null
      */
-    private Key intersect(final Key results, final Key searchKeys, final String searchJoinType) {
+    private Key intersect(final Key results, final Key searchKeys) {
         //haven't started interesecting yet? just use the other side
         if (results == null) {
             return searchKeys;
@@ -1844,16 +1805,12 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-        // otherwise we intersect and adjust the "total"
-        if (searchJoinType.equals("OR"))
-            results.addAll(versifiedSearchKeys);
-        else if (searchJoinType.equals("NOT"))
-            results.removeAll(versifiedSearchKeys);
-        else
-            results.retainAll(versifiedSearchKeys);
+
+        // otherwise we interesect and adjust the "total"
+        results.retainAll(versifiedSearchKeys);
 
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("Results after ", searchJoinType, " of results: ", results.getOsisRef());
+            LOGGER.trace("Results after retain: ", results.getOsisRef());
         }
         return results;
     }

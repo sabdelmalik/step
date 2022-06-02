@@ -52,11 +52,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 /**
@@ -82,13 +85,13 @@ public class ModuleController {
                             final VocabularyService vocabulary,
                             final SwingService swingService) {
         notNull(moduleService,
-                "Initialising the module service in the module administration controller failed",
+                "Intialising the module service in the module administration controller failed",
                 CONTROLLER_INITIALISATION_ERROR);
         notNull(morphology,
-                "Initialising the morphology service failed in the module administration controller",
+                "Intialising the morphology service failed in the module administration controller",
                 CONTROLLER_INITIALISATION_ERROR);
         notNull(swingService,
-                "Initialising the swing service failed in the module administration controller",
+                "Intialising the swing service failed in the module administration controller",
                 CONTROLLER_INITIALISATION_ERROR);
         this.swingService = swingService;
         this.moduleService = moduleService;
@@ -137,7 +140,7 @@ public class ModuleController {
     /**
      * a method that returns all the definitions for a particular key
      *
-     * @param version          Bible version
+     * @param vocabIdentifiers the strong number
      * @param reference        the reference in which this can be found
      * @param vocabIdentifiers the strong number
      * @return the definition(s) that can be resolved from the reference provided
@@ -148,7 +151,7 @@ public class ModuleController {
     /**
      * a method that returns all the definitions for a particular key
      *
-     * @param version          the Bible version
+     * @param vocabIdentifiers the strong number
      * @param reference        the reference in which this can be found
      * @param vocabIdentifiers the strong number
      * @param morphIdentifiers the morphology code to lookup
@@ -183,27 +186,13 @@ public class ModuleController {
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, vocabIdentifiers, userLanguage), true, userLanguage));
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.endsWith("A")) {
-                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "A");
-                    i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
-                }
-            }
-            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.endsWith("G")) {
-                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equalsIgnoreCase("a")) {
+                    String modifiedVocabIdentifiers = vocabIdentifiers.concat("a");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
                 }
             }
         }
         return i;
-    }
-
-    public String appendStrongSuffix(final String originalStrongNumber, final String suffix) {
-        int strLength = originalStrongNumber.length();
-        if (Character.isDigit(originalStrongNumber.charAt(strLength - 1))) {
-            return originalStrongNumber.concat(suffix);
-        }
-        return originalStrongNumber.substring(0, strLength - 1).concat(suffix); // last character in Strong number is not numeric so remove it first.
     }
 
     /**
@@ -242,6 +231,7 @@ public class ModuleController {
      * @param morphIdentifiers the morphology code to lookup
      * @param userLanguage     the language code (e.g.: en, es, zh) selected by the user in his/her browser.
      * @return the definition(s) that can be resolved from the reference provided
+     * @parma reference the verse in which the word is found
      */
     @Timed(name = "quick-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public Info getQuickInfo(final String version, final String reference, final String vocabIdentifiers, final String morphIdentifiers, final String userLanguage) {
@@ -255,14 +245,8 @@ public class ModuleController {
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, vocabIdentifiers, userLanguage), false, userLanguage));
             if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.endsWith("A")) {
-                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "A");
-                    i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
-                }
-            }
-            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
-                if (!vocabIdentifiers.endsWith("G")) {
-                    String modifiedVocabIdentifiers = appendStrongSuffix(vocabIdentifiers, "G");
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equalsIgnoreCase("a")) {
+                    String modifiedVocabIdentifiers = vocabIdentifiers.concat("a");
                     i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
                 }
             }
@@ -279,10 +263,11 @@ public class ModuleController {
      */
     private List<VocabInfo> translateToVocabInfo(final VocabResponse vocabResponse,
                                                  final boolean includeAllInfo, final String userLanguage) {
-        final List<VocabInfo> morphologyInfos = new ArrayList<>(
+        final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(
                 vocabResponse.getDefinitions().length);
         EntityDoc[] definitions = vocabResponse.getDefinitions();
-        for (EntityDoc d : definitions) {
+        for (int i = 0; i < definitions.length; i++) {
+            EntityDoc d = definitions[i];
             morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), includeAllInfo, userLanguage));
         }
         return morphologyInfos;
@@ -296,7 +281,7 @@ public class ModuleController {
      * @return the morphology information pojo
      */
     private List<MorphInfo> translateToInfo(final List<EntityDoc> morphologies, final boolean includeAllInfo) {
-        final List<MorphInfo> morphologyInfos = new ArrayList<>(morphologies.size());
+        final List<MorphInfo> morphologyInfos = new ArrayList<MorphInfo>(morphologies.size());
         for (final EntityDoc m : morphologies) {
             morphologyInfos.add(new MorphInfo(m, includeAllInfo));
         }

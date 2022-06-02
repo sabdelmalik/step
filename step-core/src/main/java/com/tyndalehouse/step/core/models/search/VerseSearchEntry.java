@@ -19,7 +19,7 @@ public class VerseSearchEntry extends LexicalSearchEntry {
     }
 
     /**
-     * @param key     meaningful key to the user
+     * @param key     meaninful key to the user
      * @param preview the preview text
      * @param osisId  TODO
      */

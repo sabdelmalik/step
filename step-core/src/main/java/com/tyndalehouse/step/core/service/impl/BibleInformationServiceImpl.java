@@ -170,8 +170,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final List<String> extraVersions = getExtraVersionsFromString(interlinearVersion);
         final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(this.optionsValidationService.getLookupOptions(options), version,
                 extraVersions, InterlinearMode.NONE, null);
-        return this.jswordPassage.getOsisTextByVerseNumbers(version, version,
-                startVerseId, endVerseId, new ArrayList<>(lookupOptions), interlinearVersion, roundUp, false);
+        final OsisWrapper passage = this.jswordPassage.getOsisTextByVerseNumbers(version, version,
+                startVerseId, endVerseId, new ArrayList<LookupOption>(lookupOptions), interlinearVersion, roundUp, false);
+        return passage;
     }
 
     /**
@@ -195,7 +196,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final InterlinearMode desiredModeOfDisplay = this.optionsValidationService.getDisplayMode(interlinearMode, version, extraVersions);
 
         OsisWrapper passageText;
-        final List<TrimmedLookupOption> removedOptions = new ArrayList<>(4);
+        final List<TrimmedLookupOption> removedOptions = new ArrayList<TrimmedLookupOption>(4);
         final List<LookupOption> inputLookupOptions = this.optionsValidationService.getLookupOptions(options);
         final InterlinearMode realModeOfDisplay = this.optionsValidationService.determineDisplayMode(inputLookupOptions, desiredModeOfDisplay, true);
         final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(inputLookupOptions, version, extraVersions,
@@ -229,7 +230,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @return
      */
     private String getRemovedOptions(final List<TrimmedLookupOption> removedOptions) {
-        List<LookupOption> options = new ArrayList<>(removedOptions.size());
+        List<LookupOption> options = new ArrayList<LookupOption>(removedOptions.size());
         for (TrimmedLookupOption o : removedOptions) {
             options.add(o.getOption());
         }
@@ -244,7 +245,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     @Override
     public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference, final String userLanguage) {
-        Verse key;
+        boolean isMultipleVerses = false;
+        Verse key = null;
         final Versification versificationForVersion = this.jswordVersification.getVersificationForVersion(version);
 
         try {
@@ -314,7 +316,6 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private String[] getInterleavedVersions(final String version, final String interlinearVersion) {
         final String[] versions = StringUtils
                 .split(version + VERSION_SEPARATOR + interlinearVersion, "[, ]+");
-        // CHECK THIS OUT.  Don't understand what this is doing.  May 26, 2022 PT
         for (int i = 0; i < versions.length; i++) {
             versions[i] = versions[i];
         }
@@ -331,7 +332,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Override
     public List<EnrichedLookupOption> getAllFeatures() {
         final LookupOption[] lo = LookupOption.values();
-        final List<EnrichedLookupOption> elo = new ArrayList<>(lo.length + 1);
+        final List<EnrichedLookupOption> elo = new ArrayList<EnrichedLookupOption>(lo.length + 1);
 
         for (final LookupOption lookupOption : lo) {
             final String displayName = lookupOption.name();
@@ -350,7 +351,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      */
     private List<String> getExtraVersionsFromString(final String extraVersions) {
         if (extraVersions == null) {
-            return new ArrayList<>(0);
+            return new ArrayList<String>(0);
         }
         return Arrays.asList(StringUtils.split(extraVersions, ","));
     }
@@ -394,7 +395,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     @Override
     public List<BibleInstaller> getInstallers() {
-        List<BibleInstaller> bibleInstallers = new ArrayList<>();
+        List<BibleInstaller> bibleInstallers = new ArrayList<BibleInstaller>();
         final List<Installer> installers = this.jswordModule.getInstallers();
         for (int ii = 0; ii < installers.size(); ii++) {
             final Installer installer = installers.get(ii);
@@ -403,6 +404,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             boolean accessesInternet = true;
             if (installer instanceof StepHttpSwordInstaller) {
                 name = ((StepHttpSwordInstaller) installer).getInstallerName();
+                accessesInternet = true;
             } else if (installer instanceof DirectoryInstaller) {
                 name = ((DirectoryInstaller) installer).getInstallerName();
                 accessesInternet = false;

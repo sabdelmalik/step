@@ -46,6 +46,15 @@ import org.crosswire.jsword.versification.Versification;
 public interface JSwordVersificationService {
 
     /**
+     * Uses the default versification to return the verse range name
+     * 
+     * @param startVerseId the starting verse ordinal
+     * @param endVerseId the ending verse ordinal
+     * @return the reference in human readable form
+     */
+    String getVerseRange(int startVerseId, int endVerseId);
+
+    /**
      * Uses the version of the given book and calculates the verse range name
      * 
      * @param startVerseId the starting verse ordinal
@@ -112,7 +121,4 @@ public interface JSwordVersificationService {
      * @return the converted reference
      */
     KeyWrapper convertReference(String reference, String sourceVersion, String targetVersion);
-
-    int convertReferenceGetOrdinal(final String reference, final Versification source, Versification target);
-
 }

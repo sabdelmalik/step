@@ -42,6 +42,7 @@ import java.io.OutputStream;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,9 +50,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +93,8 @@ public class ImageController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse response) {
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
+            throws ServletException, IOException {
         try {
             final String pathToImage = req.getRequestURI().substring(
                     req.getContextPath().length() + req.getServletPath().length());
@@ -120,7 +121,7 @@ public class ImageController extends HttpServlet {
      */
     private void download(final File image, final String pathToImage, final HttpServletResponse response) {
         final HttpGet get = new HttpGet(this.remoteSource + pathToImage);
-        final HttpClient client = HttpClientBuilder.create().build();
+        final DefaultHttpClient client = new DefaultHttpClient();
 
         // two streams for downloading
         OutputStream fileOutput = null;
