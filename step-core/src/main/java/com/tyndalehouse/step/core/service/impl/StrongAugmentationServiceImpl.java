@@ -527,7 +527,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return strong;
     }
 
-    public void readAndLoad(final String augStrongFile) {
+    public void readAndLoad(final String augStrongFile, final String installFilePath) {
         Reader fileReader = null;
         InputStream stream = null;
         BufferedInputStream bufferedStream = null;
@@ -542,7 +542,17 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         try {
             stream = ModuleLoader.class.getResourceAsStream(augStrongFile);
             if (stream == null) {
-                throw new StepInternalException("Unable to read resource: " + augStrongFile);
+                int pos = installFilePath.lastIndexOf("\\");
+                if (pos == -1) pos = installFilePath.lastIndexOf("/");
+                if (pos > 1) {
+                    String path = installFilePath.substring(0, pos) + "\\" + augStrongFile;
+                    try {
+                        stream = new FileInputStream(new File(path));
+                    } catch (final FileNotFoundException e) {
+                        throw new StepInternalException("Unable to read resource: " + path);
+                    }
+                }
+                else throw new StepInternalException("Unable to read resource: " + augStrongFile);
             }
             bufferedStream = new BufferedInputStream(stream);
             fileReader = new InputStreamReader(bufferedStream, StandardCharsets.UTF_8);

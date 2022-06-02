@@ -42,7 +42,7 @@ public interface StrongAugmentationService {
 
     boolean isNonAugmented(final String key);
 
-    void readAndLoad(final String csvResource);
+    void readAndLoad(final String augStrongFile, final String installFilePath);
 
 //    int convertOSIS2Ordinal(final String OSIS, final Versification curVersification);
 
