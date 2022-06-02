@@ -97,8 +97,7 @@ public class Loader {
      * @param clientSessionProvider the client session provider
      */
     @Inject
-    public Loader( // final JSwordPassageService jsword,
-                  final JSwordModuleService jswordModule,
+    public Loader(final JSwordModuleService jswordModule,
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
                   final StrongAugmentationService strongAugmentationService, final Provider<ClientSession> clientSessionProvider,
                   AppManagerService appManager
@@ -255,7 +254,7 @@ public class Loader {
         LOGGER.info("Finished loading...");
     }
 
-    void loadAugmentedStrongs() {
+    public void loadAugmentedStrongs() {
         LOGGER.debug("Indexing augmented strongs");
 //        System.gc(); // Free memory that will never be used after the initial load.  This like is probably unnecessary but just in case.
 //        System.out.println("Total: " + (double) Runtime.getRuntime().totalMemory() / 1024);
