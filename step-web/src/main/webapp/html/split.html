@@ -69,11 +69,52 @@
 <script>
 
 (function() {
-    var queryString = window.location.search;
-    if (queryString.substr(0,1) === "?") queryString = queryString.substr(1);
-    if (queryString.length < 15) return;
-    var posOfSecondURL = queryString.indexOf("&secondURL=");
-    var firstURL = queryString.substr(0, posOfSecondURL);
+	if (typeof jQuery == 'undefined') {
+		var urlPart1 = window.location.origin;
+		var pos = window.location.href.indexOf("/html/split.html");
+		if (pos > 8) urlPart1 = window.location.href.substr(0, pos);
+		loadFile(urlPart1 + '/libs/jquery-1.10.2.min.js'); // Load the script
+		// Poll for jQuery to come into existance
+		var checkReady = function(callback) {
+			if (window.jQuery) {
+				callback(jQuery);
+			}
+			else {
+				window.setTimeout(function() { checkReady(callback); }, 200);
+			}
+		};
+		// Start polling...
+		checkReady(function($) {
+			$(function() {
+				setupIFrames();
+			});
+		});
+	}
+	else setupIFrames();
+})();
+
+function loadFile(path) {
+  if (path.endsWith(".js")) {
+    var fileref = document.createElement("script");
+    fileref.setAttribute("type", "text/javascript");
+    fileref.setAttribute("src", path);
+  } else if (path.endsWith(".css")) {
+    var fileref = document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", path);
+  }
+  else return;
+  fileref.async = false;
+  document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
+function setupIFrames() {
+	var queryString = window.location.search;
+	if (queryString.substr(0,1) === "?") queryString = queryString.substr(1);
+	if (queryString.length < 15) return;
+	var posOfSecondURL = queryString.indexOf("&secondURL=");
+	var firstURL = queryString.substr(0, posOfSecondURL);
 	posOfSecondURL += 11;
 	var posOfWidthPercent = queryString.indexOf("&widthPercent=");
 	var secondURLLength = (posOfWidthPercent == -1) ? queryString.length - posOfSecondURL : posOfWidthPercent - posOfSecondURL;
@@ -109,33 +150,55 @@
 		document.title = "Maps, Geography of places, towns, rivers in the Bible";
 		document.getElementsByTagName('meta')["description"].content = "Locations, countries, towns, cities, rivers, places in the Bible, mapped, maps with Bible references. Searchable by reference or place names.";
 	}
+	else if (secondURL.indexOf("one_year_chrono_NT_related_OT") > -1) {
+		document.title = "One Year Chronological NT with Related OT";
+		document.getElementsByTagName('meta')["description"].content = "One Year reading plan of chronological events in the New Testament with related Old Testament passages.";
+	}
+	else if (secondURL.indexOf("one_year_chrono_OT_and_NT_together") > -1) {
+		document.title = "One Year Chronological NT and OT";
+		document.getElementsByTagName('meta')["description"].content = "One Year reading plan of chronological events in the New Testament and Old Testament passages.";
+	}
+	else if (secondURL.indexOf("one_year_chrono_OT_related_NT") > -1) {
+		document.title = "One Year Chronological OT with Related NT";
+		document.getElementsByTagName('meta')["description"].content = "One Year reading plan of chronological events in the Old Testament with related New Testament passages.";
+	}
+	else if (secondURL.indexOf("one_year_themes_chrono") > -1) {
+		document.title = "One Year Themes Chronological";
+		document.getElementsByTagName('meta')["description"].content = "One Year reading plan of themes chronologically.";
+	}
+	else if (secondURL.indexOf("two_year_chrono_OT_related_NT") > -1) {
+		document.title = "Two Year Chronological OT with Related NT";
+		document.getElementsByTagName('meta')["description"].content = "Two Year reading plan of chronological events in the Old Testament with related New Testament passages..";
+	}
 	var fullHeight = $(document).height();
 	var remainingHeight = 100 - Math.ceil((fullHeight - $("#splithdr").height()) / fullHeight) - 1;
 	$("#f1").css("height", remainingHeight + "vh");
 	$("#f2").css("height", remainingHeight + "vh");
-    if (firstURL.length > 13) document.getElementById("f1").src = firstURL;
+	if (firstURL.length > 13) document.getElementById("f1").src = firstURL;
     if (secondURL.length > 13) document.getElementById("f2").src = secondURL;
 	if ((width >= 30) && (width <= 70)) {
 		$("#f1").css("width", width + "vw");
 		$("#f2").css("width", (98 - width) + "vw");
 		$($("#myRange")[0]).val(width)
 	}
-})();
+	
+	var slider = document.getElementById("myRange");
 
-var slider = document.getElementById("myRange");
+	slider.oninput = function() {
+		$("#f1").css("width", this.value + "vw");
+		$("#f2").css("width", (98 - this.value) + "vw");
+	}
 
-slider.oninput = function() {
-	$("#f1").css("width", this.value + "vw");
-	$("#f2").css("width", (98 - this.value) + "vw");
+	$("#url2").on("keydown",function search(e) {
+		if (e.keyCode == 13) {
+			var newUrl = $(this).val();
+			if (!newUrl.toLowerCase().startsWith("http")) newUrl = "https://" + newUrl;
+			document.getElementById("f2").src = newUrl;
+		}
+	});
+
+	
 }
-
-$("#url2").on("keydown",function search(e) {
-    if (e.keyCode == 13) {
-		var newUrl = $(this).val();
-		if (!newUrl.toLowerCase().startsWith("http")) newUrl = "https://" + newUrl;
-		document.getElementById("f2").src = newUrl;
-    }
-});
 
 function copyURLToClipboard() {
 	var iFrame1URL = document.getElementById("f1").contentWindow.location.href;
@@ -158,7 +221,7 @@ function outFunc() {
 
 window.onmessage = function(e) {
     if ((typeof e.data === "string") && (typeof e.origin === "string") &&
-		 ((e.origin.indexOf("stepbible.org") > -1) || (e.origin.indexOf("localhost") > -1)) ) {
+		 ((e.origin.indexOf("stepbible.org") > -1) || (e.origin.indexOf("8080") > -1) ) ) {
         var curURL = document.getElementById("f1").contentWindow.location.href;
 		var left = "";
 		var right = "";
