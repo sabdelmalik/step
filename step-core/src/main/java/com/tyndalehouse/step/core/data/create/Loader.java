@@ -250,14 +250,14 @@ public class Loader {
 //pt20201119        loadOpenBibleGeography();
 //pt20201119        loadHotSpots();
 //pt20201119        loadTimeline();
-        loadAugmentedStrongs();
+        loadAugmentedStrongs(true);
         LOGGER.info("Finished loading...");
     }
 
-    public void loadAugmentedStrongs() {
+    public void loadAugmentedStrongs(boolean loadAugmentedFile) {
         LOGGER.debug("Indexing augmented strongs");
-        this.strongAugmentationService.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"), appManager.getStepInstallFile().toString());
-
+        if (loadAugmentedFile) this.strongAugmentationService.readAndLoad(this.coreProperties.getProperty("test.data.path.augmentedstrongs"), appManager.getStepInstallFile().toString());
+        else this.strongAugmentationService.readAndLoad("", appManager.getStepInstallFile().toString());
     }
 
     /**

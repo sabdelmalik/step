@@ -34,39 +34,42 @@ import static java.lang.Integer.parseInt;
 public class StrongAugmentationServiceImpl implements StrongAugmentationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StrongAugmentationServiceImpl.class);
     private final JSwordVersificationService versificationService;
-    private static int numOfGreekStrongWithAugments;
-    private static int numOfAugStrongInOT;
-    private static int numOfAugStrongInNT;
+    private static AugmentedStrongsData augStrongData = new AugmentedStrongsData();
+    private static class AugmentedStrongsData implements Serializable {
+        private int numOfGreekStrongWithAugments;
+        private int numOfAugStrongInOT;
+        private int numOfAugStrongInNT;
 
-    // An array of Strong numbers with augmented strongs.  If a Strong does not have augmented, it will not be in this
-    // array.  Each Strong number is a short (15 bits) so Strong numbers cannot be over 32,767.  15 bits should be OK
-    // because all Strong with augments are 4 digits.  If 15 bit is not enough, change it from a short[] to int[]
-    // This array is sorted so that binary search can be used to speed up the lookup.  Since a lookup is need for every
-    // Strong word, it is important the lookup is efficient.
-    private static short[] strongsWithAugments;
+        // An array of Strong numbers with augmented strongs.  If a Strong does not have augmented, it will not be in this
+        // array.  Each Strong number is a short (15 bits) so Strong numbers cannot be over 32,767.  15 bits should be OK
+        // because all Strong with augments are 4 digits.  If 15 bit is not enough, change it from a short[] to int[]
+        // This array is sorted so that binary search can be used to speed up the lookup.  Since a lookup is need for every
+        // Strong word, it is important the lookup is efficient.
+        private short[] strongsWithAugments;
 
-    // The following two arrays are related to strongsWithAugments array.  The same index is used for strongsWithAugments,
-    // strong2AugStrongIndex and strong2AugStrongCount.
-    // strong2AugStrongIndex has the index to access the array of first augmented Strongs for a Strong number.
-    // strong2AugStrongCount has a number of augmented strong for a specific strong.  For example, if H0001 has H0001A and H0001B,
-    // strong2AugStrongCount will contain a 2.
-    private static short[] strong2AugStrongIndex;
-    private static byte[] strong2AugStrongCount;
+        // The following two arrays are related to strongsWithAugments array.  The same index is used for strongsWithAugments,
+        // strong2AugStrongIndex and strong2AugStrongCount.
+        // strong2AugStrongIndex has the index to access the array of first augmented Strongs for a Strong number.
+        // strong2AugStrongCount has a number of augmented strong for a specific strong.  For example, if H0001 has H0001A and H0001B,
+        // strong2AugStrongCount will contain a 2.
+        private short[] strong2AugStrongIndex;
+        private byte[] strong2AugStrongCount;
 
-    // The following two arrays (one for OT and another for NT) has the index to the references (passages) for an augmented
-    // strong.  The first byte contains the last character of an augmented Strong (e.g.: G, A, B, ...)
-    // The second to forth bytes has the index to access the references (passages) for an augmented strong.
-    // The top bit is on if it is first augmented strong for a strong number.  For example, if we have H0001G and H0001H,
-    // The element for H0001G will have the top bit on.
-    private static int[] augStrong2RefIndexOT;
-    private static int[] augStrong2RefIndexNT;
+        // The following two arrays (one for OT and another for NT) has the index to the references (passages) for an augmented
+        // strong.  The first byte contains the last character of an augmented Strong (e.g.: G, A, B, ...)
+        // The second to forth bytes has the index to access the references (passages) for an augmented strong.
+        // The top bit is on if it is first augmented strong for a strong number.  For example, if we have H0001G and H0001H,
+        // The element for H0001G will have the top bit on.
+        private int[] augStrong2RefIndexOT;
+        private int[] augStrong2RefIndexNT;
 
-    // The following three are arrays of references (passages) for the augmented strongs.  There is one for OHB and one for RSV
-    // versification of the Old Testament.  We only store the NRSV versification for the NT.
-    // Each element of an array has an ordinal of a passage.
-    private static short[] refOfAugStrongOTOHB;
-    private static short[] refOfAugStrongOTRSV;
-    private static short[] refOfAugStrongNT;
+        // The following three are arrays of references (passages) for the augmented strongs.  There is one for OHB and one for RSV
+        // versification of the Old Testament.  We only store the NRSV versification for the NT.
+        // Each element of an array has an ordinal of a passage.
+        private short[] refOfAugStrongOTOHB;
+        private short[] refOfAugStrongOTRSV;
+        private short[] refOfAugStrongNT;
+    }
 
     @Inject
     public StrongAugmentationServiceImpl(final JSwordVersificationService versificationService) {
@@ -214,10 +217,10 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             if (addToOrdinalNotStored) ordinalsInRefNotStored1.add((int) refOrdinal);
             if (refOrdinal > -1) {
                 if (hebrew) {
-                    refOfAugStrongOTOHB[refIndex] = refOrdinal;
+                    augStrongData.refOfAugStrongOTOHB[refIndex] = refOrdinal;
                     refOrdinal = (short) convertOSIS2Ordinal(NRSVRef, versificationForNRSV);
                     if (refOrdinal > -1) {
-                        refOfAugStrongOTRSV[refIndex] = refOrdinal;
+                        augStrongData.refOfAugStrongOTRSV[refIndex] = refOrdinal;
                         if (addToOrdinalNotStored) ordinalsInRefNotStored2.add((int) refOrdinal);
                         // The following 3 lines are for testing to verify that there is no need to convert MT to Leningrad versification
 //                        String refInTHOT = this.versificationService.convertReference(s, "OSMHB", "THOT").getOsisKeyId();
@@ -226,32 +229,32 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 //                        }
                     }
                 } else
-                    refOfAugStrongNT[refIndex] = refOrdinal;
+                    augStrongData.refOfAugStrongNT[refIndex] = refOrdinal;
                 refIndex++;
             }
         }
         if (hebrew) {
-            sortAndMarkAugStrongWithoutRef(refOfAugStrongOTOHB, startIndex, refIndex, ordinalsInRefNotStored1);
-            sortAndMarkAugStrongWithoutRef(refOfAugStrongOTRSV, startIndex, refIndex, ordinalsInRefNotStored2);
+            sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTOHB, startIndex, refIndex, ordinalsInRefNotStored1);
+            sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongOTRSV, startIndex, refIndex, ordinalsInRefNotStored2);
         } else
-            sortAndMarkAugStrongWithoutRef(refOfAugStrongNT, startIndex, refIndex, ordinalsInRefNotStored1);
+            sortAndMarkAugStrongWithoutRef(augStrongData.refOfAugStrongNT, startIndex, refIndex, ordinalsInRefNotStored1);
         return refIndex;
     }
 
     private int binarySearchOfStrong(final String augStrong) {
         int first = 0;
-        int last = strongsWithAugments.length - 1;
+        int last = augStrongData.strongsWithAugments.length - 1;
         if (augStrong.charAt(0) == 'G') {
-            last = numOfGreekStrongWithAugments - 1;
+            last = augStrongData.numOfGreekStrongWithAugments - 1;
         }
         else {
-            first = numOfGreekStrongWithAugments;
+            first = augStrongData.numOfGreekStrongWithAugments;
         }
         int key = cnvrtStrong2Short(augStrong);
         int mid = (first + last) / 2;
         while( first <= last ) {
-            if ( strongsWithAugments[mid] < key ) first = mid + 1;
-            else if ( strongsWithAugments[mid] == key ) return mid;
+            if ( augStrongData.strongsWithAugments[mid] < key ) first = mid + 1;
+            else if ( augStrongData.strongsWithAugments[mid] == key ) return mid;
             else last = mid - 1;
             mid = (first + last) / 2;
         }
@@ -313,11 +316,11 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         String versificationName = sourceVersification.getName();
         char prefix = trimmedStrong.charAt(0);
         boolean hebrew = (prefix == 'H') || (prefix == 'h');
-        short[] ref = (hebrew) ? refOfAugStrongOTRSV : refOfAugStrongNT;
+        short[] ref = (hebrew) ? augStrongData.refOfAugStrongOTRSV : augStrongData.refOfAugStrongNT;
         Versification versificationForConversion = null;
-        if (versificationName.equals("Leningrad")) ref = refOfAugStrongOTOHB;
+        if (versificationName.equals("Leningrad")) ref = augStrongData.refOfAugStrongOTOHB;
         else if (versificationName.equals("MT")) {
-            ref = refOfAugStrongOTOHB;
+            ref = augStrongData.refOfAugStrongOTOHB;
             versificationForConversion = this.versificationService.getVersificationForVersion("OHB");
         }
         else if ((!versificationName.equals("NRSV"))) // && (!versificationName.equals("NRSVA")) && (!versificationName.equals("KJV"))  && (!versificationName.equals("KJVA")))
@@ -377,22 +380,22 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
     private int[] getIndexes2OrdinalOfAugStrong(String strong) {
         int index1 = binarySearchOfStrong(strong);
         if (index1 < 0) return null;
-        short index2 = strong2AugStrongIndex[index1];
+        short index2 = augStrongData.strong2AugStrongIndex[index1];
         if (index2 < 0) return null;
         int[] augStrong2RefIdx;
         char prefix = strong.charAt(0);
         int numOfReferences;
         if ((prefix == 'H') || (prefix == 'h')) {
-            if (index2 > numOfAugStrongInOT) return null;
-            augStrong2RefIdx = augStrong2RefIndexOT;
-            numOfReferences = refOfAugStrongOTOHB.length;
+            if (index2 > augStrongData.numOfAugStrongInOT) return null;
+            augStrong2RefIdx = augStrongData.augStrong2RefIndexOT;
+            numOfReferences = augStrongData.refOfAugStrongOTOHB.length;
         }
         else {
-            if (index2 > numOfAugStrongInNT) return null;
-            augStrong2RefIdx = augStrong2RefIndexNT;
-            numOfReferences = refOfAugStrongNT.length;
+            if (index2 > augStrongData.numOfAugStrongInNT) return null;
+            augStrong2RefIdx = augStrongData.augStrong2RefIndexNT;
+            numOfReferences = augStrongData.refOfAugStrongNT.length;
         }
-        final int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
+        final int numOfAugStrongWithSameStrong = augStrongData.strong2AugStrongCount[index1];
         char lastCharOfStrong = strong.charAt(strong.length() - 1);
         int suffixInt = (lastCharOfStrong & 0x000000ff) << 24;
         int[] result = new int[3];
@@ -419,22 +422,22 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         boolean hebrew = ((prefix == 'H') || (prefix == 'h'));
         int index1 = binarySearchOfStrong(strong);
         if (index1 < 0) return null;
-        short index2 = strong2AugStrongIndex[index1];
+        short index2 = augStrongData.strong2AugStrongIndex[index1];
         int[] augStrong2RefIdx;
         short[] refArray;
         int numOfReferences;
         if (hebrew) {
-            if ((index2 < 0) || (index2 > numOfAugStrongInOT)) return null;
-            augStrong2RefIdx = augStrong2RefIndexOT;
-            refArray = refOfAugStrongOTOHB;
-            numOfReferences = refOfAugStrongOTOHB.length;
+            if ((index2 < 0) || (index2 > augStrongData.numOfAugStrongInOT)) return null;
+            augStrong2RefIdx = augStrongData.augStrong2RefIndexOT;
+            refArray = augStrongData.refOfAugStrongOTOHB;
+            numOfReferences = augStrongData.refOfAugStrongOTOHB.length;
         } else if ((prefix == 'G') || (prefix == 'g')) {
-            if ((index2 < 0) || (index2 > numOfAugStrongInNT)) return null;
-            augStrong2RefIdx = augStrong2RefIndexNT;
-            refArray = refOfAugStrongNT;
-            numOfReferences = refOfAugStrongNT.length;
+            if ((index2 < 0) || (index2 > augStrongData.numOfAugStrongInNT)) return null;
+            augStrong2RefIdx = augStrongData.augStrong2RefIndexNT;
+            refArray = augStrongData.refOfAugStrongNT;
+            numOfReferences = augStrongData.refOfAugStrongNT.length;
         } else return null;
-        int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
+        int numOfAugStrongWithSameStrong = augStrongData.strong2AugStrongCount[index1];
         char suffix = strong.charAt(strong.length()-1);
         for (int i = 0; i < numOfAugStrongWithSameStrong; i++) {
             ImmutablePair<Character, Integer> r = getSuffixAndIdx(augStrong2RefIdx[index2 + i]);
@@ -482,20 +485,20 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         if ((ordinal < 0) || (ordinal > 32767)) return "";
         int index1 = binarySearchOfStrong(strong);
         if (index1 < 0) return strong;
-        short index2 = strong2AugStrongIndex[index1];
+        short index2 = augStrongData.strong2AugStrongIndex[index1];
         int[] augStrong2RefIdx;
         char prefix = strong.charAt(0);
         short[] refArray;
         if ((prefix == 'H') || (prefix == 'h')) {
-            if ((index2 < 0) || (index2 > numOfAugStrongInOT)) return "";
-            augStrong2RefIdx = augStrong2RefIndexOT;
-            refArray = (useNRSVVersification) ? refOfAugStrongOTRSV : refOfAugStrongOTOHB;
+            if ((index2 < 0) || (index2 > augStrongData.numOfAugStrongInOT)) return "";
+            augStrong2RefIdx = augStrongData.augStrong2RefIndexOT;
+            refArray = (useNRSVVersification) ? augStrongData.refOfAugStrongOTRSV : augStrongData.refOfAugStrongOTOHB;
         } else if ((prefix == 'G') || (prefix == 'g')) {
-            if ((index2 < 0) || (index2 > numOfAugStrongInNT)) return "";
-            augStrong2RefIdx = augStrong2RefIndexNT;
-            refArray = refOfAugStrongNT;
+            if ((index2 < 0) || (index2 > augStrongData.numOfAugStrongInNT)) return "";
+            augStrong2RefIdx = augStrongData.augStrong2RefIndexNT;
+            refArray = augStrongData.refOfAugStrongNT;
         } else return "";
-        int numOfAugStrongWithSameStrong = strong2AugStrongCount[index1];
+        int numOfAugStrongWithSameStrong = augStrongData.strong2AugStrongCount[index1];
         int index2LastAugStrongWithSameStrong = index2 + numOfAugStrongWithSameStrong - 1;
         int augStrong2RefIdxNextIdx = index2LastAugStrongWithSameStrong;
         int endIndexOfCurrentStrongRef = 0;
@@ -529,7 +532,6 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 
     public void readAndLoad(final String augStrongFile, final String installFilePath) {
         Reader fileReader = null;
-        InputStream stream = null;
         BufferedInputStream bufferedStream = null;
         String curAugStrong = "";
         String curReferences = "";
@@ -539,20 +541,40 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         HashMap<Integer, Integer> strong2AugCountHbr = new HashMap<>();
         HashMap<String, String> augStrongRefOT = new HashMap<>();
         HashMap<String, String> augStrongRefNT = new HashMap<>();
+        String installFileFolder = "";
+        int pos = installFilePath.lastIndexOf('\\');
+        if (pos == -1)
+            pos = installFilePath.lastIndexOf('/');
+        if (pos > 1)
+            installFileFolder = installFilePath.substring(0, pos+1);
+        InputStream stream = null;
         try {
-            stream = ModuleLoader.class.getResourceAsStream(augStrongFile);
-            if (stream == null) {
-                int pos = installFilePath.lastIndexOf("\\");
-                if (pos == -1) pos = installFilePath.lastIndexOf("/");
-                if (pos > 1) {
-                    String path = installFilePath.substring(0, pos) + "\\" + augStrongFile;
-                    try {
-                        stream = new FileInputStream(new File(path));
-                    } catch (final FileNotFoundException e) {
-                        throw new StepInternalException("Unable to read resource: " + path);
-                    }
+            if (augStrongFile.equals(""))
+                try {
+                    FileInputStream fileIn = new FileInputStream(installFileFolder + "augmented_strongs.dat");
+                    ObjectInputStream in = new ObjectInputStream(fileIn);
+                    augStrongData = (AugmentedStrongsData) in.readObject();
+                    in.close();
+                    fileIn.close();
+                    return;
+                } catch (IOException i) {
+                    i.printStackTrace();
+                } catch (ClassNotFoundException c) {
+                    System.out.println("augmented strong class not found");
+                    c.printStackTrace();
                 }
-                else throw new StepInternalException("Unable to read resource: " + augStrongFile);
+            else {
+                stream = ModuleLoader.class.getResourceAsStream(augStrongFile);
+            }
+            if (stream == null) {
+                if (installFileFolder.equals("")) {
+                    throw new StepInternalException("Unable to read resource: " + augStrongFile);
+                }
+                try {
+                    stream = new FileInputStream(installFileFolder + "augmented_strongs.txt");
+                } catch (final FileNotFoundException e) {
+                    throw new StepInternalException("Unable to read resource: " + installFileFolder  + "augmented_strongs.txt");
+                }
             }
             bufferedStream = new BufferedInputStream(stream);
             fileReader = new InputStreamReader(bufferedStream, StandardCharsets.UTF_8);
@@ -621,26 +643,26 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 //throw new StepInternalException("Unable to read a line from the augmented strongs file ", e);
                 System.exit(404);
             }
-            numOfGreekStrongWithAugments = strong2AugCountGrk.size();
-            int numOfStrong = numOfGreekStrongWithAugments + strong2AugCountHbr.size();
-            numOfAugStrongInOT = augStrongRefOT.size();
-            numOfAugStrongInNT = augStrongRefNT.size();
-            strongsWithAugments =new short[numOfStrong];
-            strong2AugStrongIndex =new short[numOfStrong];
-            strong2AugStrongCount=new byte[numOfStrong];
-            augStrong2RefIndexOT =new int[numOfAugStrongInOT+1];
-            augStrong2RefIndexNT =new int[numOfAugStrongInNT +1];
+            augStrongData.numOfGreekStrongWithAugments = strong2AugCountGrk.size();
+            int numOfStrong = augStrongData.numOfGreekStrongWithAugments + strong2AugCountHbr.size();
+            augStrongData.numOfAugStrongInOT = augStrongRefOT.size();
+            augStrongData.numOfAugStrongInNT = augStrongRefNT.size();
+            augStrongData.strongsWithAugments = new short[numOfStrong];
+            augStrongData.strong2AugStrongIndex = new short[numOfStrong];
+            augStrongData.strong2AugStrongCount= new byte[numOfStrong];
+            augStrongData.augStrong2RefIndexOT = new int[augStrongData.numOfAugStrongInOT+1];
+            augStrongData.augStrong2RefIndexNT = new int[augStrongData.numOfAugStrongInNT +1];
             TreeMap<Integer, Integer> sortedStrongGrk = new TreeMap<>(strong2AugCountGrk);
             int counter = 0;
             for (Map.Entry<Integer, Integer> entry : sortedStrongGrk.entrySet()) {
-                strongsWithAugments[counter] = entry.getKey().shortValue();
-                strong2AugStrongCount[counter] = entry.getValue().byteValue();
+                augStrongData.strongsWithAugments[counter] = entry.getKey().shortValue();
+                augStrongData.strong2AugStrongCount[counter] = entry.getValue().byteValue();
                 counter ++;
             }
             TreeMap<Integer, Integer> sortedStrongHbr = new TreeMap<>(strong2AugCountHbr);
             for (Map.Entry<Integer, Integer> entry : sortedStrongHbr.entrySet()) {
-                strongsWithAugments[counter] = entry.getKey().shortValue();
-                strong2AugStrongCount[counter] = entry.getValue().byteValue();
+                augStrongData.strongsWithAugments[counter] = entry.getKey().shortValue();
+                augStrongData.strong2AugStrongCount[counter] = entry.getValue().byteValue();
                 counter ++;
             }
             TreeMap<String, String> sortedAugStrong = new TreeMap<>();
@@ -688,9 +710,9 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                     numOfOTReferences -= refs.split(" ").length;
                 } else numOfNTReferences -= refs.split(" ").length;
             }
-            refOfAugStrongOTOHB = new short[numOfOTReferences];
-            refOfAugStrongOTRSV = new short[numOfOTReferences];
-            refOfAugStrongNT = new short[numOfNTReferences];
+            augStrongData.refOfAugStrongOTOHB = new short[numOfOTReferences];
+            augStrongData.refOfAugStrongOTRSV = new short[numOfOTReferences];
+            augStrongData.refOfAugStrongNT = new short[numOfNTReferences];
             int refIndexOT = 1; // don't use the first one because a zero index means it is the aug strong with the most references and the references are not stored in memory
             int refIndexNT = 1;
             for (Map.Entry<String, String> entry : sortedAugStrong.entrySet()) {
@@ -700,11 +722,11 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 boolean hebrew = false;
                 char prefix = augStrong.charAt(0);
                 if ((prefix == 'H') || (prefix == 'h')) {
-                    augStrong2RefIndexOT[strong2AugStrongIndexOT] = addToAugStrong2Ref(refIndexOT, augStrong, references.length());
+                    augStrongData.augStrong2RefIndexOT[strong2AugStrongIndexOT] = addToAugStrong2Ref(refIndexOT, augStrong, references.length());
                     hebrew = true;
                 }
                 else {
-                    augStrong2RefIndexNT[strong2AugStrongIndexNT] = addToAugStrong2Ref(refIndexNT, augStrong, references.length());
+                    augStrongData.augStrong2RefIndexNT[strong2AugStrongIndexNT] = addToAugStrong2Ref(refIndexNT, augStrong, references.length());
                 }
                 if (lastStrong != curStrongNum) {
                     int index = binarySearchOfStrong(augStrong);
@@ -712,7 +734,7 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                         LOGGER.error("Error in AugStrongServiceImpl, cannot find augstrong of " + augStrong);
                         System.exit(405);
                     }
-                    strong2AugStrongIndex[index] = (hebrew) ? (short) strong2AugStrongIndexOT : (short) strong2AugStrongIndexNT;
+                    augStrongData.strong2AugStrongIndex[index] = (hebrew) ? (short) strong2AugStrongIndexOT : (short) strong2AugStrongIndexNT;
                     lastStrong = curStrongNum;
                 }
                 if (hebrew) {
@@ -724,8 +746,8 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                     refIndexNT = addToRefArray(refIndexNT, false, augStrong, references, versificationForOT, versificationForESV, augStrongWithMostReferencesHash);
                 }
             }
-            augStrong2RefIndexOT[strong2AugStrongIndexOT] = refIndexOT;
-            augStrong2RefIndexNT[strong2AugStrongIndexNT] = refIndexNT;
+            augStrongData.augStrong2RefIndexOT[strong2AugStrongIndexOT] = refIndexOT;
+            augStrongData.augStrong2RefIndexNT[strong2AugStrongIndexNT] = refIndexNT;
             strong2AugCountGrk = null;
             strong2AugCountHbr = null;
             augStrongRefOT = null;
@@ -735,6 +757,17 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             sortedAugStrong = null;
             augStrongWithMostReferencesHash = null;
             System.gc(); // Free memory that will not be used after the initial load.  This like is probably unnecessary but just in case.
+            try {
+                FileOutputStream fileOut =
+                        new FileOutputStream(installFileFolder + "augmented_strongs.dat");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(augStrongData);
+                out.close();
+                fileOut.close();
+                System.out.printf("Serialized data is saved in augmented_strongs.dat");
+            } catch (IOException i) {
+                i.printStackTrace();
+            }
         } finally {
             closeQuietly(fileReader);
             closeQuietly(bufferedStream);
