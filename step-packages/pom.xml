@@ -97,7 +97,7 @@
 								<!-- copy the augmented_strongs.txt over -->
                                 <copy toDir="${packages}/homes/jsword/step/augmentedStrongs">
                                     <fileset dir="${jsword.home}/step/augmentedStrongs">
-                                        <include name="**/*"/>
+                                        <include name="*"/>
                                     </fileset>
                                 </copy>
                             </target>
