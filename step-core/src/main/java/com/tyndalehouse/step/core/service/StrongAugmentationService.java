@@ -1,7 +1,6 @@
 package com.tyndalehouse.step.core.service;
 
 import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.versification.Versification;
 
 /**
  * Given a strong number, we find the augmented version in order to provide more accurate definitions and context
@@ -44,9 +43,7 @@ public interface StrongAugmentationService {
 
     void readAndLoad(final String augStrongFile, final String installFilePath);
 
-//    int convertOSIS2Ordinal(final String OSIS, final Versification curVersification);
-
-//    String getAugStrongWithStrongAndOrdinal(final String strong, final int ordinal, final boolean useNRSVVersification);
+    void loadFromSerialization(final String installFilePath);
 
     void updatePassageKeyWithAugStrong(String strong, Key reference);
 

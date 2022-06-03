@@ -530,6 +530,27 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
         return strong;
     }
 
+    public void loadFromSerialization(final String installFilePath) {
+        String installFileFolder = "";
+        int pos = installFilePath.lastIndexOf('\\');
+        if (pos == -1)
+            pos = installFilePath.lastIndexOf('/');
+        if (pos > 1)
+            installFileFolder = installFilePath.substring(0, pos+1);
+        try {
+            FileInputStream fileIn = new FileInputStream(installFileFolder + "augmented_strongs.dat");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            augStrongData = (AugmentedStrongsData) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        } catch (ClassNotFoundException c) {
+            System.out.println("augmented strong class not found");
+            c.printStackTrace();
+        }
+    }
+
     public void readAndLoad(final String augStrongFile, final String installFilePath) {
         Reader fileReader = null;
         BufferedInputStream bufferedStream = null;
@@ -549,32 +570,9 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             installFileFolder = installFilePath.substring(0, pos+1);
         InputStream stream = null;
         try {
-            if (augStrongFile.equals(""))
-                try {
-                    FileInputStream fileIn = new FileInputStream(installFileFolder + "augmented_strongs.dat");
-                    ObjectInputStream in = new ObjectInputStream(fileIn);
-                    augStrongData = (AugmentedStrongsData) in.readObject();
-                    in.close();
-                    fileIn.close();
-                    return;
-                } catch (IOException i) {
-                    i.printStackTrace();
-                } catch (ClassNotFoundException c) {
-                    System.out.println("augmented strong class not found");
-                    c.printStackTrace();
-                }
-            else {
-                stream = ModuleLoader.class.getResourceAsStream(augStrongFile);
-            }
+            stream = ModuleLoader.class.getResourceAsStream(augStrongFile);
             if (stream == null) {
-                if (installFileFolder.equals("")) {
-                    throw new StepInternalException("Unable to read resource: " + augStrongFile);
-                }
-                try {
-                    stream = new FileInputStream(installFileFolder + "augmented_strongs.txt");
-                } catch (final FileNotFoundException e) {
-                    throw new StepInternalException("Unable to read resource: " + installFileFolder  + "augmented_strongs.txt");
-                }
+                throw new StepInternalException("Unable to read resource: " + augStrongFile);
             }
             bufferedStream = new BufferedInputStream(stream);
             fileReader = new InputStreamReader(bufferedStream, StandardCharsets.UTF_8);
@@ -764,8 +762,9 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
                 out.writeObject(augStrongData);
                 out.close();
                 fileOut.close();
-                System.out.printf("Serialized data is saved in augmented_strongs.dat");
+                LOGGER.info("Serialized data is saved in " + installFileFolder + "augmented_strong.dat");
             } catch (IOException i) {
+                LOGGER.error("Serialized data cannot be saved in " + installFileFolder + "augmented_strong.dat");
                 i.printStackTrace();
             }
         } finally {
