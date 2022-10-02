@@ -397,7 +397,7 @@ step.searchSelect = {
 				copyOfRange = copyOfRange.substr(pos + 1);
 			}
 		}
-
+		var backgroundColor = (step.util.isDarkMode()) ? "var(--clrBackground)" : "#f5f5f5";
 		var html = '<div class="header">' +
 			'<h4 id="hd4">' + __s.enter_search_word + '</h4>' +
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=step.searchSelect._buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
@@ -405,7 +405,7 @@ step.searchSelect = {
 			'<span id="warningMessage" style="color: red;"></span>' +
 			'<textarea id="userTextInput" rows="1" class="stepFgBg" style="font-size:16px;width:80%" placeholder="Enter search word"></textarea><br><br>' + // size 16px so the mobile devices will not expand
 			'<div id="search_table">' +
-			'<table border="1" style="background-color:#f5f5f5">' +
+			'<table border="1" style="background-color:' + backgroundColor + '">' +
 			'<colgroup>' +
 			'<col id="column1width" span="1" style="width:39%;">' +
 			'<col span="1" style="width:61%;">' +
@@ -1362,7 +1362,7 @@ step.searchSelect = {
 				result += "<span class='detailLex" + count + " glyphicon glyphicon-arrow-right' style='font-size:10px'></span>";
 				spaceWithoutLabel = "";
 			}
-			result += '<a class="detailLex' + count + '" style="padding:0px" title="' + item[1] + '"' +
+			result += '<a class="detailLex' + count + '" style="padding:0px;color:var(--clrStrongText)" title="' + item[1] + '"' +
 				'href="javascript:step.searchSelect.goSearch(\'strong\',\'' + 
 				item[1] + '\',\'' + item[1] +	'\')">' + spaceWithoutLabel + "<i>" + item[0] + "</i> " + item[2] + " " +
 				'<span class="srchParathesis">(</span>' +
