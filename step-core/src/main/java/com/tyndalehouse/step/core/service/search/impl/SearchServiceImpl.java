@@ -980,8 +980,8 @@ public class SearchServiceImpl implements SearchService {
                 int index = alpha.indexOf(parts[i]);
                 resultsArray[group] = intersect(resultsArray[group], resultsArray[index], joinType);
                 if (joinType != "NOT") {
-                    if (strongsArray[group] == null) strongsArray[group] = r.getRight();
-                    else strongsArray[group].addAll(r.getRight());
+                    if (strongsArray[group] == null) strongsArray[group] = strongsArray[index];
+                    else strongsArray[group].addAll(strongsArray[index]);
                 }
 				System.out.println("I cap: " + i + " found: " + parts[i] + " type " + joinType);
             }
