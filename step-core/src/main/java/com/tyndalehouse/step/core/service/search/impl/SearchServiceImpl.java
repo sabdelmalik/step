@@ -889,8 +889,8 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult executeJoiningSearches(final SearchQuery sq, final String srchJoin) {
         // we run each individual search, and get all the keys out of each
         ImmutablePair<Key, Set> r = (srchJoin != "") ? executeSearchWithSrchJoin(sq, srchJoin) : runJoiningSearches(sq);
-        Key results = r.getLeft();
-        Set<String> strongs = r.getRight();
+        final Key results = r.getLeft();
+        final Set<String> strongs = r.getRight();
         SearchResult result = getSearchResultFromKey(sq, results);
         result.setStrongHighlights(new ArrayList<>(strongs));
         return result;
