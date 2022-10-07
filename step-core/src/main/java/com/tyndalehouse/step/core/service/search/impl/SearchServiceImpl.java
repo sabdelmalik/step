@@ -930,15 +930,12 @@ public class SearchServiceImpl implements SearchService {
             else if (c == ')' && !positionStack.isEmpty()) {
                 int endPos = pos;
                 int begPos = positionStack.pop() + 1;
-                System.out.println("begin: " + begPos + " end: " + endPos + " s " + s.substring(begPos, endPos) + " g: " + group);
-                System.out.println("s1: " + s);
                 String s2 = s.substring(0, begPos-1) + processJoinSearch(s.substring(begPos, endPos), group, sq, resultsArray, strongsArray);
                 for (int j = 0; j <= endPos - begPos; j ++) {
                     s2 += " ";
                 }
                 s2 += s.substring(endPos+1);
                 s = s2;
-                System.out.println("s2: " + s);
                 group ++;
             }
             pos ++;
@@ -948,6 +945,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private char processJoinSearch(String arg, int group, SearchQuery sq, Key[] resultsArray, Set<String>[] strongsArray) {
+    	if (group > 25) throw new TranslatedException("search_invalid"); // Maximum of 26 groups because we are using A-Z to represent the group;
         String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         arg = arg.replaceAll("\\s", "");
         String[] parts = arg.split("(?=[aon])"); // and or not
