@@ -104,7 +104,7 @@ step.searchSelect = {
 					}
 				}
 			}
-			var indexToPreviousSearchTokens = 0;
+			var previousSearchTokensIndex = 0;
 			for (var i = 0; i < activePassageData.length; i++) {
 				var actPsgeDataElm = activePassageData[i];
 				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
@@ -134,18 +134,18 @@ step.searchSelect = {
 								currWord = {token: syntaxWords[j], item: {} };
 							}
 							if (syntaxWords.length == 1) {
-								if (indexToPreviousSearchTokens == 0) searchRelationship = "";
-								else if (indexToPreviousSearchTokens <= previousJoins.length) searchRelationship = previousJoins[indexToPreviousSearchTokens - 1];		
+								if (previousSearchTokensIndex == 0) searchRelationship = "";
+								else if (previousSearchTokensIndex <= previousJoins.length) searchRelationship = previousJoins[previousSearchTokensIndex - 1];		
 							}
-							indexToPreviousSearchTokens = this.createPreviousSearchList(itemType, currWord, previousSearches, this.previousSearchTokens, indexToPreviousSearchTokens, searchRelationship, leftParanthesis, rightParanthesis);
+							previousSearchTokensIndex = this.createPreviousSearchList(itemType, currWord, previousSearches, this.previousSearchTokens, previousSearchTokensIndex, searchRelationship, leftParanthesis, rightParanthesis);
 							searchRelationship = "";
 						}
 					}
 					else {
 						var searchRelationship = "a";
-						if (indexToPreviousSearchTokens == 0) searchRelationship = "";
-						else if (indexToPreviousSearchTokens <= previousJoins.length) searchRelationship = previousJoins[indexToPreviousSearchTokens - 1];
-						indexToPreviousSearchTokens = this.createPreviousSearchList(itemType, actPsgeDataElm, previousSearches, this.previousSearchTokens, indexToPreviousSearchTokens, searchRelationship, leftParanthesis, rightParanthesis);
+						if (previousSearchTokensIndex == 0) searchRelationship = "";
+						else if (previousSearchTokensIndex <= previousJoins.length) searchRelationship = previousJoins[previousSearchTokensIndex - 1];
+						previousSearchTokensIndex = this.createPreviousSearchList(itemType, actPsgeDataElm, previousSearches, this.previousSearchTokens, previousSearchTokensIndex, searchRelationship, leftParanthesis, rightParanthesis);
 					}
 				}
 			}
@@ -306,14 +306,23 @@ step.searchSelect = {
 		if (this.searchTypeCode.indexOf(type) > 2) {
 			if (typeof __s[type] !== "undefined") type = __s[type];
 			var htmlOfTerm = actPsgeDataElm.item.gloss;
-			if (actPsgeDataElm.item.stepTransliteration !== "")
+			if (actPsgeDataElm.item.stepTransliteration !== "") {
+				var strongNumToDisplay = "";
+				if (typeof actPsgeDataElm.item.strongNumber === "string") {
+					strongNumToDisplay = actPsgeDataElm.item.strongNumber;
+				}
+				else {
+					strongNumToDisplay = actPsgeDataElm.token;
+					if (strongNumToDisplay.substring(0,7) === "strong:") strongNumToDisplay = strongNumToDisplay.substring(7) + "*";
+				}
 				htmlOfTerm += ' <span class="srchParathesis">(</span>' +
 				'<i class="srchTransliteration">' + actPsgeDataElm.item.stepTransliteration + '</i>' +
 				'<span class="srchDash"> - </span>' +
 				'<span class="srchOriginal_Language">' + actPsgeDataElm.item.matchingForm + '</span>' +
 				'<span class="srchSpaceStrong"> </span>' +
-				'<span class="srchStrong_number">' + actPsgeDataElm.item.strongNumber + '</span>' +
+				'<span class="srchStrong_number">' + strongNumToDisplay + '</span>' +
 				'<span class="srchParathesis">)</span>';
+			}
 			var html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			previousSearches.push(html);
 			var strongNum = actPsgeDataElm.token;
