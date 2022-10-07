@@ -1887,17 +1887,10 @@ step.util = {
 							'if ((element) && (element.checked)) {' +
 								'step.searchSelect.includePreviousSearches = true;' +
 								'$("#listofprevioussearchs").show();' +
-								'var onlyFoundSubjectOrMeaningsSearch = true;' +
-								'for (var i = 0; i < step.searchSelect.previousSearchTokens.length; i++) {' +
-									'if ((step.searchSelect.previousSearchTokens[i] !== "") &&' +
-										'(!step.searchSelect.previousSearchTokens[i].startsWith(MEANINGS)) &&' +
-										'(!step.searchSelect.previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))' +
-										'onlyFoundSubjectOrMeaningsSearch = false;' +
-								'}' +
 								'$("#searchAndOrNot").show();' +
 								'if (step.searchSelect.searchUserInput.length == 0) {' +
 									'if ((step.searchSelect.rangeWasUpdated) || (step.searchSelect.andOrNotUpdated) ||' +
-										'(step.searchSelect.numOfPreviousSearchTokens != step.searchSelect.previousSearchTokens.length)) $("#updateButton").show();' +
+										'(step.searchSelect.previousSearchTokens.indexOf("") > -1)) $("#updateButton").show();' + // An empty string in previousSearchTokens mean the user has deselected it.  If there is any update to previous search, the updateButton will be showned to the user.
 								'}' +
 							'}' +
 							'else {' +
@@ -1905,8 +1898,8 @@ step.util = {
 								'$("#listofprevioussearchs").hide();' +
 								'$("#searchAndOrNot").hide();' +
 								'$("#updateButton").hide();' +
-								'$("#searchResultssubject").show();' +
-								'$("#searchResultsmeanings").show();' +
+//								'$("#searchResultssubject").show();' +
+//								'$("#searchResultsmeanings").show();' +
 								'$("#searchResultssubjectWarn").hide();' +
 								'$("#searchResultsmeaningsWarn").hide();' +
 							'}' +

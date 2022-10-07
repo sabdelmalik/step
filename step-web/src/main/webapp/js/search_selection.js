@@ -74,7 +74,6 @@ step.searchSelect = {
         this.idx2BookOrder = {};
         
 		var ua = navigator.userAgent.toLowerCase();
-		console.log("ua: " + ua);
 		$("#searchmodalbody").addClass("scrollPart");
 		if ((this.userLang.indexOf('en') != 0) && (this.groupsOT[0].groupName === "Books of Moses") && (this.groupsOT[0].groupName !== "Pentateuch"))
 			this.groupsOT[0].groupName = __s.the_pentateuch;
@@ -85,11 +84,14 @@ step.searchSelect = {
 			$('#previousSearch').empty();
 			var previousSearches = [];
 			var previousJoins = [];
+			var leftParanthesis = [];
+			var rightParanthesis = [];
+			var previousJoinsAndSearch = [];
 			for (var j = 0; j < activePassageData.length; j++) {
 				var actPsgeDataElm = activePassageData[j];
 				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
 				if (itemType == "srchJoin") {
-					var previousJoinsAndSearch = actPsgeDataElm.token.split(/(?=[aon])/);
+					previousJoinsAndSearch = actPsgeDataElm.token.split(/(?=[aon])/);
 					for (var k = 0; k < previousJoinsAndSearch.length; k++) {
 						if (k > 0) {
 							var firstChar = previousJoinsAndSearch[k].substring(0,1);
@@ -97,9 +99,12 @@ step.searchSelect = {
 								firstChar = "a";
 							previousJoins.push(firstChar);
 						}
+						leftParanthesis.push( (previousJoinsAndSearch[k].match(/\(/) || []).length ); // count the number of left paranthesis
+						rightParanthesis.push( (previousJoinsAndSearch[k].match(/\)/) || []).length ); // count the number of right paranthesis
 					}
 				}
 			}
+			var indexToPreviousSearchTokens = 0;
 			for (var i = 0; i < activePassageData.length; i++) {
 				var actPsgeDataElm = activePassageData[i];
 				var itemType = actPsgeDataElm.itemType ? actPsgeDataElm.itemType : actPsgeDataElm.tokenType
@@ -129,21 +134,22 @@ step.searchSelect = {
 								currWord = {token: syntaxWords[j], item: {} };
 							}
 							if (syntaxWords.length == 1) {
-								if (this.numOfPreviousSearchTokens == 0) searchRelationship = "";
-								else if (this.numOfPreviousSearchTokens <= previousJoins.length) searchRelationship = previousJoins[this.numOfPreviousSearchTokens - 1];		
+								if (indexToPreviousSearchTokens == 0) searchRelationship = "";
+								else if (indexToPreviousSearchTokens <= previousJoins.length) searchRelationship = previousJoins[indexToPreviousSearchTokens - 1];		
 							}
-							this.numOfPreviousSearchTokens = this.createPreviousSearchList(itemType, currWord, previousSearches, this.previousSearchTokens, this.numOfPreviousSearchTokens, searchRelationship);
+							indexToPreviousSearchTokens = this.createPreviousSearchList(itemType, currWord, previousSearches, this.previousSearchTokens, indexToPreviousSearchTokens, searchRelationship, leftParanthesis, rightParanthesis);
 							searchRelationship = "";
 						}
 					}
 					else {
 						var searchRelationship = "a";
-						if (this.numOfPreviousSearchTokens == 0) searchRelationship = "";
-						else if (this.numOfPreviousSearchTokens <= previousJoins.length) searchRelationship = previousJoins[this.numOfPreviousSearchTokens - 1];
-						this.numOfPreviousSearchTokens = this.createPreviousSearchList(itemType, actPsgeDataElm, previousSearches, this.previousSearchTokens, this.numOfPreviousSearchTokens, searchRelationship);
+						if (indexToPreviousSearchTokens == 0) searchRelationship = "";
+						else if (indexToPreviousSearchTokens <= previousJoins.length) searchRelationship = previousJoins[indexToPreviousSearchTokens - 1];
+						indexToPreviousSearchTokens = this.createPreviousSearchList(itemType, actPsgeDataElm, previousSearches, this.previousSearchTokens, indexToPreviousSearchTokens, searchRelationship, leftParanthesis, rightParanthesis);
 					}
 				}
 			}
+			this.numOfPreviousSearchTokens = previousSearches.length;
 			if (previousSearches.length > 0) {
 				var previousSearchHTML =
 					'<div id="modalonoffswitch">' +
@@ -166,8 +172,10 @@ step.searchSelect = {
 					'<br><br><br><br>' +
 					'<ul id="listofprevioussearchs" style="display:none">';
 				for (var j = 0; j < previousSearches.length; j++) {
-					previousSearchHTML += "<li id='lOPS_" + j + "'>" + previousSearches[j] + 
-					"<span class='closeMark' onclick=step.searchSelect.removePreviousSearch(" + j + ")>X</span></li>";
+					previousSearchHTML += "<li id='lOPS_" + j + "'>" + previousSearches[j];
+					previousSearchHTML += ((this.previousSearchTokens[j].indexOf("(") > -1) || (this.previousSearchTokens[j].indexOf(")") > -1)) ?
+						"" : "<span class='closeMark' onclick=step.searchSelect.removePreviousSearch(" + j + ")>X</span>";
+					previousSearchHTML += "</li>";
 				}
 				previousSearchHTML += "</ul>";
 				$('#previousSearch').append(previousSearchHTML);
@@ -260,10 +268,12 @@ step.searchSelect = {
 		if ((wordsAroundDash > 0) && (showStrong)) $(".srchSpaceStrong").show();
 		else $(".srchSpaceStrong").hide();
 	},
-	createPreviousSearchList: function(itemType, actPsgeDataElm, previousSearches, previousSearchTokensArg, numOfPreviousSearchTokensArg, previousSearchRelationship) {
+	createPreviousSearchList: function(itemType, actPsgeDataElm, previousSearches, previousSearchTokensArg, previousSearchTokensIndex, previousSearchRelationship,
+			leftParanthesis, rightParanthesis) {
 		var type = itemType.toLowerCase();
-		if (type === "srchjoin") return numOfPreviousSearchTokensArg; // searchjoins is not a search
+		if (type === "srchjoin") return previousSearchTokensIndex; // searchjoins is not a search
 		var strongNum = "";
+		var html = "";
 		if (typeof previousSearchRelationship === "undefined") previousSearchRelationship = "";
 		else if (previousSearchRelationship !== "") {
 			if (previousSearchRelationship === "a") previousSearchRelationship = "AND";
@@ -273,11 +283,18 @@ step.searchSelect = {
 			var orSelected = (previousSearchRelationship === "OR") ? " selected" : "";
 			var notSelected = (previousSearchRelationship === "NOT") ? " selected" : "";
 			previousSearchRelationship = 
-				' <select id="searchAndOrNot' + numOfPreviousSearchTokensArg + '" class="stepButton" style="font-size:16px" type="text" onchange="javascript:step.searchSelect.handleAndOrNot()">' +
+				' <select id="searchAndOrNot' + previousSearchTokensArg.length + '" class="stepButton" style="font-size:16px" type="text" onchange="javascript:step.searchSelect.handleAndOrNot()">' +
 					'<option id="and_search" value="AND"' + andSelected + '>' + __s.and + '</option>' +
 					'<option id="or_search" value="OR"' + orSelected + '>' + __s.or + '</option>' +
 					'<option id="not_search" value="NOT"' + notSelected + '>' + __s.not + '</option>' +
 				'</select> ';
+		}
+		if (leftParanthesis[previousSearchTokensIndex] > 0) {
+			var leftParanString = "(".repeat(leftParanthesis[previousSearchTokensIndex]);
+			var html = "<span style='font-size:16px'>" + previousSearchRelationship + leftParanString + "</span>";
+			previousSearchRelationship = "";
+			previousSearches.push(html);
+			previousSearchTokensArg.push(leftParanString);
 		}
 		if (type === SYNTAX) {
 			var strongNum = (actPsgeDataElm.token.toLowerCase().indexOf("strong:") == 0) ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
@@ -294,8 +311,10 @@ step.searchSelect = {
 				'<i class="srchTransliteration">' + actPsgeDataElm.item.stepTransliteration + '</i>' +
 				'<span class="srchDash"> - </span>' +
 				'<span class="srchOriginal_Language">' + actPsgeDataElm.item.matchingForm + '</span>' +
+				'<span class="srchSpaceStrong"> </span>' +
+				'<span class="srchStrong_number">' + actPsgeDataElm.item.strongNumber + '</span>' +
 				'<span class="srchParathesis">)</span>';
-			html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
+			var html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
 			previousSearches.push(html);
 			var strongNum = actPsgeDataElm.token;
 			if (itemType === SYNTAX) {
@@ -310,7 +329,13 @@ step.searchSelect = {
 			previousSearches.push("<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + actPsgeDataElm.token);
 			previousSearchTokensArg.push(itemType + "=" + actPsgeDataElm.token);
 		}
-		return numOfPreviousSearchTokensArg + 1;
+		if (rightParanthesis[previousSearchTokensIndex] > 0) {
+			var rightParanString = ")".repeat(rightParanthesis[previousSearchTokensIndex]);
+			var html = "<span style='font-size:16px'>" + rightParanString + "</span>";
+			previousSearches.push(html);
+			previousSearchTokensArg.push(rightParanString);
+		}
+		return previousSearchTokensIndex + 1;
 	},
 
 	handleKeyboardInput: function(e) {
@@ -1453,20 +1478,31 @@ step.searchSelect = {
 		var previousJoinString = "";
 		var previousSearch = "";
 		var currentJoin ;
-		var previousJoins = [];
 		if (this.includePreviousSearches) {
 			currentJoin = this.verifySearchJoin($("#searchAndOrNot option:selected").val());
 			for (var i = 0; i < this.previousSearchTokens.length; i++) {
-				if (this.previousSearchTokens[i] !== "") {
-					numOfSearches ++;
-					if (i > 0) {
-						var searchJoinForItem = this.verifySearchJoin($("#searchAndOrNot" + i + " option:selected").val());
-						previousJoins.push(searchJoinForItem);
-						previousJoinString += searchJoinForItem + (numOfSearches);
-					}
-					else previousJoinString += "1";
-					previousSearch += '|' + this.previousSearchTokens[i];
+				if (this.previousSearchTokens[i] === "") continue;
+				var leftParanthesisString = "";
+				var searchJoinForItem = "";
+				if (this.previousSearchTokens[i].substring(0,1) === "(") {
+					leftParanthesisString = this.previousSearchTokens[i];
+					if (i > 0) searchJoinForItem = this.verifySearchJoin($("#searchAndOrNot" + i + " option:selected").val());
+					do {
+						i ++;
+					} while ((this.previousSearchTokens[i] === "") && (i < this.previousSearchTokens.length));
 				}
+				else if (this.previousSearchTokens[i].substring(0,1) === ")") {
+					previousJoinString += this.previousSearchTokens[i];
+					continue;
+				}
+				numOfSearches ++;
+				if (numOfSearches > 1) {
+					if (searchJoinForItem === "")
+						searchJoinForItem = this.verifySearchJoin($("#searchAndOrNot" + i + " option:selected").val());
+					previousJoinString += searchJoinForItem + leftParanthesisString + (numOfSearches);
+				}
+				else previousJoinString += leftParanthesisString + "1";
+				previousSearch += '|' + this.previousSearchTokens[i];
 			}
 		}
 		var searchJoinsForMultipleStrongs = "";
