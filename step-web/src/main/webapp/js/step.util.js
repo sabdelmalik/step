@@ -1754,22 +1754,18 @@ step.util = {
 			'</script>' +
 		'</div>').modal("show");
     },
-	correctNoPassageInSelectedBible: function (userChoice, queryString) {
+	correctPassageNotInBible: function (userChoice, queryString) {
 		$("#showLongAlertModal").click();
-		if (userChoice == 1) {
-			step.util.passageSelectionModal( step.util.activePassageId() );
+		// if (userChoice == 1) {
+		// 	step.util.passageSelectionModal( step.util.activePassageId() );
+		// }
+		// else if (userChoice === 2) {
+		// 	step.util.startPickBible();
+		// }		
+		if (userChoice === 1) {
+			step.router.navigateSearch(queryString, true, true);
 		}
 		else if (userChoice === 2) {
-			step.util.startPickBible();
-			//if (userChoice == 3) {
-			//	setTimeout(
-			//		function() {
-			//			$("#order_button_bible_modal").click();
-			//		},
-			//	500);
-			//}
-		}
-		else if (userChoice === 4) {
 			step.router.navigateSearch(queryString, true, true);
 			step.readyToShowPassageSelect = false;
 			for (var i = 0; i < 30; i++) {
@@ -1782,21 +1778,16 @@ step.util = {
 									function() {
 										if (step.readyToShowPassageSelect) {
 											step.readyToShowPassageSelect = false; // Stop it from triggering more clicks
-											console.log("click on select reference");
 											$(".passageContainer.active").find(".select-reference").click();
 										}
 									},
 								150);
 							}
-							else console.log("not ready");
 						},
 					350);
 				}
 			}
 			step.readyToShowPassageSelect = false;
-		}
-		else if (userChoice === 6) {
-			step.router.navigateSearch(queryString, true, true);
 		}
 	},
   passageSelectionModal: function (activePassageNumber) {
@@ -3622,20 +3613,26 @@ step.util = {
 					queryStringForAnotherBible += osisIDs[j];
 				}
 			}
-			var alertMessage = "<br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
+			var alertMessage = "<br>" + __s.error_bible_doesn_t_have_passage +
+				"<br><br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
 				"<br>The " + newMasterVersion + " Bible only has the " + testamentAvailable + "Testament, " +
 				"it does not have the passage (" + passagesNotAvailable + ") which is in the " + missingTestament + " Testment. " + 
 				"<br><br>If you need both New and Old Testament passages, please select a Bible (e.g.: ESV) with both testaments as the first Bible.<br>" +
 				"<br>Below are some possible options:<br><ul>";
-			if (queryStringForAnotherBible !== "") 
-				alertMessage += "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(6,'" +
+			if ((queryStringForAnotherBible !== "") && (step.util.activePassage().get("masterVersion") !== otherVersions[recommendedVersionIndex]))
+				alertMessage += "<li><a href=\"javascript:step.util.correctPassageNotInBible(1,'" +
 					queryStringForAnotherBible +
-					"')\">Make " + otherVersions[recommendedVersionIndex] + " the first Bible.</a>";
+					"')\">" +
+					sprintf(__s.switch_another_as_first_bible, otherVersions[recommendedVersionIndex]) +
+					".</a>";
 			if (!dontGoToFirstBook)	
-				alertMessage += "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(4,'" +
-					queryStringForFirstBookInAvailableTestament +
-				 	"')\">Go to " + firstPassageInBible + " in " + newMasterVersion + " and then select my passage.</a>";
-				alertMessage += "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(5,'')\">Close this window to stay with your current passage(s) and Bible(s).</a>";
+				alertMessage += "<li><a href=\"javascript:step.util.correctPassageNotInBible(2,'" +
+					queryStringForFirstBookInAvailableTestament + "')\">" +
+					sprintf(__s.go_to_first_passage_in_bible, firstPassageInBible, newMasterVersion) +
+					"</a>";
+				alertMessage += "<li><a href=\"javascript:step.util.correctPassageNotInBible(0,'')\">" +
+					__s.close_window_stay_current_passage +
+					"</a>";
 			if (!dontShowAlert) step.util.showLongAlert(alertMessage, "Warning");
 			return false;
 		}

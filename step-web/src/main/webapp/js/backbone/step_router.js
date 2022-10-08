@@ -46,7 +46,7 @@ var StepRouter = Backbone.Router.extend({
                 }
             }
         }
-        var osisIDs = partial.substring( partial.indexOf("reference=") +10).split(" ");
+        var osisIDs = partial.substring( partial.indexOf("reference=") + 10).split(" ");
         if (!step.util.checkFirstBibleHasPassage(mainVersion, osisIDs, otherVersions, false, true)) return;
 		skipPage = (skipPage) ? true : false;
 		skipQFilter = (skipQFilter) ? true : false;
