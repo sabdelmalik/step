@@ -1795,6 +1795,9 @@ step.util = {
 			}
 			step.readyToShowPassageSelect = false;
 		}
+		else if (userChoice === 6) {
+			step.router.navigateSearch(queryString, true, true);
+		}
 	},
   passageSelectionModal: function (activePassageNumber) {
     var element = document.getElementById('passageSelectionModal');
@@ -3531,7 +3534,7 @@ step.util = {
 		return [hasNT, hasOT, ntPassages, otPassages];
 	},
 	checkBibleHasTheTestament: function(versionToCheck, hasNTPassage, hasOTPassage) {
-		versionToCheck = versionToCheck.toLowerCase();
+		versionToCheck = " " + versionToCheck.toLowerCase() + " ";
 		if ((hasNTPassage) && 
 			((step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionToCheck) > -1) ||
 			(" ohb thot alep wlc mapm ".indexOf(versionToCheck) > -1))) {
@@ -3544,12 +3547,40 @@ step.util = {
 		}
 		return true;
 	},
+	whichBibleIsTheBest: function(otherVersions, hasNTPassage, hasOTPassage) {
+		var bestPosition = 9999;
+		var indexOfSelectedVersion = -1;
+		for (var i = 0; i < otherVersions.length; i ++) {
+			var versionToCheck = " " + otherVersions[i].toLowerCase() + " ";
+			var pos =	step.passageSelect.translationsWithPopularBooksChapters.indexOf(versionToCheck);
+			if (pos == -1) pos = " kjva ".indexOf(versionToCheck) + 20; 
+			if (pos == -1) {
+				if (hasNTPassage && hasOTPassage) continue;
+				if (hasNTPassage) {
+					pos = step.passageSelect.translationsWithPopularNTBooksChapters.indexOf(versionToCheck);
+					if (pos == -1) pos = " sblgnt ".indexOf(versionToCheck);
+					pos += 1000;
+				}
+				else if (hasOTPassage) {
+					pos = step.passageSelect.translationsWithPopularOTBooksChapters.indexOf(versionToCheck);
+					if (pos == -1) pos = " ohb thot alep wlc mapm ".indexOf(versionToCheck);
+					else pos += 9; // This will give ohb and thot a lower position 
+					pos += 1000;
+				}
+			}
+			if ((pos > -1) && (pos < bestPosition)) {
+				bestPosition = pos;
+				indexOfSelectedVersion = i;
+			}
+		}
+		return indexOfSelectedVersion;
+	},
 	checkFirstBibleHasPassageBeforeSwap: function(newMasterVersion, callerPassagesModel, otherVersions) {
 		if (callerPassagesModel == null) return true; // cannot verify
 		osisIDs = callerPassagesModel.attributes.osisId.split(/[ ,]/);
 		return step.util.checkFirstBibleHasPassage(newMasterVersion, osisIDs, otherVersions);
 	},
-	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions, dontShowAlert) {
+	checkFirstBibleHasPassage: function(newMasterVersion, osisIDs, otherVersions, dontShowAlert, dontGoToFirstBook) {
 		var passageInfomation = step.util.getTestamentAndPassagesOfTheReferences(osisIDs);
 		var hasNTinReference = passageInfomation[0];
 		var hasOTinReference = passageInfomation[1];
@@ -3577,15 +3608,33 @@ step.util = {
 				queryStringForFirstBookInAvailableTestament += "|version=" + otherVersions[i];
 			}
 			queryStringForFirstBookInAvailableTestament += "|reference=" + firstPassageInBible;
+			var recommendedVersionIndex = this.whichBibleIsTheBest(otherVersions, hasNTinReference, hasOTinReference);
+			var queryStringForAnotherBible = "";
+			if (recommendedVersionIndex > -1) {
+				queryStringForAnotherBible = "version=" + otherVersions[recommendedVersionIndex] + "|version=" + newMasterVersion;
+				for (var i = 0; i < otherVersions.length; i++) {
+					if (i != recommendedVersionIndex)	queryStringForAnotherBible += "|version=" + otherVersions[i];
+				}
+				for (var j = 0; j < osisIDs.length; j++) {
+					if (j == 0) queryStringForAnotherBible += "|reference=";
+					else queryStringForAnotherBible += ","
+					queryStringForAnotherBible += osisIDs[j];
+				}
+			}
 			var alertMessage = "<br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
 				"<br>The " + newMasterVersion + " Bible only has the " + testamentAvailable + "Testament, " +
 				"it does not have the passage (" + passagesNotAvailable + ") which is in the " + missingTestament + " Testment. " + 
 				"<br><br>If you need both New and Old Testament passages, please select a Bible (e.g.: ESV) with both testaments as the first Bible.<br>" +
-				"<br>Below are some possible options:<br><ul>" +
-				"<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(4,'" +
-				 queryStringForFirstBookInAvailableTestament +
-				 "')\">Go to " + firstPassageInBible + " in " + newMasterVersion + " and then select my passage.</a>" +
-				 "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(5,'')\">Close this window to stay with your current passage(s) and Bible(s).</a>";
+				"<br>Below are some possible options:<br><ul>";
+			if (queryStringForAnotherBible !== "") 
+				alertMessage += "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(6,'" +
+					queryStringForAnotherBible +
+					"')\">Make " + otherVersions[recommendedVersionIndex] + " the first Bible.</a>";
+			if (!dontGoToFirstBook)	
+				alertMessage += "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(4,'" +
+					queryStringForFirstBookInAvailableTestament +
+				 	"')\">Go to " + firstPassageInBible + " in " + newMasterVersion + " and then select my passage.</a>";
+				alertMessage += "<li><a href=\"javascript:step.util.correctNoPassageInSelectedBible(5,'')\">Close this window to stay with your current passage(s) and Bible(s).</a>";
 			if (!dontShowAlert) step.util.showLongAlert(alertMessage, "Warning");
 			return false;
 		}
