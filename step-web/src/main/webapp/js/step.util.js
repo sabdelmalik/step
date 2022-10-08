@@ -3613,7 +3613,7 @@ step.util = {
 					queryStringForAnotherBible += osisIDs[j];
 				}
 			}
-			var alertMessage = "<br>" + __s.error_bible_doesn_t_have_passage +
+			var alertMessage = "<br>" + sprintf(__s.error_bible_doesn_t_have_passage, passagesNotAvailable) +
 				"<br><br>We cannot process your request to display " + newMasterVersion + " as the first Bible.<br>" +
 				"<br>The " + newMasterVersion + " Bible only has the " + testamentAvailable + "Testament, " +
 				"it does not have the passage (" + passagesNotAvailable + ") which is in the " + missingTestament + " Testment. " + 
