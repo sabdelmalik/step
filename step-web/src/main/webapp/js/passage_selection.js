@@ -402,8 +402,7 @@ step.passageSelect = {
 				else ap.save({targetLocation: osisID}, {silent: true});
 				osisID = osisID.substring(0, osisID.lastIndexOf('.'));
 			}
-	//        console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
-			step.router.navigatePreserveVersions("reference=" + osisID, false, true);
+			step.router.navigatePreserveVersions("reference=" + osisID, false, true, true);
 		}
 	},
 
