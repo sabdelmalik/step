@@ -3553,7 +3553,8 @@ step.util = {
 		for (var i = 0; i < otherVersions.length; i ++) {
 			var versionToCheck = " " + otherVersions[i].toLowerCase() + " ";
 			var pos =	step.passageSelect.translationsWithPopularBooksChapters.indexOf(versionToCheck);
-			if (pos == -1) pos = " kjva ".indexOf(versionToCheck) + 20; 
+			if (pos == -1) pos = " kjva ".indexOf(versionToCheck);
+			if (pos > -1)  pos += 20;
 			if (pos == -1) {
 				if (hasNTPassage && hasOTPassage) continue;
 				if (hasNTPassage) {
