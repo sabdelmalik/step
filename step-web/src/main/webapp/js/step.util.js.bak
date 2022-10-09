@@ -394,7 +394,7 @@ step.util = {
     },
     findSearchTermsInQuotesAndRemovePrefix: function(syntaxWords) {
 		if (syntaxWords.length != 1) alert("unexpected syntaxWords");
-		if (syntaxWords[0].substr(0, 2) === "t=") syntaxWords[0] = syntaxWords[0].substr(2);
+		if (syntaxWords[0].substr(0, 2) === "t=") syntaxWords[0] = syntaxWords[j].substr(2);
     //     var indxNeedConcatenate = -1;
     //     var quoteChar = "";
     //     for (var j = 0; j < syntaxWords.length; j++) {
@@ -892,7 +892,6 @@ step.util = {
 						}
                         if (itemType === SYNTAX) {
                             var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
-							step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
 							if ((syntaxWords.length == 1) && (syntaxWords[0].search(/\s*(\(*)\s*strong:([GH]\d{1,5}[A-Za-z]?)\s*(\)*)/) > -1)) {
 								// RegExp.$1 is prefix of open parathesis, RegExp.$2 is the strong number, RegExp.$2 is the suffix of close parathesis
 								var prefix = RegExp.$1;

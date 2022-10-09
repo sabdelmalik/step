@@ -114,7 +114,7 @@ step.searchSelect = {
 				else if (itemType !== VERSION) {
 					if (itemType === SYNTAX) {
 						var syntaxWords = actPsgeDataElm.token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
-						step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
+						// step.util.findSearchTermsInQuotesAndRemovePrefix(syntaxWords);
 						// var searchRelationship = "";
 						// for (var j = 0; j < syntaxWords.length; j++) {
 						// 	if (syntaxWords[j] == "") continue;
