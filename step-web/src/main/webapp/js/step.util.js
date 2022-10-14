@@ -1913,7 +1913,36 @@ step.util = {
 			$('textarea#enterYourPassage').focus().val(step.tempKeyInput);
 			step.tempKeyInput = "";
 		}
-    },
+  },
+
+  copyModal: function () {
+    var element = document.getElementById('copyModal');
+    if (element) element.parentNode.removeChild(element);
+    $("div.modal-backdrop.in").remove();
+		var modalHTML = '<div id="copyModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+				'<div class="modal-content stepModalFgBg" style="width:95%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">' +
+					'<div class="modal-header">' +
+						'<span class="pull-right">' +
+							step.util.modalCloseBtn("copyModal") +
+							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
+						'</span>';
+		modalHTML +=
+					'<div id="versesbody" class="modal-body"></div>' +
+					'<div class="footer">';
+		modalHTML +=
+						'<br>' +
+					'</div>' +
+					'<script>' +
+						'$(document).ready(function () {' +
+							'step.copyText.initVerseSelect();' +
+						'});' +
+					'</script>' +
+				'</div>' +
+			'</div>' +
+		'</div>';
+		$(_.template(modalHTML)()).modal("show");
+	},
 
 	searchSelectionModal: function () {
 		var docWidth = $(document).width();
