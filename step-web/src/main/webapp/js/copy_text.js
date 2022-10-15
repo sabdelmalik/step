@@ -8,10 +8,10 @@ step.copyText = {
 	},
 
 	_displayVerses: function() {
-    $('#versesbody').empty();
+    $('#bookchaptermodalbody').empty();
 		var html = this._buildHeaderAndSkeleton();
-		$('#versesbody').append(html);
-		$('#versesbody').append(this._buildChptrVrsTbl(40));
+		$('#bookchaptermodalbody').append(html);
+		$('#bookchaptermodalbody').append(this._buildChptrVrsTbl(-1));
 	},
 
 
@@ -22,86 +22,92 @@ step.copyText = {
 		return html;
 	},
 
-	_buildBookTableHeader: function() {
-		var columns  = 10;
-		var columnPercent = Math.floor(100 / columns);
-		html = '<table>' +
-			'<colgroup>';
-		for (var i = 0; i < columns; i++) {
-			html += '<col span="1" style="width:' + columnPercent + '%;">';
+	goCopy: function(firstVerseIndex, lastVerseIndex) {
+		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
+		var copyOfPassage = $(passageContainer).find(".passageContentHolder").clone();
+		if (firstVerseIndex > lastVerseIndex) {
+			var temp = firstVerseIndex;
+			firstVerseIndex = lastVerseIndex;
+			lastVerseIndex = temp;
 		}
-		html += '</colgroup>';
-		html += '<tr>';
-		return html;
-	},
-
-	goToPassage: function(osisID, chptrOrVrsNum) {
-		var bookID = osisID.substring(0, osisID.indexOf("."));
-		if (bookID === "") bookID = osisID;
-		if ((chptrOrVrsNum != 0) && ($("#select_verse_number").hasClass("checked")) && 
-			(this.modalMode === "chapter")) {
-			var numOfVerse = 0;
-			for (var i = 0; i < this.osisChapterJsword.length; i++) {
-				var currentOsisID = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
-				if (bookID === currentOsisID) {
-					numOfVerse = this.osisChapterJsword[i][2][Math.abs(chptrOrVrsNum)-1] || 0; // -1 is used for books with 1 chapter (e.g.: Jude)
-					break;
+		var verses = $(copyOfPassage).find('.versenumber');
+		if (lastVerseIndex < verses.length - 1) {
+			for (var k = verses.length - 1; k > lastVerseIndex; k--) {
+				var found = false;
+				var count = 0;
+				var parent = $(verses[k]).parent();
+				while ((!found) && (count < 6)) {
+					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping"))) {
+						parent.remove();
+						found = true;
+					}
+					else parent = parent.parent();
+					count ++;
 				}
 			}
-			if (numOfVerse > 0) {
-				this._buildChptrVrsTbl(null, osisID, numOfVerse, false);
-				return;
-			}
-			else alert('Cannot determine the number of verse in ' + osisID + '.  Will proceed to display the chapter.');
 		}
-		var activePassageData = step.util.activePassage().get("searchTokens") || [];
-		var allVersions = "";
-		var existingReferences = "";
-		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
-		for (var i = 0; i < activePassageData.length; i++) {
-			if (activePassageData[i].itemType == "version") {
-				if (allVersions.length > 0) allVersions += "|version=";
-				allVersions += activePassageData[i].item.shortInitials;
-			}
-			else if ((selectedDisplayLoc === "append") && (activePassageData[i].itemType == "reference")) {
-				existingReferences += "|reference=" + activePassageData[i].item.osisID;
+		if (firstVerseIndex > 0) {
+			for (var k = firstVerseIndex -1; k >= 0; k--) {
+				var found = false;
+				var count = 0;
+				var parent = $(verses[k]).parent();
+				while ((!found) && (count < 6)) {
+					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping"))) {
+						parent.remove();
+						found = true;
+					}
+					else parent = parent.parent();
+					count ++;
+				}
 			}
 		}
-		step.util.closeModal('passageSelectionModal');
-		if (selectedDisplayLoc === "append") {
-			var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
-			step.router.navigateSearch(url, true, true); // skip QFilter
-		}
+
+		$(copyOfPassage).find('.notesPane').remove()
+		$(copyOfPassage).find('.note').remove();
+		if ($(copyOfPassage).find('.verseGrouping').length == 0)
+			$(copyOfPassage).find('.heading').remove();
 		else {
-			if (selectedDisplayLoc === "new") {
-				step.util.createNewColumn();
+			$(copyOfPassage).find('.heading').prepend("<br>");
+			var singleVerses = $(copyOfPassage).find('.singleVerse');
+			for (var i = 0; i < singleVerses.length; i ++) {
+				$(singleVerses[i]).html( $(singleVerses[i]).html().replace(/(>\(\w{2,8}\))\n/, "$1") );
 			}
-			if (this.modalMode === "verse") {
-				ap=step.util.activePassage();
-				var numOfChaptersInBook = this.getNumOfChapters(bookID);
-				if (numOfChaptersInBook === 1) {
-					var tmpOsisID = osisID.substring(0, osisID.indexOf(".")) + '.1.' + osisID.substring(osisID.indexOf(".") + 1);
-					ap.save({targetLocation: tmpOsisID}, {silent: true});
-				}
-				else ap.save({targetLocation: osisID}, {silent: true});
-				osisID = osisID.substring(0, osisID.lastIndexOf('.'));
-			}
-			step.router.navigatePreserveVersions("reference=" + osisID, false, true, true);
+			$(singleVerses).prepend("<br>");
 		}
+		$(copyOfPassage).find(".stepButton").remove();
+		$(copyOfPassage).find(".level2").text("\t");
+		$(copyOfPassage).find('.startLineGroup').replaceWith("<br>")
+		$(copyOfPassage).find("p").replaceWith("<br>")
+		if ($(copyOfPassage).find('.headingVerseNumber').length > 0)
+			$(copyOfPassage).find('.headingVerseNumber').prepend("<br>")
+		var interlinearClasses = $(copyOfPassage).find('.interlinear');
+		for (var j = 0; j < interlinearClasses.length; j++) {
+			if ($($(interlinearClasses[j]).find(".interlinear")).length == 0) {
+				var text = $(interlinearClasses[j]).text();
+				if (text.indexOf("[") > -1) continue;
+				text = text.replace(/\s/g, "").replace(/&nbsp;/g, "");
+				if (text.length == 0) continue;
+				$(interlinearClasses[j]).prepend(" [").append("] ");
+			}
+		}
+		var textToCopy = $($(copyOfPassage).html().replace(/<br\s*[\/]?>/gi, "\r\n")).text().replace(/    /g, " ")
+			.replace(/   /g, " ").replace(/  /g, " ").replace(/(\d)([A-Za-z])/g, "$1 $2").replace(/\t /g, "\t")
+			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n");
+		if ($(copyOfPassage).find('.verseGrouping').length > 0) {
+			textToCopy = textToCopy.replace(/\n\n/g, "\n");
+		}
+		if (interlinearClasses.length > 0)
+			textToCopy = textToCopy.replace(/\s+/g, " ");
+		console.log(textToCopy);
+		navigator.clipboard.writeText(textToCopy);
+		$('#bookchaptermodalbody').empty();
+		$('#bookchaptermodalbody').append("<h2>The text is copied to the clipboard.");
+		setTimeout( function() { step.util.closeModal("copyModal")}, 1000);
 	},
 
-	getNumOfChapters: function(bookID) {
-		for (var i = 0; i < this.osisChapterJsword.length; i++) {
-			var currentOsisID = (this.osisChapterJsword[i].length === 4) ? this.osisChapterJsword[i][3] : this.osisChapterJsword[i][0];
-			if (bookID === currentOsisID) {
-				return this.osisChapterJsword[i][1];
-			}
-		}
-	},
-
-	_buildChptrVrsTbl: function(numOfChptrsOrVrs) {
-		var headerMsg;
-		headerMsg = __s.please_select_verse;
+	_buildChptrVrsTbl: function(firstSelection) {
+		var verses = $('.versenumber');
+		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy" : "The copy will start at verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
 		this.modalMode = 'verse';
 		var tableColumns = 10;
 		var widthPercent = 10;
@@ -114,10 +120,9 @@ step.copyText = {
 				widthPercent = 14;
 			}
 		}
-    var chapterDescription = [];
 		var html = '<div class="header">' +
             '<h4>' + headerMsg + '</h4>';
-    html +=
+    	html +=
             '</div>' +
 			'<div style="overflow-y:auto">' +
 			'<table>' +
@@ -127,27 +132,37 @@ step.copyText = {
 		}
 		html += '</colgroup>' +
 			'<tr>';
-
 		var chptrOrVrsNum = 0;
-		var osisIDLink = "";
-		if (numOfChptrsOrVrs > 0) {
-			for (var i = 0; i < numOfChptrsOrVrs; i++) {
-				chptrOrVrsNum++;
-				var curChptrDesc = "";
-				if (typeof chapterDescription[chptrOrVrsNum] === "string")
-					curChptrDesc = " - " + chapterDescription[chptrOrVrsNum];
-				html += '<td><a href="javascript:step.passageSelect.goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');"' +
-                    '>' + chptrOrVrsNum + 
-                    '</a></td>'
-				if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
-					html += '</tr><tr>';
-				}
+		var previousVerseName = "";
+		for (var i = 0; i < verses.length; i++) {
+			chptrOrVrsNum++;
+			var verseName = $(verses[i]).text();
+			var originalVerseName = verseName;
+			var verseSplit = verseName.split(/:/);
+			if ((verseSplit.length == 2) && (verseSplit[0] === previousVerseName.split(/:/)[0])) verseName = verseSplit[1];
+			else {
+				verseSplit = verseName.split(/ /);
+				if ((verseSplit.length == 2) && (verseSplit[0] === previousVerseName.split(/ /)[0])) verseName = verseSplit[1];
+			}
+			previousVerseName = originalVerseName;
+			
+			if (firstSelection > -1) {
+				if (i == firstSelection) verseName = "<b><i>" + verseName + "</i></b>";
+				html += '<td><a href="javascript:step.copyText.goCopy(' + firstSelection + ',' + i + ');"' +
+					'>' + verseName + 
+					'</a></td>'
+			}
+			else html += '<td><a href="javascript:step.copyText._buildChptrVrsTbl(' + i + ');"' +
+					'>' + verseName + 
+					'</a></td>'
+			if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
+				html += '</tr><tr>';
 			}
 		}
 		html +=
 			'</tr></table></div>' +
 			'</div>';
-		$('#versesbody').empty();
-		$('#versesbody').append(html);
+		$('#bookchaptermodalbody').empty();
+		$('#bookchaptermodalbody').append(html);
 	}
 };

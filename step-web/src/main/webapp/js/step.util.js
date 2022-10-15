@@ -818,48 +818,6 @@ step.util = {
 		if (!step.util.checkFirstBibleHasPassageBeforeSwap(newMasterVersion, passageModel, otherVersions)) return;
         passageModel.save({ args: newArgs, masterVersion: masterVersion, otherVersions: otherVersions }, { silent: silent });
     },
-
-	copyToClipboard: function () {
-		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
-		var copyOfPassage = $(passageContainer).find(".passageContentHolder").clone();
-		$(copyOfPassage).find('.notesPane').remove()
-		$(copyOfPassage).find('.note').remove();
-		if ($(copyOfPassage).find('.verseGrouping').length == 0)
-			$(copyOfPassage).find('.heading').remove();
-		else {
-			$(copyOfPassage).find('.heading').prepend("<br>");
-			var singleVerses = $(copyOfPassage).find('.singleVerse');
-			for (var i = 0; i < singleVerses.length; i ++) {
-				$(singleVerses[i]).html( $(singleVerses[i]).html().replace(/(>\(\w{2,8}\))\n/, "$1") );
-			}
-			$(singleVerses).prepend("<br>");
-		}
-		$(copyOfPassage).find(".stepButton").remove();
-		$(copyOfPassage).find(".level2").text("\t");
-		$(copyOfPassage).find('.startLineGroup').replaceWith("<br>")
-		$(copyOfPassage).find("p").replaceWith("<br>")
-		if ($(copyOfPassage).find('.headingVerseNumber').length > 0)
-			$(copyOfPassage).find('.headingVerseNumber').prepend("<br>")
-		var interlinearClasses = $(copyOfPassage).find('.interlinear');
-		for (var j = 0; j < interlinearClasses.length; j++) {
-			if ($($(interlinearClasses[j]).find(".interlinear")).length == 0) {
-				var text = $(interlinearClasses[j]).text();
-				if (text.indexOf("[") > -1) continue;
-				text = text.replace(/\s/g, "").replace(/&nbsp;/g, "");
-				if (text.length == 0) continue;
-				$(interlinearClasses[j]).prepend(" [").append("] ");
-			}
-		}
-		var textToCopy = $($(copyOfPassage).html().replace(/<br\s*[\/]?>/gi, "\r\n")).text().replace(/    /g, " ")
-			.replace(/   /g, " ").replace(/  /g, " ").replace(/(\d)([A-Za-z])/g, "$1 $2").replace(/\t /g, "\t")
-			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n");
-		if ($(copyOfPassage).find('.verseGrouping').length > 0) {
-			textToCopy = textToCopy.replace(/\n\n/g, "\n");
-		}
-		if (interlinearClasses.length > 0)
-			textToCopy = textToCopy.replace(/\s+/g, " ");
-		navigator.clipboard.writeText(textToCopy);
-	},
     ui: {
         selectMark: function (classes) {
             return '<span" class="glyphicon glyphicon-ok ' + classes + '" style="color:var(--clrText);background:var(--clrBackground)"></span>';
@@ -1926,9 +1884,10 @@ step.util = {
 						'<span class="pull-right">' +
 							step.util.modalCloseBtn("copyModal") +
 							'<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>' +
-						'</span>';
+						'</span>'+
+					'</div>';
 		modalHTML +=
-					'<div id="versesbody" class="modal-body"></div>' +
+					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
 					'<div class="footer">';
 		modalHTML +=
 						'<br>' +
