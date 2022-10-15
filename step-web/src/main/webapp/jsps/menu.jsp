@@ -33,7 +33,6 @@
     <a id="report-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="html/reports_by_step.html" target="_blank" title="Reports that uses STEP">
         <i class="glyphicon glyphicon-th-list"></i><span class="navbarIconDesc hidden-sm">&nbsp;&nbsp;Reports</span>
     </a>
-	
     <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats"/>">
         <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats"/></span>
     </a>
