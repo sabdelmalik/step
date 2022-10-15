@@ -98,7 +98,38 @@ step.copyText = {
 		}
 		if (interlinearClasses.length > 0)
 			textToCopy = textToCopy.replace(/\s+/g, " ");
-		console.log(textToCopy);
+
+		var versionsString = step.util.activePassage().get("masterVersion") + "," + step.util.activePassage().get("extraVersions");
+		var versions = versionsString.split(",");
+		for (var i = 0; i < versions.length; i++) {
+			currentVersion = versions[i];
+			if (currentVersion === "") continue;
+			$.ajaxSetup({async: false});
+			$.getJSON("/html/copyrights/" + currentVersion + ".json", function(copyRights) {
+				if (i == 0) textToCopy += "\n";
+				textToCopy += "\n" + copyRights;
+			});
+			$.ajaxSetup({async: true});
+		}
+		var previousCopyTimeStamps = $.cookie("step.copyTimeStamps");
+		var currentTimeInSeconds =  Math.floor( new Date().getTime() / 1000 );
+		var timeStampForNewCookie = currentTimeInSeconds.toString();
+		var copiesInLastMinute = 0;
+		if ((previousCopyTimeStamps != null) && (typeof previousCopyTimeStamps === "string")) {
+			previousTimes = previousCopyTimeStamps.split(",");
+			for (var j = 0; j < previousTimes.length; j ++) {
+				if (previousTimes[j] === "") continue;
+				if (currentTimeInSeconds - previousTimes[j] > 60) continue;
+				timeStampForNewCookie += "," + previousTimes[j];
+				copiesInLastMinute ++;
+			}
+		}
+		$.cookie("step.copyTimeStamps", timeStampForNewCookie);
+		if (copiesInLastMinute > 4) {
+			alert("You are copying in a rapid pace. Consider slowing down.\n\nThe copy function is intended for personal use within the copyrights limitation.  Please review the copyrights requirement for the Bibles (" +
+				versionsString +
+				") you are using.");
+		}
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append("<h2>The text is copied to the clipboard.");
@@ -107,7 +138,7 @@ step.copyText = {
 
 	_buildChptrVrsTbl: function(firstSelection) {
 		var verses = $('.versenumber');
-		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy" : "The copy will start at verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
+		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy" : "Copy will start from verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
 		this.modalMode = 'verse';
 		var tableColumns = 10;
 		var widthPercent = 10;
