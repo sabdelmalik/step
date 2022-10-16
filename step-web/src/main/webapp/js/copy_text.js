@@ -37,7 +37,7 @@ step.copyText = {
 				var count = 0;
 				var parent = $(verses[k]).parent();
 				while ((!found) && (count < 6)) {
-					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping"))) {
+					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping")) || (parent.hasClass("interlinear"))) {
 						parent.remove();
 						found = true;
 					}
@@ -52,7 +52,7 @@ step.copyText = {
 				var count = 0;
 				var parent = $(verses[k]).parent();
 				while ((!found) && (count < 6)) {
-					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping"))) {
+					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping"))|| (parent.hasClass("interlinear"))) {
 						parent.remove();
 						found = true;
 					}
@@ -93,6 +93,26 @@ step.copyText = {
 				$(interlinearClasses[j]).prepend(" [").append("] ");
 			}
 		}
+
+		var versionsString = step.util.activePassage().get("masterVersion");
+		var extraVersions = step.util.activePassage().get("extraVersions");
+		if (extraVersions !== "") versionsString += "," + extraVersions;
+		var versions = versionsString.split(",");
+		var comparingTable = $(copyOfPassage).find('.comparingTable');
+		if (comparingTable.length > 0) {
+			var rows = $(comparingTable).find("tr.row");
+			if (rows.length > 0) {
+				for (var k = 0; k < rows.length; k++) {
+					var cells = $(rows[k]).find("td.cell");
+					if (cells.length == versions.length) {
+						for (var l = 0; l < cells.length; l++) {
+							$(cells[l]).prepend(" (" + versions[l] + ") ");
+						}
+					}
+				}
+			}
+			$(comparingTable).find("tr").not(".row").remove();
+		}
 		var textToCopy = $($(copyOfPassage).html().replace(/<br\s*[\/]?>/gi, "\r\n")).text().replace(/    /g, " ")
 			.replace(/   /g, " ").replace(/  /g, " ").replace(/(\d)([A-Za-z])/g, "$1 $2").replace(/\t /g, "\t")
 			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n");
@@ -102,8 +122,6 @@ step.copyText = {
 		if (interlinearClasses.length > 0)
 			textToCopy = textToCopy.replace(/\s+/g, " ");
 
-		var versionsString = step.util.activePassage().get("masterVersion") + "," + step.util.activePassage().get("extraVersions");
-		var versions = versionsString.split(",");
 		for (var i = 0; i < versions.length; i++) {
 			currentVersion = versions[i];
 			if (currentVersion === "") continue;
