@@ -116,6 +116,7 @@ step.copyText = {
 		var timeStampForNewCookie = currentTimeInSeconds.toString();
 		var copiesInLastMinute = 0;
 		var longestDifference = 0;
+		var previousTimes = [];
 		if ((previousCopyTimeStamps != null) && (typeof previousCopyTimeStamps === "string")) {
 			previousTimes = previousCopyTimeStamps.split(",");
 			for (var j = 0; j < previousTimes.length; j ++) {
@@ -136,6 +137,7 @@ step.copyText = {
 			sleepTime = Math.min((60 - longestDifference) * 1000, 5000);
 			$("#copyModal").find('.close').hide();
 		}
+		else if (previousTimes.length > 0) sleepTime = 750;
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append("<h2>The text is copied to the clipboard.");
