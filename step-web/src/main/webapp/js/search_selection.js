@@ -1596,8 +1596,31 @@ step.searchSelect = {
 		this.numOfPreviousSearchTokens --;
 		showPreviousSearch();
 		$('#lOPS_' + index).hide();
+		var startParenthesis = -1;
+		var hasSearchWithinParthensis = false;
+		for (var i = 0; i < this.previousSearchTokens.length; i++) {
+			if (this.previousSearchTokens[i].substring(0,1) === "(") {
+				startParenthesis = i;
+				hasSearchWithinParthensis = false;
+			}
+			else if (startParenthesis > -1) {
+				if (this.previousSearchTokens[i].substring(0,1) === ")") {
+					if (!hasSearchWithinParthensis) {
+						this.previousSearchTokens[startParenthesis] = "";
+						this.previousSearchTokens[i] = "";
+						$('#lOPS_' + startParenthesis).hide();
+						$('#lOPS_' + i).hide();
+						this.numOfPreviousSearchTokens -= 2;
+					}
+					startParenthesis = -1;
+					hasSearchWithinParthensis = false;
+				}
+				else if (this.previousSearchTokens[i] !== "") hasSearchWithinParthensis = true;
+			}
+		}
 		if (this.numOfPreviousSearchTokens == 0) {
 			$('#previousSearch').empty();
+			$('#updateButton').hide();
 		}
 	},
 

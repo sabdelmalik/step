@@ -76,6 +76,9 @@ step.copyText = {
 		}
 		$(copyOfPassage).find(".stepButton").remove();
 		$(copyOfPassage).find(".level2").text("\t");
+		$(copyOfPassage).find(".level3").text("\t\t");
+		$(copyOfPassage).find(".level4").text("\t\t\t");
+		$(copyOfPassage).find(".level5").text("\t\t\t\t");
 		$(copyOfPassage).find('.startLineGroup').replaceWith("<br>")
 		$(copyOfPassage).find("p").replaceWith("<br>")
 		if ($(copyOfPassage).find('.headingVerseNumber').length > 0)
