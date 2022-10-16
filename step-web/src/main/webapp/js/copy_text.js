@@ -134,11 +134,11 @@ step.copyText = {
 				versionsString +
 				") you are using.");
 			sleepTime = Math.min((60 - longestDifference) * 1000, 5000);
+			$("#copyModal").find('.close').hide();
 		}
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append("<h2>The text is copied to the clipboard.");
-		console.log("Sleep time " + sleepTime);
 		setTimeout( function() { step.util.closeModal("copyModal")}, sleepTime);
 	},
 
