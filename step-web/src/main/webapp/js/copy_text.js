@@ -169,7 +169,7 @@ step.copyText = {
 		else if (previousTimes.length > 0) sleepTime = 600;
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
-		$('#bookchaptermodalbody').append("<h2>The text is copied to the clipboard.");
+		$('#bookchaptermodalbody').append("<h2>The text is copied, ready to be paste.");
 		setTimeout( function() { step.util.closeModal("copyModal")}, sleepTime);
 	},
 
