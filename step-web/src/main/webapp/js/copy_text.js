@@ -137,10 +137,7 @@ step.copyText = {
 			sleepTime = Math.min((60 - longestDifference) * 1000, 5000);
 			$("#copyModal").find('.close').hide();
 		}
-		else if (previousTimes.length == 1) sleepTime = 750;
-		else if (previousTimes.length == 2) sleepTime = 700;
-		else if (previousTimes.length == 3) sleepTime = 650;
-		else if (previousTimes.length == 4) sleepTime = 500;
+		else if (previousTimes.length > 0) sleepTime = 600;
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append("<h2>The text is copied to the clipboard.");
