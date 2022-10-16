@@ -84,7 +84,7 @@ step.copyText = {
 		$(copyOfPassage).find(".level5").text("\t\t\t\t");
 		$(copyOfPassage).find('.startLineGroup').replaceWith("<br>")
 		$(copyOfPassage).find("p").replaceWith("<br>")
-		$(copyOfPassage).find("h2.xgen").prepend("<br>")
+		$(copyOfPassage).find("h2.xgen").prepend("\r\n")
 		if ($(copyOfPassage).find('.headingVerseNumber').length > 0)
 			$(copyOfPassage).find('.headingVerseNumber').prepend("<br>")
 		var interlinearClasses = $(copyOfPassage).find('.interlinear');
