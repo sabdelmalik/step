@@ -128,7 +128,7 @@ step.copyText = {
 			$.ajaxSetup({async: false});
 			$.getJSON("/html/copyrights/" + currentVersion + ".json", function(copyRights) {
 				if (i == 0) textToCopy += "\n";
-				textToCopy += "\n" + currentVersion + " : " + copyRights;
+				textToCopy += "\n" + currentVersion + ": " + copyRights;
 			});
 			$.ajaxSetup({async: true});
 		}
