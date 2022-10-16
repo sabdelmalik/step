@@ -84,6 +84,7 @@ step.copyText = {
 		$(copyOfPassage).find(".level5").text("\t\t\t\t");
 		$(copyOfPassage).find('.startLineGroup').replaceWith("<br>")
 		$(copyOfPassage).find("p").replaceWith("<br>")
+		$(copyOfPassage).find("h2.xgen").prepend("<br>")
 		if ($(copyOfPassage).find('.headingVerseNumber').length > 0)
 			$(copyOfPassage).find('.headingVerseNumber').prepend("<br>")
 		var interlinearClasses = $(copyOfPassage).find('.interlinear');
@@ -116,9 +117,15 @@ step.copyText = {
 			}
 			$(comparingTable).find("tr").not(".row").remove();
 		}
-		var textToCopy = $($(copyOfPassage).html().replace(/<br\s*[\/]?>/gi, "\r\n")).text().replace(/    /g, " ")
+		var textToCopy = ""
+		for (var m = 0; m < copyOfPassage.length; m++) {
+			$(copyOfPassage[m]).html().replace(/<br\s*[\/]?>/gi, "\r\n");
+			textToCopy += $(copyOfPassage[m]).text().replace(/    /g, " ")
 			.replace(/   /g, " ").replace(/  /g, " ").replace(/(\d)([A-Za-z])/g, "$1 $2").replace(/\t /g, "\t")
-			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n");
+			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n").replace(/^ /g, "");
+			textToCopy += "\n";
+		}
+		
 		if ($(copyOfPassage).find('.verseGrouping').length > 0) {
 			textToCopy = textToCopy.replace(/\n\n/g, "\n");
 		}
