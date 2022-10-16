@@ -31,15 +31,17 @@ step.copyText = {
 			lastVerseIndex = temp;
 		}
 		var verses = $(copyOfPassage).find('.versenumber');
+		var versesRemoved = 0;
 		if (lastVerseIndex < verses.length - 1) {
 			for (var k = verses.length - 1; k > lastVerseIndex; k--) {
 				var found = false;
-				var count = 0;
+				var count = 0; // The parent to delete should not be more than 6 level up.
 				var parent = $(verses[k]).parent();
 				while ((!found) && (count < 6)) {
 					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping")) || (parent.hasClass("interlinear"))) {
 						parent.remove();
 						found = true;
+						versesRemoved ++;
 					}
 					else parent = parent.parent();
 					count ++;
@@ -55,6 +57,7 @@ step.copyText = {
 					if ((parent.hasClass("verse")) || (parent.hasClass("row")) || (parent.hasClass("verseGrouping"))|| (parent.hasClass("interlinear"))) {
 						parent.remove();
 						found = true;
+						versesRemoved ++;
 					}
 					else parent = parent.parent();
 					count ++;
@@ -135,6 +138,11 @@ step.copyText = {
 		var previousCopyTimeStamps = $.cookie("step.copyTimeStamps");
 		var currentTimeInSeconds =  Math.floor( new Date().getTime() / 1000 );
 		var timeStampForNewCookie = currentTimeInSeconds.toString();
+		if (versesRemoved > 0) {
+			var gracePeriod = Math.floor(20 * (versesRemoved / verses.length));
+			console.log("grace period: " + gracePeriod);
+			timeStampForNewCookie -= gracePeriod;
+		}
 		var copiesInLastMinute = 0;
 		var longestDifference = 0;
 		var previousTimes = [];
