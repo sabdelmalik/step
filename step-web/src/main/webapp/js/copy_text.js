@@ -106,7 +106,7 @@ step.copyText = {
 					var cells = $(rows[k]).find("td.cell");
 					if (cells.length == versions.length) {
 						for (var l = 0; l < cells.length; l++) {
-							$(cells[l]).prepend(" (" + versions[l] + ") ");
+							$(cells[l]).prepend("\n(" + versions[l] + ") ");
 						}
 					}
 				}
@@ -128,7 +128,7 @@ step.copyText = {
 			$.ajaxSetup({async: false});
 			$.getJSON("/html/copyrights/" + currentVersion + ".json", function(copyRights) {
 				if (i == 0) textToCopy += "\n";
-				textToCopy += "\n" + copyRights;
+				textToCopy += "\n" + currentVersion + " : " + copyRights;
 			});
 			$.ajaxSetup({async: true});
 		}
