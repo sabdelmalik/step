@@ -23,7 +23,7 @@
         <span class="icon-bar"></span>
     </button>
 
-	<a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal()();" title="<fmt:message key="copy_text"/>">
+	<a id="copy-icon" style="padding-left:5px" href="javascript:step.util.copyModal();" title="<fmt:message key="copy_text"/>">
         <i class="glyphicon glyphicon-copy"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="copy_text"/></span>
     </a>
 	

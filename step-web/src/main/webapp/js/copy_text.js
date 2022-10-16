@@ -115,25 +115,31 @@ step.copyText = {
 		var currentTimeInSeconds =  Math.floor( new Date().getTime() / 1000 );
 		var timeStampForNewCookie = currentTimeInSeconds.toString();
 		var copiesInLastMinute = 0;
+		var longestDifference = 0;
 		if ((previousCopyTimeStamps != null) && (typeof previousCopyTimeStamps === "string")) {
 			previousTimes = previousCopyTimeStamps.split(",");
 			for (var j = 0; j < previousTimes.length; j ++) {
 				if (previousTimes[j] === "") continue;
-				if (currentTimeInSeconds - previousTimes[j] > 60) continue;
+				var difference = currentTimeInSeconds - previousTimes[j];
+				if (difference > 60) continue;
+				if (longestDifference < difference) longestDifference = difference;
 				timeStampForNewCookie += "," + previousTimes[j];
 				copiesInLastMinute ++;
 			}
 		}
+		var sleepTime = 1000;
 		$.cookie("step.copyTimeStamps", timeStampForNewCookie);
 		if (copiesInLastMinute > 4) {
-			alert("You are copying in a rapid pace. Consider slowing down.\n\nThe copy function is intended for personal use within the copyrights limitation.  Please review the copyrights requirement for the Bibles (" +
+			alert("You are copying at a rapid pace.\n\nThe copy function is intended for personal use within the copyrights limitation.  Please review the copyrights requirement for the Bibles (" +
 				versionsString +
 				") you are using.");
+			sleepTime = Math.min((60 - longestDifference) * 1000, 5000);
 		}
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append("<h2>The text is copied to the clipboard.");
-		setTimeout( function() { step.util.closeModal("copyModal")}, 1000);
+		console.log("Sleep time " + sleepTime);
+		setTimeout( function() { step.util.closeModal("copyModal")}, sleepTime);
 	},
 
 	_buildChptrVrsTbl: function(firstSelection) {
