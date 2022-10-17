@@ -97,6 +97,7 @@ step.copyText = {
 			}
 			else $(interlinearClasses[j]).prepend("<br>");
 		}
+		$(copyOfPassage).find(".verseNumber").append(" ");
 		$(copyOfPassage).find(".interVerseNumbers").prepend("<br>");
 		$(copyOfPassage).find("p").replaceWith("\n");
 		$(copyOfPassage).find("br").replaceWith("\n");
@@ -129,7 +130,7 @@ step.copyText = {
 				console.log("pos: " + posSearch + " " + $(copyOfPassage[m]).html());
 			}
 			textToCopy += $(copyOfPassage[m]).text().replace(/    /g, " ")
-			.replace(/   /g, " ").replace(/  /g, " ").replace(/(\d)([A-Za-z'“])/g, "$1 $2").replace(/\t /g, "\t")
+			.replace(/   /g, " ").replace(/  /g, " ").replace(/\t /g, "\t")
 			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n").replace(/\n\n\t/g, "\n\t").replace(/^\n/g, "")
 			.replace(/(\n) (\d)/g, "$1$2").replace(/\n $/, "\n").replace(/\n\n$/, "\n");
 			if (textToCopy.search(/\n$/) == -1)
@@ -197,7 +198,7 @@ step.copyText = {
 		else if (previousTimes.length > 0) sleepTime = 600;
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
-		$('#bookchaptermodalbody').append("<h2>The text is copied, ready to be paste.");
+		$('#bookchaptermodalbody').append("<h2>The text is copied, ready to be pasted.");
 		setTimeout( function() { step.util.closeModal("copyModal")}, sleepTime);
 	},
 
