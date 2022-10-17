@@ -70,23 +70,23 @@ step.copyText = {
 		if ($(copyOfPassage).find('.verseGrouping').length == 0)
 			$(copyOfPassage).find('.heading').remove();
 		else {
-			$(copyOfPassage).find('.heading').prepend("<br>");
+			$(copyOfPassage).find('.heading').prepend("\r\n");
 			var singleVerses = $(copyOfPassage).find('.singleVerse');
 			for (var i = 0; i < singleVerses.length; i ++) {
 				$(singleVerses[i]).html( $(singleVerses[i]).html().replace(/(>\(\w{2,8}\))\n/, "$1") );
 			}
-			$(singleVerses).prepend("<br>");
+			$(singleVerses).prepend("\r\n");
 		}
 		$(copyOfPassage).find(".stepButton").remove();
 		$(copyOfPassage).find(".level2").text("\t");
 		$(copyOfPassage).find(".level3").text("\t\t");
 		$(copyOfPassage).find(".level4").text("\t\t\t");
 		$(copyOfPassage).find(".level5").text("\t\t\t\t");
-		$(copyOfPassage).find('.startLineGroup').replaceWith("<br>")
-		$(copyOfPassage).find("p").replaceWith("<br>")
+		$(copyOfPassage).find('.startLineGroup').replaceWith("\r\n")
+		$(copyOfPassage).find("p").replaceWith("\r\n")
 		$(copyOfPassage).find("h2.xgen").prepend("\r\n")
 		if ($(copyOfPassage).find('.headingVerseNumber').length > 0)
-			$(copyOfPassage).find('.headingVerseNumber').prepend("<br>")
+			$(copyOfPassage).find('.headingVerseNumber').prepend("\r\n")
 		var interlinearClasses = $(copyOfPassage).find('.interlinear');
 		for (var j = 0; j < interlinearClasses.length; j++) {
 			if ($($(interlinearClasses[j]).find(".interlinear")).length == 0) {
