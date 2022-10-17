@@ -139,7 +139,10 @@ step.copyText = {
 			$.getJSON("/html/copyrights/" + currentVersion + ".json", function(copyRights) {
 				if (i == 0) textToCopy += "\n";
 				textToCopy += "\n" + currentVersion + ": " + copyRights;
-			});
+			}).fail(function() {
+                textToCopy += "\n" + currentVersion + ": Copyright notice at STEPBible.org/version.jsp?version=" + currentVersion;
+            });
+			;
 			$.ajaxSetup({async: true});
 		}
 		var previousCopyTimeStamps = $.cookie("step.copyTimeStamps");
@@ -182,7 +185,7 @@ step.copyText = {
 
 	_buildChptrVrsTbl: function(firstSelection) {
 		var verses = $('.versenumber');
-		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy" : "Copy will start from verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
+		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy<br><br><br>" : "Copy will start from verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
 		this.modalMode = 'verse';
 		var tableColumns = 10;
 		var widthPercent = 10;
