@@ -70,23 +70,22 @@ step.copyText = {
 		if ($(copyOfPassage).find('.verseGrouping').length == 0)
 			$(copyOfPassage).find('.heading').remove();
 		else {
-			$(copyOfPassage).find('.heading').prepend("\r\n");
+			$(copyOfPassage).find('.heading').prepend("\n");
 			var singleVerses = $(copyOfPassage).find('.singleVerse');
 			for (var i = 0; i < singleVerses.length; i ++) {
 				$(singleVerses[i]).html( $(singleVerses[i]).html().replace(/(>\(\w{2,8}\))\n/, "$1") );
 			}
-			$(singleVerses).prepend("\r\n");
+			$(singleVerses).prepend("\n");
 		}
 		$(copyOfPassage).find(".stepButton").remove();
 		$(copyOfPassage).find(".level2").text("\t");
 		$(copyOfPassage).find(".level3").text("\t\t");
 		$(copyOfPassage).find(".level4").text("\t\t\t");
 		$(copyOfPassage).find(".level5").text("\t\t\t\t");
-		$(copyOfPassage).find('.startLineGroup').replaceWith("\r\n")
-		$(copyOfPassage).find("p").replaceWith("\r\n")
-		$(copyOfPassage).find("h2.xgen").prepend("\r\n")
+		$(copyOfPassage).find('.startLineGroup').replaceWith("\n");
+		$(copyOfPassage).find("h2.xgen").prepend("\n");
 		if ($(copyOfPassage).find('.headingVerseNumber').length > 0)
-			$(copyOfPassage).find('.headingVerseNumber').prepend("\r\n")
+			$(copyOfPassage).find('.headingVerseNumber').prepend("\n");
 		var interlinearClasses = $(copyOfPassage).find('.interlinear');
 		for (var j = 0; j < interlinearClasses.length; j++) {
 			if ($($(interlinearClasses[j]).find(".interlinear")).length == 0) {
@@ -96,7 +95,11 @@ step.copyText = {
 				if (text.length == 0) continue;
 				$(interlinearClasses[j]).prepend(" [").append("] ");
 			}
+			else $(interlinearClasses[j]).prepend("<br>");
 		}
+		$(copyOfPassage).find(".interVerseNumbers").prepend("<br>");
+		$(copyOfPassage).find("p").replaceWith("\n");
+		$(copyOfPassage).find("br").replaceWith("\n");
 
 		var versionsString = step.util.activePassage().get("masterVersion");
 		var extraVersions = step.util.activePassage().get("extraVersions");
@@ -119,25 +122,40 @@ step.copyText = {
 		}
 		var textToCopy = ""
 		for (var m = 0; m < copyOfPassage.length; m++) {
-			$(copyOfPassage[m]).html().replace(/<br\s*[\/]?>/gi, "\r\n");
+//			$(copyOfPassage[m]).html().replace(/<br\s*[\/]?>/gi, "\n");
+
+			var posSearch = $(copyOfPassage[m]).html().search(/<br\s*[\/]?>/);
+			if (posSearch> -1) {
+				console.log("pos: " + posSearch + " " + $(copyOfPassage[m]).html());
+			}
 			textToCopy += $(copyOfPassage[m]).text().replace(/    /g, " ")
-			.replace(/   /g, " ").replace(/  /g, " ").replace(/(\d)([A-Za-z])/g, "$1 $2").replace(/\t /g, "\t")
-			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n").replace(/^ /g, "");
-			textToCopy += "\n";
+			.replace(/   /g, " ").replace(/  /g, " ").replace(/(\d)([A-Za-z'“])/g, "$1 $2").replace(/\t /g, "\t")
+			.replace(/\n\s+\n/g, "\n\n").replace(/\n\n\n/g, "\n\n").replace(/\n\n\t/g, "\n\t").replace(/^\n/g, "")
+			.replace(/(\n) (\d)/g, "$1$2").replace(/\n $/, "\n").replace(/\n\n$/, "\n");
+			if (textToCopy.search(/\n$/) == -1)
+				textToCopy += "\n";
 		}
 		
 		if ($(copyOfPassage).find('.verseGrouping').length > 0) {
 			textToCopy = textToCopy.replace(/\n\n/g, "\n");
 		}
-		if (interlinearClasses.length > 0)
-			textToCopy = textToCopy.replace(/\s+/g, " ");
+		if (interlinearClasses.length > 0) {
+			var updatedText = "";
+			var textByLines = textToCopy.split(/\n/);
+			for (var n = 0; n < textByLines.length; n ++) {
+				var tmp = textByLines[n].replace(/\s+/g, " ");
+				if ((tmp === "") || (tmp === " "))
+					continue;
+				updatedText += tmp + "\n";
+			}
+			textToCopy = updatedText;
+		}
 
 		for (var i = 0; i < versions.length; i++) {
 			currentVersion = versions[i];
 			if (currentVersion === "") continue;
 			$.ajaxSetup({async: false});
 			$.getJSON("/html/copyrights/" + currentVersion + ".json", function(copyRights) {
-				if (i == 0) textToCopy += "\n";
 				textToCopy += "\n" + currentVersion + ": " + copyRights;
 			}).fail(function() {
                 textToCopy += "\n" + currentVersion + ": Copyright notice at STEPBible.org/version.jsp?version=" + currentVersion;
