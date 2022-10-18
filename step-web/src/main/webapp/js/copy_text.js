@@ -87,7 +87,7 @@ step.copyText = {
 						}
 					}
 				}
-				else if (aTag.length == 2) {
+				else if (aTag.length > 1) {
 					noteID = "n" + l;
 					refs = $(notes[l]).find(".inlineNote").text().replace(/▼/, "");
 				}
