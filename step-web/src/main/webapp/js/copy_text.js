@@ -5,6 +5,7 @@ step.copyText = {
 		step.util.closeModal('searchSelectionModal');
 		step.util.closeModal('passageSelectionModal');
 		this._displayVerses();
+		if (step.util.activePassage().get("extraVersions") !== "") $("#modalonoffswitch").hide();
 	},
 
 	_displayVerses: function() {
@@ -73,7 +74,8 @@ step.copyText = {
 					var noteID = $(aTag).text();
 					var refs = "";
 	//				var describedBy = $(aTag).attr("aria-describedby");
-					var margins = $(copyOfPassage).find(".notesPane").find(".margin");
+//					var margins = $(copyOfPassage).find(".notesPane").find(".margin");
+					var margins = $(".margin");
 					if (margins.length > 0) {
 						for (var m = 0; m < margins.length; m++) {
 							if (noteID === $(margins[m]).find("strong").text()) {

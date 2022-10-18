@@ -1890,13 +1890,13 @@ step.util = {
 					'<br>' +
 					'<div id="modalonoffswitch">' +
 						'<span id="select_notes">&nbsp;<b>Include cross references and notes</b></span>' +
-						'<div class="onoffswitch2 append">' +
+						'<span class="onoffswitch2 append">' +
 							'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectnotesonoffswitch" onchange="addNotesToCopy()"/>' +
 							'<label class="onoffswitch2-label" for="selectnotesonoffswitch">' +
 							'<span class="onoffswitch2-inner"></span>' +
 							'<span class="onoffswitch2-switch"></span>' +
 							'</label>' +
-						'</div>' +
+						'</span>' +
 					'</div>' +
 
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
@@ -1909,7 +1909,6 @@ step.util = {
 							'step.copyText.initVerseSelect();' +
 						'});' +
 						'function addNotesToCopy() {' +
-						'debugger;' +
 							'if (document.getElementById("selectnotesonoffswitch").checked) {' +
 								'$("#select_notes").addClass("checked");' +
 							'}' +
