@@ -64,6 +64,39 @@ step.copyText = {
 				}
 			}
 		}
+		var endNotes = "";
+		if ($("#select_notes").hasClass("checked")) {
+			var notes = $(copyOfPassage).find('.note');
+			for (var l = 0; l < notes.length; l++) {
+				var aTag = $(notes[l]).find("a");
+				if (aTag.length == 1) {
+					var noteID = $(aTag).text();
+					var refs = "";
+	//				var describedBy = $(aTag).attr("aria-describedby");
+					var margins = $(copyOfPassage).find(".notesPane").find(".margin");
+					if (margins.length > 0) {
+						for (var m = 0; m < margins.length; m++) {
+							if (noteID === $(margins[m]).find("strong").text()) {
+								var linkRefs = $(margins[m]).find(".linkRef");
+								for (var n = 0; n < linkRefs.length; n ++) {
+									if (n > 0) refs += ", ";
+									refs += $(linkRefs[n]).text();
+								}
+								continue;
+							}
+						}
+					}
+				}
+				else if (aTag.length == 2) {
+					noteID = "n" + l;
+					refs = $(notes[l]).find(".inlineNote").text().replace(/▼/, "");
+				}
+				if (refs !== "") {
+					$("<span>(" + noteID + ") </span>").insertAfter(notes[l]);
+					endNotes += "\n(" + noteID + ") " + refs;
+				}
+			}
+		}
 
 		$(copyOfPassage).find('.notesPane').remove()
 		$(copyOfPassage).find('.note').remove();
@@ -151,7 +184,7 @@ step.copyText = {
 			}
 			textToCopy = updatedText;
 		}
-
+		if (endNotes !== "") textToCopy += "\nEnd notes:" + endNotes;
 		for (var i = 0; i < versions.length; i++) {
 			currentVersion = versions[i];
 			if (currentVersion === "") continue;
