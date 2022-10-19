@@ -244,7 +244,9 @@ step.copyText = {
 	},
 
 	_buildChptrVrsTbl: function(firstSelection) {
-		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy<br><br><br>" : "Copy will start from verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
+		var verses = $('.versenumber');
+		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy<br><br><br>" : 
+			"Copy will start from verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
 		this.modalMode = 'verse';
 		var tableColumns = 10;
 		var widthPercent = 10;
@@ -271,7 +273,6 @@ step.copyText = {
 			'<tr>';
 		var chptrOrVrsNum = 0;
 		var previousVerseName = "";
-		var verses = $('.versenumber');
 		for (var i = 0; i < verses.length; i++) {
 			chptrOrVrsNum++;
 			var verseName = $(verses[i]).text();
