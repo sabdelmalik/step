@@ -2,6 +2,12 @@ window.step = window.step || {};
 step.copyText = {
 
 	initVerseSelect: function() {
+		var verses = $('.versenumber');
+		if (verses.length == 0) {
+			alert("Cannot copy without verse numbers");
+			step.util.closeModal('copyModal');
+			return;
+		}
 		step.util.closeModal('searchSelectionModal');
 		step.util.closeModal('passageSelectionModal');
 		this._displayVerses();
@@ -9,7 +15,7 @@ step.copyText = {
 	},
 
 	_displayVerses: function() {
-    $('#bookchaptermodalbody').empty();
+	    $('#bookchaptermodalbody').empty();
 		var html = this._buildHeaderAndSkeleton();
 		$('#bookchaptermodalbody').append(html);
 		$('#bookchaptermodalbody').append(this._buildChptrVrsTbl(-1));
@@ -238,7 +244,6 @@ step.copyText = {
 	},
 
 	_buildChptrVrsTbl: function(firstSelection) {
-		var verses = $('.versenumber');
 		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy<br><br><br>" : "Copy will start from verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
 		this.modalMode = 'verse';
 		var tableColumns = 10;
@@ -266,6 +271,7 @@ step.copyText = {
 			'<tr>';
 		var chptrOrVrsNum = 0;
 		var previousVerseName = "";
+		var verses = $('.versenumber');
 		for (var i = 0; i < verses.length; i++) {
 			chptrOrVrsNum++;
 			var verseName = $(verses[i]).text();

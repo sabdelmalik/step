@@ -584,11 +584,12 @@ var PassageDisplayView = DisplayView.extend({
             //if no options, or no verse numbers, then exit
             var hasVerseNumbersByDefault = interlinearMode != undefined && interlinearMode != "" && interlinearMode != 'INTERLINEAR';
 
-            if (options == undefined || (options.indexOf("V") == -1 && !hasVerseNumbersByDefault)) {
-                //nothing to do:
-                return;
+            if (options == undefined) return;
+            if (options.indexOf("V") == -1) {
+                $("#copy-icon").hide()
+                if (!hasVerseNumbersByDefault) return; //nothing to do:
             }
-
+            else $("#copy-icon").show();
             step.util.ui.enhanceVerseNumbers(passageId, passageContent, version);
         },
 

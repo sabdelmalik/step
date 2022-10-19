@@ -919,7 +919,8 @@ public class SearchServiceImpl implements SearchService {
         }
         if (!positionStack.isEmpty())
             throw new TranslatedException("search_invalid");
-        Key[] resultsArray = new Key[group+1]; // The last element in the array will have the final result
+    	if (group > 25) throw new TranslatedException("search_invalid"); // Maximum of 26 groups because we are using A-Z to represent the group;
+		Key[] resultsArray = new Key[group+1]; // The last element in the array will have the final result
         Set<String>[] strongsArray = new Set[group+1];  // The last element in the array will have the final result
         group = 0;
         int pos = 0;
