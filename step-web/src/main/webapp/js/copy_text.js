@@ -72,15 +72,27 @@ step.copyText = {
 			}
 		}
 		var endNotes = "";
-		if ($("#select_notes").hasClass("checked")) {
+		
+		if ($("#selectnotes").prop("checked")) {
+			var notes = $(copyOfPassage).find('.note');
+			for (var l = 0; l < notes.length; l++) {
+				var aTag = $(notes[l]).find("a");
+				if (aTag.length > 1) {
+					noteID = "n" + l;
+					refs = $(notes[l]).find(".inlineNote").text().replace(/▼/, "");
+					$("<span>(" + noteID + ") </span>").insertAfter(notes[l]);
+					endNotes += "\n(" + noteID + ") " + refs;
+				}
+			}
+		}
+		var endXrefs = "";
+		if ($("#selectxref").prop("checked")) {
 			var notes = $(copyOfPassage).find('.note');
 			for (var l = 0; l < notes.length; l++) {
 				var aTag = $(notes[l]).find("a");
 				if (aTag.length == 1) {
 					var noteID = $(aTag).text();
 					var refs = "";
-	//				var describedBy = $(aTag).attr("aria-describedby");
-//					var margins = $(copyOfPassage).find(".notesPane").find(".margin");
 					var margins = $(".margin");
 					if (margins.length > 0) {
 						for (var m = 0; m < margins.length; m++) {
@@ -95,16 +107,13 @@ step.copyText = {
 						}
 					}
 				}
-				else if (aTag.length > 1) {
-					noteID = "n" + l;
-					refs = $(notes[l]).find(".inlineNote").text().replace(/▼/, "");
-				}
 				if (refs !== "") {
 					$("<span>(" + noteID + ") </span>").insertAfter(notes[l]);
-					endNotes += "\n(" + noteID + ") " + refs;
+					endXrefs += "\n(" + noteID + ") " + refs;
 				}
 			}
 		}
+
 
 		$(copyOfPassage).find('.notesPane').remove()
 		$(copyOfPassage).find('.note').remove();
@@ -165,7 +174,6 @@ step.copyText = {
 		var textToCopy = ""
 		for (var m = 0; m < copyOfPassage.length; m++) {
 //			$(copyOfPassage[m]).html().replace(/<br\s*[\/]?>/gi, "\n");
-
 			var posSearch = $(copyOfPassage[m]).html().search(/<br\s*[\/]?>/);
 			if (posSearch> -1) {
 				console.log("pos: " + posSearch + " " + $(copyOfPassage[m]).html());
@@ -192,7 +200,8 @@ step.copyText = {
 			}
 			textToCopy = updatedText;
 		}
-		if (endNotes !== "") textToCopy += "\nEnd notes:" + endNotes;
+		if (endNotes !== "") textToCopy += "\nNotes:" + endNotes;
+		if (endXrefs !== "") textToCopy += "\nCross references:" + endXrefs;
 		for (var i = 0; i < versions.length; i++) {
 			currentVersion = versions[i];
 			if (currentVersion === "") continue;
@@ -240,6 +249,7 @@ step.copyText = {
 		navigator.clipboard.writeText(textToCopy);
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append("<h2>The text is copied, ready to be pasted.");
+		$('#copyModalFooter').empty();
 		setTimeout( function() { step.util.closeModal("copyModal")}, sleepTime);
 	},
 

@@ -1887,35 +1887,25 @@ step.util = {
 						'</span>'+
 					'</div>';
 		modalHTML +=
-					'<br>' +
-					'<div id="modalonoffswitch">' +
-						'<span id="select_notes">&nbsp;<b>Include cross references and notes</b></span>' +
-						'<span class="onoffswitch2 append">' +
-							'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectnotesonoffswitch" onchange="addNotesToCopy()"/>' +
-							'<label class="onoffswitch2-label" for="selectnotesonoffswitch">' +
-							'<span class="onoffswitch2-inner"></span>' +
-							'<span class="onoffswitch2-switch"></span>' +
-							'</label>' +
-						'</span>' +
-					'</div>' +
-
 					'<div id="bookchaptermodalbody" class="modal-body"></div>' +
-					'<div class="footer">';
+					'<br>';
+
 		modalHTML +=
+					'<div class="footer" id="copyModalFooter">' +
+						'<div>' +
+							'<span>&nbsp;&nbsp;<b>Include notes</b>&nbsp;</span>' +
+							'<input type="checkbox" id="selectnotes"/>' +
+						'</div>' +
+						'<div>' +
+							'<span>&nbsp;&nbsp;<b>Include cross references</b>&nbsp;</span>' +
+							'<input type="checkbox" id="selectxref"/>' +
+						'</div>' +
 						'<br>' +
 					'</div>' +
 					'<script>' +
 						'$(document).ready(function () {' +
 							'step.copyText.initVerseSelect();' +
 						'});' +
-						'function addNotesToCopy() {' +
-							'if (document.getElementById("selectnotesonoffswitch").checked) {' +
-								'$("#select_notes").addClass("checked");' +
-							'}' +
-							'else {' +
-								'$("#select_notes").removeClass("checked");' +
-							'}' +
-						'}' +
 					'</script>' +
 				'</div>' +
 			'</div>' +
