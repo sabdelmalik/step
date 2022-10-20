@@ -2788,26 +2788,6 @@ step.util = {
 				steps: introJsSteps, nextLabel: " > ", prevLabel: " < ", doneLabel: __s.done
 			}).start();
 		}
-		else {
-		    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.copyIntro") : $.cookie('step.copyIntro');
-			var introCount = parseInt(introCountFromStorageOrCookie, 10);
-			if (isNaN(introCount)) introCount = 0;
-			if (introCount < 2) {
-				var introJsSteps = [
-				{
-					element: document.querySelector('#copy-icon'),
-					intro: "NEW: Copy from STEPBible to your document.",
-					position: 'left'
-				}
-         	   ];
-				introJs().setOptions({
-					steps: introJsSteps
-				}).start();
-				introCount ++;
-				if (window.localStorage) window.localStorage.setItem("step.copyIntro", introCount);
-				else $.cookie('step.copyIntro', introCount);
-			}
-		}
 	},
     showIntroOfMultiVersion: function () {
 		if ($.getUrlVars().indexOf("skipwelcome") > -1) return;
