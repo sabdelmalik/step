@@ -3,11 +3,11 @@ step.copyText = {
 
 	initVerseSelect: function() {
 		var verses = $('.versenumber');
-		if (verses.length == 0) {
-			alert("Cannot copy without verse numbers");
-			step.util.closeModal('copyModal');
-			return;
-		}
+		// if (verses.length == 0) {
+		// 	alert("Cannot copy without verse numbers");
+		// 	step.util.closeModal('copyModal');
+		// 	return;
+		// }
 		step.util.closeModal('searchSelectionModal');
 		step.util.closeModal('passageSelectionModal');
 		this._displayVerses();
@@ -38,6 +38,7 @@ step.copyText = {
 			lastVerseIndex = temp;
 		}
 		var verses = $(copyOfPassage).find('.versenumber');
+		if (verses.length == 0) verses = $(copyOfPassage).find('.verselink');
 		var versesRemoved = 0;
 		if (lastVerseIndex < verses.length - 1) {
 			for (var k = verses.length - 1; k > lastVerseIndex; k--) {
@@ -254,9 +255,25 @@ step.copyText = {
 	},
 
 	_buildChptrVrsTbl: function(firstSelection) {
-		var verses = $('.versenumber');
+		var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
+		var versesInPanel = $(passageContainer).find(".versenumber");
+		var verses = [];
+		if (versesInPanel.length > 0) {
+			for (var i = 0; i < versesInPanel.length; i ++) {
+				verses.push($(versesInPanel[i]).text());
+			}
+		}
+		else {
+			versesInPanel = $(passageContainer).find(".verseLink");
+			for (var i = 0; i < versesInPanel.length; i ++) {
+				var tmp = $(versesInPanel[i]).attr("name");
+				tmp = tmp.replace(/^([123A-Za-z]+)\.(\d)/, "$1 $2").replace(/\./g, ":");
+				verses.push(tmp);
+			}
+		}
+//		var verses = $('.versenumber');
 		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy<br><br><br>" : 
-			"Copy will start from verse: " + $(verses[firstSelection]).text() + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
+			"Copy will start from verse: " + verses[firstSelection] + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
 		this.modalMode = 'verse';
 		var tableColumns = 10;
 		var widthPercent = 10;
@@ -285,7 +302,7 @@ step.copyText = {
 		var previousVerseName = "";
 		for (var i = 0; i < verses.length; i++) {
 			chptrOrVrsNum++;
-			var verseName = $(verses[i]).text();
+			var verseName = verses[i];
 			var originalVerseName = verseName;
 			var verseSplit = verseName.split(/:/);
 			if ((verseSplit.length == 2) && (verseSplit[0] === previousVerseName.split(/:/)[0])) verseName = verseSplit[1];
