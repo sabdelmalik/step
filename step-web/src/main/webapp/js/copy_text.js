@@ -11,7 +11,10 @@ step.copyText = {
 		step.util.closeModal('searchSelectionModal');
 		step.util.closeModal('passageSelectionModal');
 		this._displayVerses();
-		if (step.util.activePassage().get("extraVersions") !== "") $("#modalonoffswitch").hide();
+		if (step.util.activePassage().get("extraVersions") !== "") { // notes and Xref for more than one version is confusing so don't offer the choice.
+			$("#includeNotes").hide();
+			$("#includeXRefs").hide();
+		} 
 	},
 
 	_displayVerses: function() {
@@ -79,7 +82,7 @@ step.copyText = {
 			for (var l = 0; l < notes.length; l++) {
 				var aTag = $(notes[l]).find("a");
 				if (aTag.length > 1) {
-					noteID = "n" + l;
+					noteID = "n" + (l + 1); // The notes number will start with 1, not zero.
 					refs = $(notes[l]).find(".inlineNote").text().replace(/▼/, "");
 					$("<span>(" + noteID + ") </span>").insertAfter(notes[l]);
 					endNotes += "\n(" + noteID + ") " + refs;
@@ -114,7 +117,6 @@ step.copyText = {
 				}
 			}
 		}
-
 
 		$(copyOfPassage).find('.notesPane').remove()
 		$(copyOfPassage).find('.note').remove();
@@ -271,7 +273,22 @@ step.copyText = {
 				verses.push(tmp);
 			}
 		}
-//		var verses = $('.versenumber');
+
+		var hasXRefs = false;
+		var hasNotes = false;
+		var notes = $(passageContainer).find('.note');
+		for (var l = 0; ((l < notes.length) && (!hasXRefs || (!hasNotes))); l++) {
+			var aTag = $(notes[l]).find("a");
+			if ((aTag.length == 1) && (!hasXRefs)) {
+				$("#includeXRefs").show();
+				hasXRefs = true;
+			}
+			else if ((aTag.length > 1) && (!hasNotes)) {
+				$("#includeNotes").show();
+				hasNotes = true;
+			}
+		}
+
 		var headerMsg = (firstSelection == -1) ? "Select the <i>first</i> verse to copy<br><br><br>" : 
 			"Copy will start from verse: " + verses[firstSelection] + "<br>Select the <i>last</i> verse to copy.  If you only want to copy one verse, select the same verse again.";
 		this.modalMode = 'verse';

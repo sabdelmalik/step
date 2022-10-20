@@ -1892,11 +1892,11 @@ step.util = {
 
 		modalHTML +=
 					'<div class="footer" id="copyModalFooter">' +
-						'<div>' +
+						'<div id="includeNotes" style="display:none">' +
 							'<span>&nbsp;&nbsp;<b>Include notes</b>&nbsp;</span>' +
 							'<input type="checkbox" id="selectnotes"/>' +
 						'</div>' +
-						'<div>' +
+						'<div id="includeXRefs" style="display:none">' +
 							'<span>&nbsp;&nbsp;<b>Include cross references</b>&nbsp;</span>' +
 							'<input type="checkbox" id="selectxref"/>' +
 						'</div>' +
