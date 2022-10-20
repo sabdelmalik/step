@@ -2792,11 +2792,11 @@ step.util = {
 		    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.copyIntro") : $.cookie('step.copyIntro');
 			var introCount = parseInt(introCountFromStorageOrCookie, 10);
 			if (isNaN(introCount)) introCount = 0;
-			if (introCount < 2) {
+			if ((introCount < 2) && (window.innerWidth > 499)) {
 				var introJsSteps = [
 				{
 					element: document.querySelector('#copy-icon'),
-					intro: "NEW: Copy from STEPBible to your document.",
+					intro: "NEW: Copy from STEPBible to your documents.",
 					position: 'left'
 				}
          	   ];
